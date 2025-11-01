@@ -6,6 +6,8 @@ import numpy as np
 import json
 from PIL import Image
 import io # Needed for camera input
+from pathlib import Path
+import os
 
 # --- CONFIGURATION ---
 st.set_page_config(
@@ -18,8 +20,10 @@ st.set_page_config(
 # --- Constants ---
 IMG_SIZE = 224
 NUM_CLASSES = 100
-MODEL_WEIGHTS_PATH = "best_model_food100.keras" # Make sure this matches your file name
-CLASS_NAMES_PATH = "class_names.json"
+# Resolve file paths relative to this script to avoid working-directory issues
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_WEIGHTS_PATH = BASE_DIR / "best_model_food100.keras"  # Make sure this matches your file name
+CLASS_NAMES_PATH = BASE_DIR / "class_names.json"
 
 # --- Custom CSS (Keep as before) ---
 st.markdown("""
@@ -68,9 +72,16 @@ def build_and_load_model():
         outputs = layers.Dense(NUM_CLASSES, activation="softmax", name="output_layer")(x)
         model = keras.Model(inputs, outputs, name="EfficientNetB0_Food100") # Model name
 
-        # 4. Load the Trained Weights
-        model.load_weights(MODEL_WEIGHTS_PATH)
-        # st.success("Model loaded successfully!") # Optional success message
+        # 4. Try loading a full saved model first (if file was saved with model.save)
+        try:
+            full_model = tf.keras.models.load_model(str(MODEL_WEIGHTS_PATH))
+            return full_model
+        except Exception:
+            # Not a full model file - try loading weights into the architecture
+            pass
+        
+        # Fallback: load weights into the architecture above (weights-only file)
+        model.load_weights(str(MODEL_WEIGHTS_PATH))
         return model
 
     except FileNotFoundError:
@@ -88,7 +99,7 @@ def build_and_load_model():
 def load_my_class_names():
     # ... (Your existing class names loading code - seems correct) ...
     try:
-        with open(CLASS_NAMES_PATH, 'r') as f:
+        with open(str(CLASS_NAMES_PATH), 'r', encoding='utf-8') as f:
             class_names = json.load(f)
         if len(class_names) != NUM_CLASSES:
              st.warning(f"Class names count mismatch.")
