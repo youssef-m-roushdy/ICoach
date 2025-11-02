@@ -18,7 +18,7 @@ const router = Router();
  *       
  *       **How to test:**
  *       1. Open a new browser tab
- *       2. Navigate to: `http://localhost:3000/api/v1/auth/google`
+ *       2. Navigate to: `http://localhost:5000/api/v1/auth/google`
  *       3. You'll be redirected to Google's login page
  *       4. After authentication, you'll be redirected back with a token
  *       

@@ -577,7 +577,11 @@ const options = {
   },
   apis: process.env.NODE_ENV === 'production' 
     ? ['./dist/routes/v1/*.js']  // In production/Docker, use compiled JS files
-    : ['./src/routes/v1/*.ts'],  // In development, use TypeScript source files
+    : [
+        './src/routes/v1/authRoutes.ts',
+        './src/routes/v1/userRoutes.ts',
+        './src/routes/v1/foodRoutes.ts'
+      ],  // In development, explicitly list all route files
 };
 
 const specs = swaggerJsdoc(options);

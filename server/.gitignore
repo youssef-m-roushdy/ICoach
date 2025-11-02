@@ -213,3 +213,4 @@ docs/generated/
 *.env
 .env.docker.example
 .env.development
+.env.production

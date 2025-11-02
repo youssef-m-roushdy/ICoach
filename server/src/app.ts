@@ -19,7 +19,7 @@ configurePassport();
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Trust proxy (for rate limiting and IP detection)
 app.set('trust proxy', 1);
