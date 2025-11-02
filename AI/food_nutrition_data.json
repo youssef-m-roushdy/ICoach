@@ -1,0 +1,992 @@
+[
+  {
+    "name": "adds_soup",
+    "per_100g": {
+      "calories_kcal": 70.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 2.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "aesh_baldy",
+    "per_100g": {
+      "calories_kcal": 260.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 55.0,
+      "fat_g": 2.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "aolaas",
+    "per_100g": {
+      "calories_kcal": 95.0,
+      "protein_g": 2.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 2.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "apple",
+    "per_100g": {
+      "calories_kcal": 52.0,
+      "protein_g": 0.3,
+      "carbohydrate_g": 14.0,
+      "fat_g": 0.3,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "apple_pie",
+    "per_100g": {
+      "calories_kcal": 237.0,
+      "protein_g": 2.4,
+      "carbohydrate_g": 34.0,
+      "fat_g": 11.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "bamya",
+    "per_100g": {
+      "calories_kcal": 90.0,
+      "protein_g": 2.0,
+      "carbohydrate_g": 8.0,
+      "fat_g": 5.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "banana",
+    "per_100g": {
+      "calories_kcal": 89.0,
+      "protein_g": 1.1,
+      "carbohydrate_g": 23.0,
+      "fat_g": 0.3,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "basbousa",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 5.0,
+      "carbohydrate_g": 50.0,
+      "fat_g": 15.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "bashamil",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 10.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 10.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "breakfast_burrito",
+    "per_100g": {
+      "calories_kcal": 270.0,
+      "protein_g": 12.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 15.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "caesar_salad",
+    "per_100g": {
+      "calories_kcal": 180.0,
+      "protein_g": 10.0,
+      "carbohydrate_g": 7.0,
+      "fat_g": 10.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "cannoli",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 7.0,
+      "carbohydrate_g": 35.0,
+      "fat_g": 21.0,
+      "sugar_g": 20.0
+    }
+  },
+  {
+    "name": "carrot",
+    "per_100g": {
+      "calories_kcal": 41.0,
+      "protein_g": 1.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 0.2,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "cheese_plate",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 22.0,
+      "carbohydrate_g": 3.0,
+      "fat_g": 28.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "cheesecake",
+    "per_100g": {
+      "calories_kcal": 360.0,
+      "protein_g": 6.0,
+      "carbohydrate_g": 30.0,
+      "fat_g": 25.0,
+      "sugar_g": 25.0
+    }
+  },
+  {
+    "name": "chicken_wings",
+    "per_100g": {
+      "calories_kcal": 300.0,
+      "protein_g": 20.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 22.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "chocolate_cake",
+    "per_100g": {
+      "calories_kcal": 390.0,
+      "protein_g": 5.0,
+      "carbohydrate_g": 55.0,
+      "fat_g": 18.0,
+      "sugar_g": 40.0
+    }
+  },
+  {
+    "name": "cinabon",
+    "per_100g": {
+      "calories_kcal": 420.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 60.0,
+      "fat_g": 18.0,
+      "sugar_g": 30.0
+    }
+  },
+  {
+    "name": "creme_brulee",
+    "per_100g": {
+      "calories_kcal": 300.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 20.0,
+      "sugar_g": 25.0
+    }
+  },
+  {
+    "name": "cucumber",
+    "per_100g": {
+      "calories_kcal": 15.0,
+      "protein_g": 0.6,
+      "carbohydrate_g": 3.6,
+      "fat_g": 0.1,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "cup_cakes",
+    "per_100g": {
+      "calories_kcal": 390.0,
+      "protein_g": 4.5,
+      "carbohydrate_g": 56.0,
+      "fat_g": 18.0,
+      "sugar_g": 38.0
+    }
+  },
+  {
+    "name": "deviled_eggs",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 11.0,
+      "carbohydrate_g": 2.0,
+      "fat_g": 16.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "donuts",
+    "per_100g": {
+      "calories_kcal": 400.0,
+      "protein_g": 5.0,
+      "carbohydrate_g": 55.0,
+      "fat_g": 20.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "eggs_benedict",
+    "per_100g": {
+      "calories_kcal": 230.0,
+      "protein_g": 11.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 14.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "falafel",
+    "per_100g": {
+      "calories_kcal": 340.0,
+      "protein_g": 14.0,
+      "carbohydrate_g": 32.0,
+      "fat_g": 18.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "fatta",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 12.0,
+      "carbohydrate_g": 23.0,
+      "fat_g": 10.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "fig",
+    "per_100g": {
+      "calories_kcal": 74.0,
+      "protein_g": 0.8,
+      "carbohydrate_g": 19.0,
+      "fat_g": 0.3,
+      "sugar_g": 16.0
+    }
+  },
+  {
+    "name": "fish",
+    "per_100g": {
+      "calories_kcal": 240.0,
+      "protein_g": 20.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 12.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "fish_and_chips",
+    "per_100g": {
+      "calories_kcal": 250.0,
+      "protein_g": 14.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 13.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "fool",
+    "per_100g": {
+      "calories_kcal": 160.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 16.0,
+      "fat_g": 9.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "french_fries",
+    "per_100g": {
+      "calories_kcal": 300.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 37.0,
+      "fat_g": 15.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "french_onion_soup",
+    "per_100g": {
+      "calories_kcal": 55.0,
+      "protein_g": 2.5,
+      "carbohydrate_g": 6.0,
+      "fat_g": 4.0,
+      "sugar_g": 3.0
+    }
+  },
+  {
+    "name": "french_toast",
+    "per_100g": {
+      "calories_kcal": 210.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 22.0,
+      "fat_g": 8.0,
+      "sugar_g": 4.0
+    }
+  },
+  {
+    "name": "fried_calamari",
+    "per_100g": {
+      "calories_kcal": 230.0,
+      "protein_g": 15.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 14.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "frozen_yogurt",
+    "per_100g": {
+      "calories_kcal": 140.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 4.0,
+      "sugar_g": 23.0
+    }
+  },
+  {
+    "name": "garlic_bread",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 40.0,
+      "fat_g": 18.0,
+      "sugar_g": 3.0
+    }
+  },
+  {
+    "name": "golash",
+    "per_100g": {
+      "calories_kcal": 270.0,
+      "protein_g": 10.0,
+      "carbohydrate_g": 22.0,
+      "fat_g": 16.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "grape",
+    "per_100g": {
+      "calories_kcal": 69.0,
+      "protein_g": 0.7,
+      "carbohydrate_g": 18.0,
+      "fat_g": 0.2,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "grilled_cheese_sandwich",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 12.0,
+      "carbohydrate_g": 28.0,
+      "fat_g": 22.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "grilled_salmon",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 22.0,
+      "carbohydrate_g": 0.0,
+      "fat_g": 13.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "hamburger",
+    "per_100g": {
+      "calories_kcal": 300.0,
+      "protein_g": 17.0,
+      "carbohydrate_g": 26.0,
+      "fat_g": 16.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "hawawshy",
+    "per_100g": {
+      "calories_kcal": 250.0,
+      "protein_g": 13.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 16.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "hot_dog",
+    "per_100g": {
+      "calories_kcal": 300.0,
+      "protein_g": 11.0,
+      "carbohydrate_g": 24.0,
+      "fat_g": 19.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "ice_cream",
+    "per_100g": {
+      "calories_kcal": 210.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 13.0,
+      "sugar_g": 23.0
+    }
+  },
+  {
+    "name": "kebda",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 26.0,
+      "carbohydrate_g": 5.0,
+      "fat_g": 7.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "kofta",
+    "per_100g": {
+      "calories_kcal": 250.0,
+      "protein_g": 18.0,
+      "carbohydrate_g": 4.0,
+      "fat_g": 13.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "konafa",
+    "per_100g": {
+      "calories_kcal": 380.0,
+      "protein_g": 7.0,
+      "carbohydrate_g": 47.0,
+      "fat_g": 25.0,
+      "sugar_g": 27.0
+    }
+  },
+  {
+    "name": "koshari",
+    "per_100g": {
+      "calories_kcal": 160.0,
+      "protein_g": 7.0,
+      "carbohydrate_g": 30.0,
+      "fat_g": 5.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "lasagna",
+    "per_100g": {
+      "calories_kcal": 180.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 18.0,
+      "fat_g": 9.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "macaroni_and_cheese",
+    "per_100g": {
+      "calories_kcal": 190.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 22.0,
+      "fat_g": 9.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "macarons",
+    "per_100g": {
+      "calories_kcal": 480.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 65.0,
+      "fat_g": 20.0,
+      "sugar_g": 57.0
+    }
+  },
+  {
+    "name": "mahshi",
+    "per_100g": {
+      "calories_kcal": 125.0,
+      "protein_g": 3.0,
+      "carbohydrate_g": 16.0,
+      "fat_g": 1.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "mandi",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 16.0,
+      "carbohydrate_g": 14.0,
+      "fat_g": 9.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "mango",
+    "per_100g": {
+      "calories_kcal": 60.0,
+      "protein_g": 0.8,
+      "carbohydrate_g": 15.0,
+      "fat_g": 0.4,
+      "sugar_g": 14.0
+    }
+  },
+  {
+    "name": "mansaf",
+    "per_100g": {
+      "calories_kcal": 185.0,
+      "protein_g": 10.0,
+      "carbohydrate_g": 16.0,
+      "fat_g": 9.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "meat",
+    "per_100g": {
+      "calories_kcal": 230.0,
+      "protein_g": 27.0,
+      "carbohydrate_g": 0.0,
+      "fat_g": 13.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "mesaqaa",
+    "per_100g": {
+      "calories_kcal": 170.0,
+      "protein_g": 10.0,
+      "carbohydrate_g": 10.0,
+      "fat_g": 13.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "molokhia",
+    "per_100g": {
+      "calories_kcal": 65.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 5.5,
+      "fat_g": 3.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "mombar",
+    "per_100g": {
+      "calories_kcal": 250.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 17.0,
+      "fat_g": 17.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "muaskhan",
+    "per_100g": {
+      "calories_kcal": 250.0,
+      "protein_g": 13.0,
+      "carbohydrate_g": 15.0,
+      "fat_g": 15.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "nachos",
+    "per_100g": {
+      "calories_kcal": 230.0,
+      "protein_g": 10.0,
+      "carbohydrate_g": 22.0,
+      "fat_g": 13.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "om_ali",
+    "per_100g": {
+      "calories_kcal": 280.0,
+      "protein_g": 7.0,
+      "carbohydrate_g": 30.0,
+      "fat_g": 16.0,
+      "sugar_g": 22.0
+    }
+  },
+  {
+    "name": "omelette",
+    "per_100g": {
+      "calories_kcal": 180.0,
+      "protein_g": 11.0,
+      "carbohydrate_g": 1.0,
+      "fat_g": 14.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "onion",
+    "per_100g": {
+      "calories_kcal": 40.0,
+      "protein_g": 1.1,
+      "carbohydrate_g": 9.0,
+      "fat_g": 0.1,
+      "sugar_g": 4.0
+    }
+  },
+  {
+    "name": "onion_rings",
+    "per_100g": {
+      "calories_kcal": 280.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 35.0,
+      "fat_g": 14.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "orange",
+    "per_100g": {
+      "calories_kcal": 47.0,
+      "protein_g": 0.9,
+      "carbohydrate_g": 12.0,
+      "fat_g": 0.1,
+      "sugar_g": 9.0
+    }
+  },
+  {
+    "name": "pancakes",
+    "per_100g": {
+      "calories_kcal": 260.0,
+      "protein_g": 5.0,
+      "carbohydrate_g": 40.0,
+      "fat_g": 9.0,
+      "sugar_g": 18.0
+    }
+  },
+  {
+    "name": "pastries",
+    "per_100g": {
+      "calories_kcal": 400.0,
+      "protein_g": 7.0,
+      "carbohydrate_g": 45.0,
+      "fat_g": 20.0,
+      "sugar_g": 25.0
+    }
+  },
+  {
+    "name": "peach",
+    "per_100g": {
+      "calories_kcal": 39.0,
+      "protein_g": 0.9,
+      "carbohydrate_g": 10.0,
+      "fat_g": 0.3,
+      "sugar_g": 8.0
+    }
+  },
+  {
+    "name": "pheno",
+    "per_100g": {
+      "calories_kcal": 280.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 53.0,
+      "fat_g": 3.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "pizza",
+    "per_100g": {
+      "calories_kcal": 320.0,
+      "protein_g": 14.0,
+      "carbohydrate_g": 30.0,
+      "fat_g": 15.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "pomegranate",
+    "per_100g": {
+      "calories_kcal": 83.0,
+      "protein_g": 1.7,
+      "carbohydrate_g": 19.0,
+      "fat_g": 1.2,
+      "sugar_g": 14.0
+    }
+  },
+  {
+    "name": "qatayef",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 7.0,
+      "carbohydrate_g": 45.0,
+      "fat_g": 16.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "red_velvet_cake",
+    "per_100g": {
+      "calories_kcal": 380.0,
+      "protein_g": 5.0,
+      "carbohydrate_g": 47.0,
+      "fat_g": 20.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "rice",
+    "per_100g": {
+      "calories_kcal": 130.0,
+      "protein_g": 2.7,
+      "carbohydrate_g": 28.0,
+      "fat_g": 0.3,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "rice_with_milk",
+    "per_100g": {
+      "calories_kcal": 140.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 23.0,
+      "fat_g": 3.0,
+      "sugar_g": 16.0
+    }
+  },
+  {
+    "name": "risotto",
+    "per_100g": {
+      "calories_kcal": 140.0,
+      "protein_g": 4.0,
+      "carbohydrate_g": 23.0,
+      "fat_g": 5.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "sambosa",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 12.0,
+      "carbohydrate_g": 22.0,
+      "fat_g": 25.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "scallops",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 20.0,
+      "carbohydrate_g": 5.0,
+      "fat_g": 12.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "shawrma",
+    "per_100g": {
+      "calories_kcal": 250.0,
+      "protein_g": 14.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 15.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "shrimp",
+    "per_100g": {
+      "calories_kcal": 180.0,
+      "protein_g": 24.0,
+      "carbohydrate_g": 5.0,
+      "fat_g": 6.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "shrimp_and_grits",
+    "per_100g": {
+      "calories_kcal": 175.0,
+      "protein_g": 12.0,
+      "carbohydrate_g": 14.0,
+      "fat_g": 9.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "sojoq",
+    "per_100g": {
+      "calories_kcal": 300.0,
+      "protein_g": 18.0,
+      "carbohydrate_g": 5.0,
+      "fat_g": 22.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "spaghetti_bolognese",
+    "per_100g": {
+      "calories_kcal": 160.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 6.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "spaghetti_carbonara",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 11.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "spring_rolls",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 8.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "steak",
+    "per_100g": {
+      "calories_kcal": 280.0,
+      "protein_g": 26.0,
+      "carbohydrate_g": 3.0,
+      "fat_g": 20.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "strawberry",
+    "per_100g": {
+      "calories_kcal": 32.0,
+      "protein_g": 0.7,
+      "carbohydrate_g": 7.7,
+      "fat_g": 0.3,
+      "sugar_g": 4.9
+    }
+  },
+  {
+    "name": "sushi",
+    "per_100g": {
+      "calories_kcal": 260.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 25.0,
+      "fat_g": 12.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "tacos",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 9.0,
+      "carbohydrate_g": 15.0,
+      "fat_g": 11.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "takoyaki",
+    "per_100g": {
+      "calories_kcal": 170.0,
+      "protein_g": 8.0,
+      "carbohydrate_g": 20.0,
+      "fat_g": 8.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "tiramisu",
+    "per_100g": {
+      "calories_kcal": 320.0,
+      "protein_g": 6.0,
+      "carbohydrate_g": 29.0,
+      "fat_g": 20.0,
+      "sugar_g": 24.0
+    }
+  },
+  {
+    "name": "tomato",
+    "per_100g": {
+      "calories_kcal": 18.0,
+      "protein_g": 0.9,
+      "carbohydrate_g": 3.9,
+      "fat_g": 0.2,
+      "sugar_g": 2.6
+    }
+  },
+  {
+    "name": "tuna",
+    "per_100g": {
+      "calories_kcal": 200.0,
+      "protein_g": 27.0,
+      "carbohydrate_g": 0.0,
+      "fat_g": 10.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "tuna_tartare",
+    "per_100g": {
+      "calories_kcal": 160.0,
+      "protein_g": 21.0,
+      "carbohydrate_g": 2.0,
+      "fat_g": 8.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "waffles",
+    "per_100g": {
+      "calories_kcal": 350.0,
+      "protein_g": 6.0,
+      "carbohydrate_g": 50.0,
+      "fat_g": 18.0,
+      "sugar_g": 25.0
+    }
+  },
+  {
+    "name": "waraa_enb",
+    "per_100g": {
+      "calories_kcal": 120.0,
+      "protein_g": 3.0,
+      "carbohydrate_g": 16.0,
+      "fat_g": 6.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "yougurt",
+    "per_100g": {
+      "calories_kcal": 60.0,
+      "protein_g": 3.5,
+      "carbohydrate_g": 5.0,
+      "fat_g": 3.0,
+      "sugar_g": 0.0
+    }
+  },
+  {
+    "name": "zalbya",
+    "per_100g": {
+      "calories_kcal": 400.0,
+      "protein_g": 5.0,
+      "carbohydrate_g": 60.0,
+      "fat_g": 20.0,
+      "sugar_g": 36.0
+    }
+  }
+]
