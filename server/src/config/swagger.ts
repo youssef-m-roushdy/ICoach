@@ -21,10 +21,10 @@ const options = {
     servers: [
       {
         url: process.env.NODE_ENV === 'production' 
-          ? 'https://api.icoach.com' 
-          : 'http://localhost:3000',
+          ? `http://localhost:${process.env.PORT || 5000}` 
+          : `http://localhost:${process.env.PORT || 5000}`,
         description: process.env.NODE_ENV === 'production' 
-          ? 'Production server' 
+          ? 'Production server (Docker)' 
           : 'Development server'
       }
     ],

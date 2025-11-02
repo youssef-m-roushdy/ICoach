@@ -50,6 +50,9 @@ COPY --from=builder /app/config ./config
 # Copy .sequelizerc for database migrations
 COPY --from=builder /app/.sequelizerc ./
 
+# Copy food_nutrition_data.json for seeding
+COPY --from=builder /app/food_nutrition_data.json ./
+
 # Create necessary directories and set permissions
 RUN mkdir -p logs uploads && \
     chown -R nodejs:nodejs /app
@@ -58,7 +61,7 @@ RUN mkdir -p logs uploads && \
 USER nodejs
 
 # Expose port
-EXPOSE 3000
+EXPOSE 5000
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
