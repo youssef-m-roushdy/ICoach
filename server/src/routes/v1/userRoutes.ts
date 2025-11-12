@@ -20,6 +20,7 @@ import {
   validateResendVerification,
 } from '../../middleware/validation.js';
 import { asyncHandler } from '../../middleware/errorHandler.js';
+import { uploadProfilePicture, handleMulterError } from '../../middleware/upload.js';
 
 const router = Router();
 
@@ -773,6 +774,228 @@ router.post('/change-password',
   authenticate,
   validatePasswordChange,
   asyncHandler(UserController.changePassword)
+);
+
+/**
+ * @swagger
+ * /api/v1/users/profile/avatar:
+ *   post:
+ *     tags:
+ *       - User Profile
+ *     summary: Upload profile picture
+ *     description: |
+ *       Upload a new profile picture for the authenticated user. 
+ *       If a profile picture already exists, use PUT method to replace it.
+ *       The image will be automatically resized to 500x500 and optimized for web delivery.
+ *       Supported formats: JPEG, PNG, GIF, WebP.
+ *       Maximum file size: 3MB.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - avatar
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile picture image file
+ *     responses:
+ *       200:
+ *         description: Profile picture uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Profile picture uploaded successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *                     image:
+ *                       type: object
+ *                       properties:
+ *                         url:
+ *                           type: string
+ *                           description: Secure HTTPS URL of the uploaded image
+ *                           example: "https://res.cloudinary.com/demo/image/upload/v1234567890/icoach/profiles/user_1.jpg"
+ *                         publicId:
+ *                           type: string
+ *                           description: Cloudinary public ID
+ *                           example: "icoach/profiles/user_1"
+ *       400:
+ *         description: No image uploaded or invalid file type
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.post('/profile/avatar', 
+  authenticate,
+  uploadProfilePicture,
+  handleMulterError,
+  asyncHandler(UserController.uploadAvatar)
+);
+
+/**
+ * @swagger
+ * /api/v1/users/profile/avatar:
+ *   put:
+ *     tags:
+ *       - User Profile
+ *     summary: Update/Replace profile picture
+ *     description: |
+ *       Replace the existing profile picture with a new one.
+ *       The old image will be automatically deleted from Cloudinary.
+ *       If no profile picture exists, this will upload a new one.
+ *       The image will be automatically resized to 500x500 and optimized for web delivery.
+ *       Supported formats: JPEG, PNG, GIF, WebP.
+ *       Maximum file size: 3MB.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - avatar
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *                 description: New profile picture image file
+ *     responses:
+ *       200:
+ *         description: Profile picture updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Profile picture updated successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       $ref: '#/components/schemas/User'
+ *                     image:
+ *                       type: object
+ *                       properties:
+ *                         url:
+ *                           type: string
+ *                           description: Secure HTTPS URL of the new uploaded image
+ *                           example: "https://res.cloudinary.com/demo/image/upload/v1234567890/icoach/profiles/user_1.jpg"
+ *                         publicId:
+ *                           type: string
+ *                           description: Cloudinary public ID
+ *                           example: "icoach/profiles/user_1"
+ *                         oldImageDeleted:
+ *                           type: boolean
+ *                           description: Whether the old image was deleted
+ *                           example: true
+ *       400:
+ *         description: No image uploaded or invalid file type
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.put('/profile/avatar', 
+  authenticate,
+  uploadProfilePicture,
+  handleMulterError,
+  asyncHandler(UserController.updateAvatar)
+);
+
+/**
+ * @swagger
+ * /api/v1/users/profile/avatar:
+ *   delete:
+ *     tags:
+ *       - User Profile
+ *     summary: Delete profile picture
+ *     description: Remove the current user's profile picture from both Cloudinary and the database
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Profile picture deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         user:
+ *                           $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.delete('/profile/avatar', 
+  authenticate,
+  asyncHandler(UserController.deleteAvatar)
 );
 
 // Admin routes

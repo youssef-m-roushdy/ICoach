@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/userService.js';
+import { ImageService } from '../services/imageService.js';
 import { AppError } from '../utils/errors.js';
 
 export class UserController {
@@ -355,6 +356,145 @@ export class UserController {
       res.status(200).json({
         success: true,
         message: 'User deleted successfully',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Upload user profile picture
+   */
+  static async uploadAvatar(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const user = (req as any).user;
+      const userId = user?.id;
+      
+      if (!userId) {
+        throw new AppError('User not authenticated', 401);
+      }
+
+      if (!req.file) {
+        throw new AppError('Please upload an image', 400);
+      }
+
+      // Upload to Cloudinary
+      const uploadResult = await ImageService.uploadProfilePicture(req.file.buffer, userId);
+
+      // Update user avatar URL in database
+      const updatedUser = await UserService.updateUser(userId, {
+        avatar: uploadResult.secureUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Profile picture uploaded successfully',
+        data: {
+          user: updatedUser,
+          image: {
+            url: uploadResult.secureUrl,
+            publicId: uploadResult.publicId,
+          },
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Update/Replace user profile picture
+   */
+  static async updateAvatar(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const user = (req as any).user;
+      const userId = user?.id;
+      
+      if (!userId) {
+        throw new AppError('User not authenticated', 401);
+      }
+
+      if (!req.file) {
+        throw new AppError('Please upload an image', 400);
+      }
+
+      // Get current user to check for existing avatar
+      const currentUser = await UserService.getUserById(userId);
+      let oldImageDeleted = false;
+
+      // Delete old avatar from Cloudinary if exists
+      if (currentUser?.avatar) {
+        try {
+          await ImageService.deleteImageByUrl(currentUser.avatar);
+          oldImageDeleted = true;
+        } catch (error) {
+          console.warn('Failed to delete old avatar from Cloudinary:', error);
+        }
+      }
+
+      // Upload new avatar to Cloudinary
+      const uploadResult = await ImageService.uploadProfilePicture(req.file.buffer, userId);
+
+      // Update user avatar URL in database
+      const updatedUser = await UserService.updateUser(userId, {
+        avatar: uploadResult.secureUrl,
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Profile picture updated successfully',
+        data: {
+          user: updatedUser,
+          image: {
+            url: uploadResult.secureUrl,
+            publicId: uploadResult.publicId,
+            oldImageDeleted,
+          },
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Delete user profile picture
+   */
+  static async deleteAvatar(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const authUser = (req as any).user;
+      const userId = authUser?.id;
+      
+      if (!userId) {
+        throw new AppError('User not authenticated', 401);
+      }
+
+      const user = await UserService.getUserById(userId);
+      
+      if (!user) {
+        throw new AppError('User not found', 404);
+      }
+
+      // Delete from Cloudinary if exists
+      if (user.avatar) {
+        try {
+          await ImageService.deleteImageByUrl(user.avatar);
+        } catch (error) {
+          console.warn('Failed to delete image from Cloudinary:', error);
+        }
+      }
+
+      // Remove avatar URL from database
+      const updatedUser = await UserService.updateUser(userId, {
+        avatar: '',
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Profile picture deleted successfully',
+        data: {
+          user: updatedUser,
+        },
       });
     } catch (error) {
       next(error);

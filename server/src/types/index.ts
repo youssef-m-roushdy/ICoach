@@ -1,10 +1,11 @@
 export interface User {
-  id: string;
+  id: string | number;
   email: string;
   firstName: string;
   lastName: string;
   role: 'user' | 'admin' | 'coach';
   isEmailVerified: boolean;
+  avatar?: string;
   createdAt: Date;
   updatedAt: Date;
 }

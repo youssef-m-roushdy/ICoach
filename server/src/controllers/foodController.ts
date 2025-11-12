@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Food } from '../models/sql/index.js';
+import { ImageService } from '../services/imageService.js';
 import { AppError } from '../utils/errors.js';
 import { Op } from 'sequelize';
 
@@ -96,16 +97,29 @@ export class FoodController {
   }
 
   /**
-   * Create new food (authenticated users only)
+   * Create new food with optional image (Admin only)
    */
   static async createFood(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, calories, protein, carbohydrate, fat, sugar, pic } = req.body;
+      const { name, calories, protein, carbohydrate, fat, sugar } = req.body;
 
       // Check if food with same name already exists
       const existingFood = await Food.findOne({ where: { name: name.toLowerCase().trim() } });
       if (existingFood) {
         throw new AppError('Food with this name already exists', 409);
+      }
+
+      let imageUrl = null;
+
+      // Upload image to Cloudinary if provided
+      if (req.file) {
+        try {
+          const uploadResult = await ImageService.uploadFoodImage(req.file.buffer, name.toLowerCase().trim());
+          imageUrl = uploadResult.secureUrl;
+        } catch (error) {
+          console.error('Image upload failed:', error);
+          // Continue creating food even if image upload fails
+        }
       }
 
       const food = await Food.create({
@@ -115,7 +129,7 @@ export class FoodController {
         carbohydrate,
         fat,
         sugar: sugar || 0,
-        pic: pic || null,
+        pic: imageUrl,
       });
 
       res.status(201).json({
@@ -129,7 +143,7 @@ export class FoodController {
   }
 
   /**
-   * Update food by ID (authenticated users only)
+   * Update food by ID with optional image (Admin only)
    */
   static async updateFood(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -145,13 +159,39 @@ export class FoodController {
         throw new AppError('Food not found', 404);
       }
 
-      const { name, calories, protein, carbohydrate, fat, sugar, pic } = req.body;
+      const { name, calories, protein, carbohydrate, fat, sugar } = req.body;
 
       // If name is being changed, check if new name is already taken
       if (name && name.toLowerCase().trim() !== food.name) {
         const existingFood = await Food.findOne({ where: { name: name.toLowerCase().trim() } });
         if (existingFood) {
           throw new AppError('Food with this name already exists', 409);
+        }
+      }
+
+      let imageUrl = food.pic; // Keep existing image by default
+
+      // Handle image upload if new image is provided
+      if (req.file) {
+        // Delete old image from Cloudinary if exists
+        if (food.pic) {
+          try {
+            await ImageService.deleteImageByUrl(food.pic);
+          } catch (error) {
+            console.warn('Failed to delete old image from Cloudinary:', error);
+          }
+        }
+
+        // Upload new image
+        try {
+          const uploadResult = await ImageService.uploadFoodImage(
+            req.file.buffer, 
+            parseInt(id)
+          );
+          imageUrl = uploadResult.secureUrl;
+        } catch (error) {
+          console.error('Image upload failed:', error);
+          throw new AppError('Failed to upload image', 500);
         }
       }
 
@@ -163,7 +203,7 @@ export class FoodController {
         carbohydrate: carbohydrate !== undefined ? carbohydrate : food.carbohydrate,
         fat: fat !== undefined ? fat : food.fat,
         sugar: sugar !== undefined ? sugar : food.sugar,
-        pic: pic !== undefined ? pic : food.pic,
+        pic: imageUrl,
       });
 
       res.status(200).json({
@@ -177,7 +217,7 @@ export class FoodController {
   }
 
   /**
-   * Delete food by ID (authenticated users only)
+   * Delete food by ID with automatic image cleanup (Admin only)
    */
   static async deleteFood(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -191,6 +231,16 @@ export class FoodController {
 
       if (!food) {
         throw new AppError('Food not found', 404);
+      }
+
+      // Delete image from Cloudinary if exists
+      if (food.pic) {
+        try {
+          await ImageService.deleteImageByUrl(food.pic);
+        } catch (error) {
+          console.warn('Failed to delete image from Cloudinary:', error);
+          // Continue with deletion even if image deletion fails
+        }
       }
 
       await food.destroy();

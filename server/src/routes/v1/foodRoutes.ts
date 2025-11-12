@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { FoodController } from '../../controllers/foodController.js';
 import { authenticate, authorize } from '../../middleware/auth.js';
 import { asyncHandler } from '../../middleware/errorHandler.js';
+import { uploadFoodImage, handleMulterError } from '../../middleware/upload.js';
 
 const router = Router();
 
@@ -286,16 +287,18 @@ router.get('/:id', authenticate, asyncHandler(FoodController.getFoodById));
  *   post:
  *     tags:
  *       - Foods
- *     summary: Create new food (Admin only)
+ *     summary: Create new food with optional image (Admin only)
  *     description: |
- *       Create a new food item in the database.
+ *       Create a new food item in the database with optional image upload.
  *       **Admin authentication required** - Only admin users can create foods.
+ *       Image is optional and will be uploaded to Cloudinary if provided.
+ *       Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB.
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -329,10 +332,10 @@ router.get('/:id', authenticate, asyncHandler(FoodController.getFoodById));
  *                 type: number
  *                 description: Sugar per 100g in grams (optional, defaults to 0)
  *                 example: 0
- *               pic:
+ *               foodImage:
  *                 type: string
- *                 description: URL or path to food image (optional)
- *                 example: "https://example.com/images/chicken.jpg"
+ *                 format: binary
+ *                 description: Food image file (optional)
  *     responses:
  *       201:
  *         description: Food created successfully
@@ -358,7 +361,7 @@ router.get('/:id', authenticate, asyncHandler(FoodController.getFoodById));
  *       500:
  *         description: Internal server error
  */
-router.post('/', authenticate, authorize('admin'), asyncHandler(FoodController.createFood));
+router.post('/', authenticate, authorize('admin'), uploadFoodImage, handleMulterError, asyncHandler(FoodController.createFood));
 
 /**
  * @swagger
@@ -366,10 +369,12 @@ router.post('/', authenticate, authorize('admin'), asyncHandler(FoodController.c
  *   put:
  *     tags:
  *       - Foods
- *     summary: Update food by ID (Admin only)
+ *     summary: Update food with optional image replacement (Admin only)
  *     description: |
- *       Update an existing food item.
+ *       Update an existing food item with optional image upload/replacement.
  *       **Admin authentication required** - Only admin users can update foods.
+ *       If a new image is uploaded, the old image will be automatically deleted from Cloudinary.
+ *       Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -382,24 +387,38 @@ router.post('/', authenticate, authorize('admin'), asyncHandler(FoodController.c
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               name:
  *                 type: string
+ *                 description: Food name
+ *                 example: "updated_chicken_breast"
  *               calories:
  *                 type: number
+ *                 description: Calories per 100g
+ *                 example: 170
  *               protein:
  *                 type: number
+ *                 description: Protein per 100g
+ *                 example: 32
  *               carbohydrate:
  *                 type: number
+ *                 description: Carbohydrate per 100g
+ *                 example: 0
  *               fat:
  *                 type: number
+ *                 description: Fat per 100g
+ *                 example: 4.0
  *               sugar:
  *                 type: number
- *               pic:
+ *                 description: Sugar per 100g
+ *                 example: 0
+ *               foodImage:
  *                 type: string
+ *                 format: binary
+ *                 description: New food image file (optional, replaces existing image)
  *     responses:
  *       200:
  *         description: Food updated successfully
@@ -427,7 +446,7 @@ router.post('/', authenticate, authorize('admin'), asyncHandler(FoodController.c
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', authenticate, authorize('admin'), asyncHandler(FoodController.updateFood));
+router.put('/:id', authenticate, authorize('admin'), uploadFoodImage, handleMulterError, asyncHandler(FoodController.updateFood));
 
 /**
  * @swagger
@@ -435,9 +454,10 @@ router.put('/:id', authenticate, authorize('admin'), asyncHandler(FoodController
  *   delete:
  *     tags:
  *       - Foods
- *     summary: Delete food by ID (Admin only)
+ *     summary: Delete food with automatic image cleanup (Admin only)
  *     description: |
  *       Delete a food item from the database.
+ *       The food's image will be automatically deleted from Cloudinary if it exists.
  *       **Admin authentication required** - Only admin users can delete foods.
  *     security:
  *       - bearerAuth: []
