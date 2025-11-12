@@ -1,0 +1,30 @@
+{
+  "login": {
+    "title": "Anmeldung",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "button": "Einloggen",
+    "noAccount": "Noch kein Konto?",
+    "signup": "Registrieren"
+  },
+  "signup": {
+    "title": "Registrierung",
+    "name": "Name",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "button": "Konto erstellen",
+    "haveAccount": "Bereits ein Konto?",
+    "login": "Anmelden"
+  },
+  "home": {
+    "welcome": "Willkommen zu unserer App 🏠"
+  },
+  "language": {
+    "select": "Sprache auswählen",
+    "english": "Englisch",
+    "arabic": "Arabisch",
+    "german": "Deutsch",
+    "french": "Französisch"
+  }
+}
