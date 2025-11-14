@@ -192,6 +192,40 @@ export class ImageService {
   }
 
   /**
+   * Check if an image exists in Cloudinary
+   * @param publicId - The public ID of the image (e.g., 'icoach/foods/apple')
+   * @returns True if image exists, false otherwise
+   */
+  static async imageExists(publicId: string): Promise<boolean> {
+    try {
+      await cloudinary.api.resource(publicId);
+      return true;
+    } catch (error: any) {
+      if (error.http_code === 404) {
+        return false;
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Get existing image URL from Cloudinary without uploading
+   * @param publicId - The public ID (e.g., 'icoach/foods/apple')
+   * @returns Cloudinary URL if exists, null otherwise
+   */
+  static async getExistingImageUrl(publicId: string): Promise<string | null> {
+    try {
+      const result = await cloudinary.api.resource(publicId);
+      return result.secure_url;
+    } catch (error: any) {
+      if (error.http_code === 404) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  /**
    * Delete an image from Cloudinary
    * @param publicId - The public ID of the image to delete
    * @returns Deletion result

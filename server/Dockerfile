@@ -53,6 +53,9 @@ COPY --from=builder /app/.sequelizerc ./
 # Copy food_nutrition_data.json for seeding
 COPY --from=builder /app/food_nutrition_data.json ./
 
+# Copy food_images directory for seeding (IMPORTANT for Cloudinary upload)
+COPY --from=builder /app/food_images ./food_images
+
 # Create necessary directories and set permissions
 RUN mkdir -p logs uploads && \
     chown -R nodejs:nodejs /app
