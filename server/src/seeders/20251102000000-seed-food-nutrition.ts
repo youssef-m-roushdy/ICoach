@@ -4,6 +4,7 @@ import { QueryInterface, DataTypes, QueryTypes } from 'sequelize';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import { ImageService } from '../services/imageService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,44 +14,85 @@ export async function up (queryInterface: QueryInterface, Sequelize: typeof Data
   try {
     // Read the food nutrition data JSON file (in server directory)
     const jsonFilePath = path.join(__dirname, '../../food_nutrition_data.json');
-    const foodData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));      // Check if foods table already has data
-      const existingFoods = await queryInterface.sequelize.query(
-        'SELECT COUNT(*) as count FROM foods',
-        {
-          type: QueryTypes.SELECT
-        }
-      );
+    const foodData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
 
-      const count = (existingFoods[0] as any).count;
-      
-      if (count > 0) {
-        console.log(`ℹ️  Foods table already has ${count} records, skipping seeding.`);
-        return;
+    // Check if foods table already has data
+    const existingFoods = await queryInterface.sequelize.query(
+      'SELECT COUNT(*) as count FROM foods',
+      {
+        type: QueryTypes.SELECT
+      }
+    );
+
+    const count = (existingFoods[0] as any).count;
+    
+    if (count > 0) {
+      console.log(`ℹ️  Foods table already has ${count} records, skipping seeding.`);
+      console.log(`💡 To re-seed with images, first run: npm run db:seed:undo`);
+      return;
+    }
+
+    console.log(`🚀 Starting to seed ${foodData.length} food items with images...`);
+    console.log(`📤 This may take a few minutes as images are uploaded to Cloudinary...\n`);
+
+    // Transform the JSON data and upload images to Cloudinary
+    const foodRecords = [];
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let i = 0; i < foodData.length; i++) {
+      const food = foodData[i];
+      let imageUrl = null;
+
+      try {
+        // Upload image to Cloudinary if it exists
+        if (food.pic) {
+          const imagePath = path.join(__dirname, '../../', food.pic);
+          
+          if (fs.existsSync(imagePath)) {
+            const uploadResult = await ImageService.uploadFoodImageFromPath(
+              imagePath,
+              food.name
+            );
+            
+            imageUrl = uploadResult.secureUrl;
+            successCount++;
+            console.log(`✅ [${i + 1}/${foodData.length}] Uploaded: ${food.name}`);
+          } else {
+            console.log(`⚠️  [${i + 1}/${foodData.length}] Image not found: ${food.pic}`);
+          }
+        }
+      } catch (uploadError) {
+        errorCount++;
+        console.error(`❌ [${i + 1}/${foodData.length}] Failed to upload ${food.name}:`, uploadError);
       }
 
-      // Transform the JSON data to match the foods table schema
-      const foodRecords = foodData.map((food: any) => ({
+      // Add food record with or without image
+      foodRecords.push({
         name: food.name,
         calories: food.per_100g.calories_kcal,
         protein: food.per_100g.protein_g,
         carbohydrate: food.per_100g.carbohydrate_g,
         fat: food.per_100g.fat_g,
         sugar: food.per_100g.sugar_g || 0.0,
-        pic: null, // Can be updated later with actual image URLs
+        pic: imageUrl,
         createdAt: new Date(),
         updatedAt: new Date()
-      }));
-
-      // Insert all food records
-      await queryInterface.bulkInsert('foods', foodRecords, {});
-
-      console.log(`✅ Successfully seeded ${foodRecords.length} food items!`);
-      console.log(`📊 Foods table now contains nutrition data for ${foodRecords.length} items.`);
-    } catch (error) {
-      console.error('❌ Error seeding food nutrition data:', error);
-      throw error;
+      });
     }
+
+    // Insert all food records
+    await queryInterface.bulkInsert('foods', foodRecords, {});
+
+    console.log(`\n✅ Successfully seeded ${foodRecords.length} food items!`);
+    console.log(`📸 Images uploaded: ${successCount}`);
+    console.log(`❌ Upload errors: ${errorCount}`);
+    console.log(`📊 Foods table now contains nutrition data for ${foodRecords.length} items.`);
+  } catch (error) {
+    console.error('❌ Error seeding food nutrition data:', error);
+    throw error;
   }
+}
 
 export async function down (queryInterface: QueryInterface, Sequelize: typeof DataTypes) {
   try {

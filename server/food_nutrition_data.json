@@ -1,6 +1,7 @@
 [
   {
     "name": "adds_soup",
+    "pic": "food_images/adds_soup.jpg",
     "per_100g": {
       "calories_kcal": 70.0,
       "protein_g": 4.0,
@@ -11,6 +12,7 @@
   },
   {
     "name": "aesh_baldy",
+    "pic": "food_images/aesh_baldy.jpg",
     "per_100g": {
       "calories_kcal": 260.0,
       "protein_g": 9.0,
@@ -21,6 +23,7 @@
   },
   {
     "name": "aolaas",
+    "pic": "food_images/aolaas.jpg",
     "per_100g": {
       "calories_kcal": 95.0,
       "protein_g": 2.0,
@@ -31,6 +34,7 @@
   },
   {
     "name": "apple",
+    "pic": "food_images/apple.jpg",
     "per_100g": {
       "calories_kcal": 52.0,
       "protein_g": 0.3,
@@ -41,6 +45,7 @@
   },
   {
     "name": "apple_pie",
+    "pic": "food_images/apple_pie.jpg",
     "per_100g": {
       "calories_kcal": 237.0,
       "protein_g": 2.4,
@@ -57,7 +62,8 @@
       "carbohydrate_g": 8.0,
       "fat_g": 5.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/bamya.jpg"
   },
   {
     "name": "banana",
@@ -67,7 +73,8 @@
       "carbohydrate_g": 23.0,
       "fat_g": 0.3,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/banana.jpg"
   },
   {
     "name": "basbousa",
@@ -77,7 +84,8 @@
       "carbohydrate_g": 50.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/basbousa.jpg"
   },
   {
     "name": "bashamil",
@@ -87,7 +95,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/bashamil.jpg"
   },
   {
     "name": "breakfast_burrito",
@@ -97,7 +106,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/breakfast_burrito.jpg"
   },
   {
     "name": "caesar_salad",
@@ -107,7 +117,8 @@
       "carbohydrate_g": 7.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/caesar_salad.jpg"
   },
   {
     "name": "cannoli",
@@ -117,7 +128,8 @@
       "carbohydrate_g": 35.0,
       "fat_g": 21.0,
       "sugar_g": 20.0
-    }
+    },
+    "pic": "food_images/cannoli.jpg"
   },
   {
     "name": "carrot",
@@ -127,7 +139,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 0.2,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/carrot.jpg"
   },
   {
     "name": "cheese_plate",
@@ -137,7 +150,8 @@
       "carbohydrate_g": 3.0,
       "fat_g": 28.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/cheese_plate.jpg"
   },
   {
     "name": "cheesecake",
@@ -147,7 +161,8 @@
       "carbohydrate_g": 30.0,
       "fat_g": 25.0,
       "sugar_g": 25.0
-    }
+    },
+    "pic": "food_images/cheesecake.jpg"
   },
   {
     "name": "chicken_wings",
@@ -157,7 +172,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 22.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/chicken_wings.jpg"
   },
   {
     "name": "chocolate_cake",
@@ -167,7 +183,8 @@
       "carbohydrate_g": 55.0,
       "fat_g": 18.0,
       "sugar_g": 40.0
-    }
+    },
+    "pic": "food_images/chocolate_cake.jpg"
   },
   {
     "name": "cinabon",
@@ -177,7 +194,8 @@
       "carbohydrate_g": 60.0,
       "fat_g": 18.0,
       "sugar_g": 30.0
-    }
+    },
+    "pic": "food_images/cinabon.jpg"
   },
   {
     "name": "creme_brulee",
@@ -187,7 +205,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 20.0,
       "sugar_g": 25.0
-    }
+    },
+    "pic": "food_images/creme_brulee.jpg"
   },
   {
     "name": "cucumber",
@@ -197,7 +216,8 @@
       "carbohydrate_g": 3.6,
       "fat_g": 0.1,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/cucumber.jpg"
   },
   {
     "name": "cup_cakes",
@@ -207,7 +227,8 @@
       "carbohydrate_g": 56.0,
       "fat_g": 18.0,
       "sugar_g": 38.0
-    }
+    },
+    "pic": "food_images/cup_cakes.jpg"
   },
   {
     "name": "deviled_eggs",
@@ -217,7 +238,8 @@
       "carbohydrate_g": 2.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/deviled_eggs.jpg"
   },
   {
     "name": "donuts",
@@ -227,7 +249,8 @@
       "carbohydrate_g": 55.0,
       "fat_g": 20.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/donuts.jpg"
   },
   {
     "name": "eggs_benedict",
@@ -237,7 +260,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/eggs_benedict.jpg"
   },
   {
     "name": "falafel",
@@ -247,7 +271,8 @@
       "carbohydrate_g": 32.0,
       "fat_g": 18.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/falafel.jpg"
   },
   {
     "name": "fatta",
@@ -257,7 +282,8 @@
       "carbohydrate_g": 23.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/fatta.jpg"
   },
   {
     "name": "fig",
@@ -267,7 +293,8 @@
       "carbohydrate_g": 19.0,
       "fat_g": 0.3,
       "sugar_g": 16.0
-    }
+    },
+    "pic": "food_images/fig.jpg"
   },
   {
     "name": "fish",
@@ -277,7 +304,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 12.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/fish.jpg"
   },
   {
     "name": "fish_and_chips",
@@ -287,7 +315,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/fish_and_chips.jpg"
   },
   {
     "name": "fool",
@@ -297,7 +326,8 @@
       "carbohydrate_g": 16.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/fool.jpg"
   },
   {
     "name": "french_fries",
@@ -307,7 +337,8 @@
       "carbohydrate_g": 37.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/french_fries.jpg"
   },
   {
     "name": "french_onion_soup",
@@ -317,7 +348,8 @@
       "carbohydrate_g": 6.0,
       "fat_g": 4.0,
       "sugar_g": 3.0
-    }
+    },
+    "pic": "food_images/french_onion_soup.jpg"
   },
   {
     "name": "french_toast",
@@ -327,7 +359,8 @@
       "carbohydrate_g": 22.0,
       "fat_g": 8.0,
       "sugar_g": 4.0
-    }
+    },
+    "pic": "food_images/french_toast.jpg"
   },
   {
     "name": "fried_calamari",
@@ -337,7 +370,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/fried_calamari.jpg"
   },
   {
     "name": "frozen_yogurt",
@@ -347,7 +381,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 4.0,
       "sugar_g": 23.0
-    }
+    },
+    "pic": "food_images/frozen_yogurt.jpg"
   },
   {
     "name": "garlic_bread",
@@ -357,7 +392,8 @@
       "carbohydrate_g": 40.0,
       "fat_g": 18.0,
       "sugar_g": 3.0
-    }
+    },
+    "pic": "food_images/garlic_bread.jpg"
   },
   {
     "name": "golash",
@@ -367,7 +403,8 @@
       "carbohydrate_g": 22.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/golash.jpg"
   },
   {
     "name": "grape",
@@ -377,7 +414,8 @@
       "carbohydrate_g": 18.0,
       "fat_g": 0.2,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/grape.jpg"
   },
   {
     "name": "grilled_cheese_sandwich",
@@ -387,7 +425,8 @@
       "carbohydrate_g": 28.0,
       "fat_g": 22.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/grilled_cheese_sandwich.jpg"
   },
   {
     "name": "grilled_salmon",
@@ -397,7 +436,8 @@
       "carbohydrate_g": 0.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/grilled_salmon.jpg"
   },
   {
     "name": "hamburger",
@@ -407,7 +447,8 @@
       "carbohydrate_g": 26.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/hamburger.jpg"
   },
   {
     "name": "hawawshy",
@@ -417,7 +458,8 @@
       "carbohydrate_g": 20.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/hawawshy.jpg"
   },
   {
     "name": "hot_dog",
@@ -427,7 +469,8 @@
       "carbohydrate_g": 24.0,
       "fat_g": 19.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/hot_dog.jpg"
   },
   {
     "name": "ice_cream",
@@ -437,7 +480,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 13.0,
       "sugar_g": 23.0
-    }
+    },
+    "pic": "food_images/ice_cream.jpg"
   },
   {
     "name": "kebda",
@@ -447,7 +491,8 @@
       "carbohydrate_g": 5.0,
       "fat_g": 7.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/kebda.jpg"
   },
   {
     "name": "kofta",
@@ -457,7 +502,8 @@
       "carbohydrate_g": 4.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/kofta.jpg"
   },
   {
     "name": "konafa",
@@ -467,7 +513,8 @@
       "carbohydrate_g": 47.0,
       "fat_g": 25.0,
       "sugar_g": 27.0
-    }
+    },
+    "pic": "food_images/konafa.jpg"
   },
   {
     "name": "koshari",
@@ -477,7 +524,8 @@
       "carbohydrate_g": 30.0,
       "fat_g": 5.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/koshari.jpg"
   },
   {
     "name": "lasagna",
@@ -487,7 +535,8 @@
       "carbohydrate_g": 18.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/lasagna.jpg"
   },
   {
     "name": "macaroni_and_cheese",
@@ -497,7 +546,8 @@
       "carbohydrate_g": 22.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/macaroni_and_cheese.jpg"
   },
   {
     "name": "macarons",
@@ -507,7 +557,8 @@
       "carbohydrate_g": 65.0,
       "fat_g": 20.0,
       "sugar_g": 57.0
-    }
+    },
+    "pic": "food_images/macarons.jpg"
   },
   {
     "name": "mahshi",
@@ -517,7 +568,8 @@
       "carbohydrate_g": 16.0,
       "fat_g": 1.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/mahshi.jpg"
   },
   {
     "name": "mandi",
@@ -527,7 +579,8 @@
       "carbohydrate_g": 14.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/mandi.jpg"
   },
   {
     "name": "mango",
@@ -537,7 +590,8 @@
       "carbohydrate_g": 15.0,
       "fat_g": 0.4,
       "sugar_g": 14.0
-    }
+    },
+    "pic": "food_images/mango.jpg"
   },
   {
     "name": "mansaf",
@@ -547,7 +601,8 @@
       "carbohydrate_g": 16.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/mansaf.jpg"
   },
   {
     "name": "meat",
@@ -557,7 +612,8 @@
       "carbohydrate_g": 0.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/meat.jpg"
   },
   {
     "name": "mesaqaa",
@@ -567,7 +623,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/mesaqaa.jpg"
   },
   {
     "name": "molokhia",
@@ -577,7 +634,8 @@
       "carbohydrate_g": 5.5,
       "fat_g": 3.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/molokhia.jpg"
   },
   {
     "name": "mombar",
@@ -587,7 +645,8 @@
       "carbohydrate_g": 17.0,
       "fat_g": 17.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/mombar.jpg"
   },
   {
     "name": "muaskhan",
@@ -597,7 +656,8 @@
       "carbohydrate_g": 15.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/muaskhan.jpg"
   },
   {
     "name": "nachos",
@@ -607,7 +667,8 @@
       "carbohydrate_g": 22.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/nachos.jpg"
   },
   {
     "name": "om_ali",
@@ -617,7 +678,8 @@
       "carbohydrate_g": 30.0,
       "fat_g": 16.0,
       "sugar_g": 22.0
-    }
+    },
+    "pic": "food_images/om_ali.jpg"
   },
   {
     "name": "omelette",
@@ -627,7 +689,8 @@
       "carbohydrate_g": 1.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/omelette.jpg"
   },
   {
     "name": "onion",
@@ -637,7 +700,8 @@
       "carbohydrate_g": 9.0,
       "fat_g": 0.1,
       "sugar_g": 4.0
-    }
+    },
+    "pic": "food_images/onion.jpg"
   },
   {
     "name": "onion_rings",
@@ -647,7 +711,8 @@
       "carbohydrate_g": 35.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/onion_rings.jpg"
   },
   {
     "name": "orange",
@@ -657,7 +722,8 @@
       "carbohydrate_g": 12.0,
       "fat_g": 0.1,
       "sugar_g": 9.0
-    }
+    },
+    "pic": "food_images/orange.jpg"
   },
   {
     "name": "pancakes",
@@ -667,7 +733,8 @@
       "carbohydrate_g": 40.0,
       "fat_g": 9.0,
       "sugar_g": 18.0
-    }
+    },
+    "pic": "food_images/pancakes.jpg"
   },
   {
     "name": "pastries",
@@ -677,7 +744,8 @@
       "carbohydrate_g": 45.0,
       "fat_g": 20.0,
       "sugar_g": 25.0
-    }
+    },
+    "pic": "food_images/pastries.jpg"
   },
   {
     "name": "peach",
@@ -687,7 +755,8 @@
       "carbohydrate_g": 10.0,
       "fat_g": 0.3,
       "sugar_g": 8.0
-    }
+    },
+    "pic": "food_images/peach.jpg"
   },
   {
     "name": "pheno",
@@ -697,7 +766,8 @@
       "carbohydrate_g": 53.0,
       "fat_g": 3.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/pheno.jpg"
   },
   {
     "name": "pizza",
@@ -707,7 +777,8 @@
       "carbohydrate_g": 30.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/pizza.jpg"
   },
   {
     "name": "pomegranate",
@@ -717,7 +788,8 @@
       "carbohydrate_g": 19.0,
       "fat_g": 1.2,
       "sugar_g": 14.0
-    }
+    },
+    "pic": "food_images/pomegranate.jpg"
   },
   {
     "name": "qatayef",
@@ -727,7 +799,8 @@
       "carbohydrate_g": 45.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/qatayef.jpg"
   },
   {
     "name": "red_velvet_cake",
@@ -737,7 +810,8 @@
       "carbohydrate_g": 47.0,
       "fat_g": 20.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/red_velvet_cake.jpg"
   },
   {
     "name": "rice",
@@ -747,7 +821,8 @@
       "carbohydrate_g": 28.0,
       "fat_g": 0.3,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/rice.jpg"
   },
   {
     "name": "rice_with_milk",
@@ -757,7 +832,8 @@
       "carbohydrate_g": 23.0,
       "fat_g": 3.0,
       "sugar_g": 16.0
-    }
+    },
+    "pic": "food_images/rice_with_milk.jpg"
   },
   {
     "name": "risotto",
@@ -767,7 +843,8 @@
       "carbohydrate_g": 23.0,
       "fat_g": 5.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/risotto.jpg"
   },
   {
     "name": "sambosa",
@@ -777,7 +854,8 @@
       "carbohydrate_g": 22.0,
       "fat_g": 25.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/sambosa.jpg"
   },
   {
     "name": "scallops",
@@ -787,7 +865,8 @@
       "carbohydrate_g": 5.0,
       "fat_g": 12.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/scallops.jpg"
   },
   {
     "name": "shawrma",
@@ -797,7 +876,8 @@
       "carbohydrate_g": 20.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/shawrma.jpg"
   },
   {
     "name": "shrimp",
@@ -807,7 +887,8 @@
       "carbohydrate_g": 5.0,
       "fat_g": 6.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/shrimp.jpg"
   },
   {
     "name": "shrimp_and_grits",
@@ -817,7 +898,8 @@
       "carbohydrate_g": 14.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/shrimp_and_grits.jpg"
   },
   {
     "name": "sojoq",
@@ -827,7 +909,8 @@
       "carbohydrate_g": 5.0,
       "fat_g": 22.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/sojoq.jpg"
   },
   {
     "name": "spaghetti_bolognese",
@@ -837,7 +920,8 @@
       "carbohydrate_g": 20.0,
       "fat_g": 6.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/spaghetti_bolognese.jpg"
   },
   {
     "name": "spaghetti_carbonara",
@@ -847,7 +931,8 @@
       "carbohydrate_g": 20.0,
       "fat_g": 11.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/spaghetti_carbonara.jpg"
   },
   {
     "name": "spring_rolls",
@@ -857,7 +942,8 @@
       "carbohydrate_g": 20.0,
       "fat_g": 8.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/spring_rolls.jpg"
   },
   {
     "name": "steak",
@@ -867,7 +953,8 @@
       "carbohydrate_g": 3.0,
       "fat_g": 20.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/steak.jpg"
   },
   {
     "name": "strawberry",
@@ -877,7 +964,8 @@
       "carbohydrate_g": 7.7,
       "fat_g": 0.3,
       "sugar_g": 4.9
-    }
+    },
+    "pic": "food_images/strawberry.jpg"
   },
   {
     "name": "sushi",
@@ -887,7 +975,8 @@
       "carbohydrate_g": 25.0,
       "fat_g": 12.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/sushi.jpg"
   },
   {
     "name": "tacos",
@@ -897,7 +986,8 @@
       "carbohydrate_g": 15.0,
       "fat_g": 11.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/tacos.jpg"
   },
   {
     "name": "takoyaki",
@@ -907,7 +997,8 @@
       "carbohydrate_g": 20.0,
       "fat_g": 8.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/takoyaki.jpg"
   },
   {
     "name": "tiramisu",
@@ -917,7 +1008,8 @@
       "carbohydrate_g": 29.0,
       "fat_g": 20.0,
       "sugar_g": 24.0
-    }
+    },
+    "pic": "food_images/tiramisu.jpg"
   },
   {
     "name": "tomato",
@@ -927,7 +1019,8 @@
       "carbohydrate_g": 3.9,
       "fat_g": 0.2,
       "sugar_g": 2.6
-    }
+    },
+    "pic": "food_images/tomato.jpg"
   },
   {
     "name": "tuna",
@@ -937,7 +1030,8 @@
       "carbohydrate_g": 0.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/tuna.jpg"
   },
   {
     "name": "tuna_tartare",
@@ -947,7 +1041,8 @@
       "carbohydrate_g": 2.0,
       "fat_g": 8.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/tuna_tartare.jpg"
   },
   {
     "name": "waffles",
@@ -957,7 +1052,8 @@
       "carbohydrate_g": 50.0,
       "fat_g": 18.0,
       "sugar_g": 25.0
-    }
+    },
+    "pic": "food_images/waffles.jpg"
   },
   {
     "name": "waraa_enb",
@@ -967,7 +1063,8 @@
       "carbohydrate_g": 16.0,
       "fat_g": 6.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/waraa_enb.jpg"
   },
   {
     "name": "yougurt",
@@ -977,7 +1074,8 @@
       "carbohydrate_g": 5.0,
       "fat_g": 3.0,
       "sugar_g": 0.0
-    }
+    },
+    "pic": "food_images/yougurt.jpg"
   },
   {
     "name": "zalbya",
@@ -987,6 +1085,7 @@
       "carbohydrate_g": 60.0,
       "fat_g": 20.0,
       "sugar_g": 36.0
-    }
+    },
+    "pic": "food_images/zalbya.jpg"
   }
 ]

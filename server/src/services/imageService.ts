@@ -155,6 +155,43 @@ export class ImageService {
   }
 
   /**
+   * Upload food image from file path (for seeders)
+   * @param filePath - Absolute path to the image file
+   * @param foodName - Food name for public ID
+   * @returns Upload result
+   */
+  static async uploadFoodImageFromPath(
+    filePath: string,
+    foodName: string
+  ): Promise<CloudinaryUploadResult> {
+    try {
+      const result = await cloudinary.uploader.upload(filePath, {
+        folder: 'icoach/foods',
+        public_id: foodName,
+        overwrite: true,
+        resource_type: 'image',
+        transformation: [
+          { width: 800, height: 800, crop: 'limit' },
+          { quality: 'auto' },
+          { fetch_format: 'auto' },
+        ],
+      });
+
+      return {
+        publicId: result.public_id,
+        url: result.url,
+        secureUrl: result.secure_url,
+        width: result.width,
+        height: result.height,
+        format: result.format,
+        resourceType: result.resource_type,
+      };
+    } catch (error) {
+      throw new Error(`Failed to upload food image: ${error}`);
+    }
+  }
+
+  /**
    * Delete an image from Cloudinary
    * @param publicId - The public ID of the image to delete
    * @returns Deletion result
