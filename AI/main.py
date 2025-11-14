@@ -69,6 +69,15 @@ async def global_exception_handler(request: Request, exc: Exception):
 @app.on_event("startup")
 async def startup_event():
     """Initialize services on startup"""
+    # Print banner with documentation links
+    print("\n" + "="*60)
+    print("🍔 Food Recognition API")
+    print("="*60)
+    print(f"📍 Server: http://{settings.HOST}:{settings.PORT}")
+    print(f"📚 API Docs: http://localhost:{settings.PORT}/docs")
+    print(f"📖 ReDoc: http://localhost:{settings.PORT}/redoc")
+    print("="*60 + "\n")
+    
     logger.info("Starting Food Recognition API...")
     logger.info(f"API Version: {settings.API_VERSION}")
     logger.info(f"Debug Mode: {settings.DEBUG}")
