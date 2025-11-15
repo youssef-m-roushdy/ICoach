@@ -1,21 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types';
-import { CustomInput, CustomButton } from '../components/common';
+import { CustomInput, CustomButton, GoogleButton } from '../components/common';
 import { AuthHeader } from '../components/auth';
 import { COLORS, SIZES } from '../constants';
+import { authService } from '../services';
+import { useAuth } from '../context';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
 
 export default function SignInScreen() {
   const navigation = useNavigation<SignInScreenNavigationProp>();
+  const { login } = useAuth();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSignUp = async () => {
+    if (!username || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await authService.register({
+        username,
+        email,
+        password,
+      });
+
+      if (response.success && response.data) {
+        await login(
+          response.data.user,
+          response.data.token,
+          response.data.refreshToken
+        );
+        Alert.alert('Success', 'Account created successfully!');
+      }
+    } catch (error: any) {
+      Alert.alert('Registration Failed', error.message || 'Please try again');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <ImageBackground
@@ -31,17 +80,41 @@ export default function SignInScreen() {
       <View style={styles.formContainer}>
         <Text style={styles.title}>Sign up</Text>
 
-        <CustomInput placeholder="Enter your username" />
+        <CustomInput 
+          placeholder="Enter your username" 
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+        <CustomInput 
+          placeholder="Enter your email" 
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
         <CustomInput 
           placeholder="Create your password" 
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry 
         />
         <CustomInput 
-          placeholder="Rewrite your password" 
+          placeholder="Confirm your password" 
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
           secureTextEntry 
         />
 
-        <CustomButton title="Sign up" variant="secondary" />
+        {isLoading ? (
+          <ActivityIndicator size="large" color={COLORS.primary} style={styles.loader} />
+        ) : (
+          <>
+            <CustomButton title="Sign up" variant="secondary" onPress={handleSignUp} />
+            <Text style={styles.orText}>OR</Text>
+            <GoogleButton />
+          </>
+        )}
       </View>
     </ImageBackground>
   );
@@ -66,5 +139,14 @@ const styles = StyleSheet.create({
     fontSize: SIZES.h3,
     fontWeight: 'bold',
     marginBottom: 25,
+  },
+  orText: {
+    color: COLORS.gray,
+    fontSize: SIZES.small,
+    marginTop: SIZES.md,
+    marginBottom: SIZES.sm,
+  },
+  loader: {
+    marginTop: SIZES.md,
   },
 });
