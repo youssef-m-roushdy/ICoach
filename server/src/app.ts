@@ -31,7 +31,15 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:5173'],
+  origin: process.env.CORS_ORIGIN?.split(',') || [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://localhost:8081',
+    'http://localhost:19000',
+    'http://localhost:19001',
+    'exp://localhost:8081',
+    'exp://192.168.1.6:8081'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
