@@ -6,6 +6,7 @@ export const COLORS = {
   gray: '#ccc',
   lightGray: '#D9D9D9',
   darkGray: '#444',
+  textSecondary: '#999',
   overlay: 'rgba(255, 255, 255, 0.15)',
   inputBackground: 'rgba(255, 234, 234, 0.1)',
   modalOverlay: 'rgba(0,0,0,0.7)',

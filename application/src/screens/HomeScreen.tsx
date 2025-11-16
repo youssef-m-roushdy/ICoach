@@ -1,34 +1,91 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context';
 import { COLORS, SIZES } from '../constants';
 
+interface GoogleUser {
+  email: string;
+  firstName: string;
+  lastName: string;
+  photo?: string;
+  googleId: string;
+}
+
 export default function HomeScreen() {
   const { user, logout } = useAuth();
+  const route = useRoute();
+  const [googleUser, setGoogleUser] = useState<GoogleUser | null>(null);
+
+  useEffect(() => {
+    // Check if we have Google user data from navigation params
+    const params = route.params as any;
+    if (params?.userData) {
+      setGoogleUser(params.userData);
+    } else {
+      // Try to load from AsyncStorage
+      loadGoogleUser();
+    }
+  }, [route.params]);
+
+  const loadGoogleUser = async () => {
+    try {
+      const userData = await AsyncStorage.getItem('googleUser');
+      if (userData) {
+        setGoogleUser(JSON.parse(userData));
+      }
+    } catch (error) {
+      console.error('Failed to load Google user:', error);
+    }
+  };
 
   const handleLogout = async () => {
     try {
       await logout();
+      await AsyncStorage.removeItem('googleUser');
+      await AsyncStorage.removeItem('idToken');
     } catch (error) {
       console.error('Logout error:', error);
     }
   };
 
+  const displayName = googleUser?.firstName || user?.username || 'User';
+  const displayEmail = googleUser?.email || user?.email || '';
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
+        {googleUser?.photo && (
+          <Image 
+            source={{ uri: googleUser.photo }} 
+            style={styles.profileImage}
+          />
+        )}
         <Text style={styles.title}>Welcome to ICoach! 🎉</Text>
         <Text style={styles.subtitle}>
-          Hello, {user?.username || 'User'}!
+          Hello, {displayName}!
         </Text>
+        {displayEmail && (
+          <Text style={styles.email}>{displayEmail}</Text>
+        )}
       </View>
+
+      {googleUser && (
+        <View style={styles.userInfoCard}>
+          <Text style={styles.infoTitle}>Google Account Info</Text>
+          <Text style={styles.infoText}>📧 Email: {googleUser.email}</Text>
+          <Text style={styles.infoText}>👤 Name: {googleUser.firstName} {googleUser.lastName}</Text>
+          <Text style={styles.infoText}>🆔 Google ID: {googleUser.googleId}</Text>
+        </View>
+      )}
 
       <View style={styles.content}>
         <View style={styles.card}>
@@ -77,6 +134,14 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     alignItems: 'center',
   },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: SIZES.md,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+  },
   title: {
     fontSize: SIZES.h2,
     fontWeight: 'bold',
@@ -86,6 +151,31 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: SIZES.body,
     color: COLORS.gray,
+  },
+  email: {
+    fontSize: SIZES.small,
+    color: COLORS.darkGray,
+    marginTop: SIZES.xs,
+  },
+  userInfoCard: {
+    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+    padding: SIZES.lg,
+    margin: SIZES.lg,
+    borderRadius: SIZES.radiusMedium,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+  },
+  infoTitle: {
+    fontSize: SIZES.h4,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    marginBottom: SIZES.sm,
+  },
+  infoText: {
+    fontSize: SIZES.small,
+    color: COLORS.text,
+    marginBottom: SIZES.xs,
+    lineHeight: 20,
   },
   content: {
     padding: SIZES.lg,

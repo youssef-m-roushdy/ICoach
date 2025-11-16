@@ -109,4 +109,78 @@ router.get(
  */
 router.get('/google/failure', AuthController.googleFailure);
 
+/**
+ * @swagger
+ * /api/v1/auth/google/mobile:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     summary: Google Sign-In for Mobile (React Native)
+ *     description: |
+ *       **For Mobile Apps - No redirect needed!**
+ *       
+ *       This endpoint receives the idToken from Google Sign-In in React Native,
+ *       verifies it with Google, and returns JWT + user data directly.
+ *       
+ *       **Flow:**
+ *       1. User taps "Sign in with Google" in mobile app
+ *       2. Google Sign-In SDK handles authentication
+ *       3. App sends idToken to this endpoint
+ *       4. Server verifies token and returns JWT + user data
+ *       5. App stores JWT and navigates to Home screen
+ *       
+ *       Just like Facebook, Instagram, TikTok!
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idToken
+ *             properties:
+ *               idToken:
+ *                 type: string
+ *                 description: ID token from Google Sign-In SDK
+ *                 example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE4MmU..."
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Google authentication successful"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     jwt:
+ *                       type: string
+ *                       description: Access token (JWT)
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: number
+ *                         email:
+ *                           type: string
+ *                         username:
+ *                           type: string
+ *                         firstName:
+ *                           type: string
+ *                         lastName:
+ *                           type: string
+ *       400:
+ *         description: Missing idToken
+ *       401:
+ *         description: Invalid or expired Google token
+ */
+router.post('/google/mobile', AuthController.googleMobileAuth);
+
 export default router;

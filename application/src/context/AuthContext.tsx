@@ -9,6 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (user: User, token: string, refreshToken?: string) => Promise<void>;
   logout: () => Promise<void>;
+  setAuthState: (token: string, user: User) => Promise<void>;
   token: string | null;
 }
 
@@ -80,6 +81,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const setAuthState = async (authToken: string, userData: User) => {
+    try {
+      setUser(userData);
+      setToken(authToken);
+      
+      // Store in AsyncStorage
+      await AsyncStorage.setItem(TOKEN_KEY, authToken);
+      await AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
+    } catch (error) {
+      console.error('Error setting auth state:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -88,6 +103,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isLoading,
         login,
         logout,
+        setAuthState,
         token,
       }}
     >

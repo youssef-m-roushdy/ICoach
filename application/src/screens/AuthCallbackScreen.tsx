@@ -1,0 +1,73 @@
+import React, { useEffect } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useAuth } from '../context/AuthContext';
+import { COLORS } from '../constants';
+import type { RootStackParamList } from '../types/navigation';
+
+type AuthCallbackRouteProp = RouteProp<RootStackParamList, 'AuthCallback'>;
+
+const AuthCallbackScreen: React.FC = () => {
+  const route = useRoute<AuthCallbackRouteProp>();
+  const navigation = useNavigation();
+  const { setAuthState } = useAuth();
+
+  useEffect(() => {
+    const handleCallback = async () => {
+      try {
+        // Get token and user data from URL parameters
+        const { token, user } = route.params || {};
+
+        if (token && user) {
+          const userData = typeof user === 'string' ? JSON.parse(user) : user;
+          
+          // Update auth context with token and user data
+          await setAuthState(token, userData);
+          
+          // Navigate to home screen
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Home' as never }],
+          });
+        } else {
+          // If no token, redirect to sign in
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'SignIn' as never }],
+          });
+        }
+      } catch (error) {
+        console.error('Auth callback error:', error);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'SignIn' as never }],
+        });
+      }
+    };
+
+    handleCallback();
+  }, [route.params, navigation, setAuthState]);
+
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={COLORS.primary} />
+      <Text style={styles.text}>Completing authentication...</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.background,
+  },
+  text: {
+    marginTop: 16,
+    fontSize: 16,
+    color: COLORS.textSecondary,
+  },
+});
+
+export default AuthCallbackScreen;

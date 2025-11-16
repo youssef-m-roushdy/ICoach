@@ -1,62 +1,116 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View, Linking } from 'react-native';
-import { COLORS, SIZES } from '../../constants';
-import { authService } from '../../services';
+import React, { useState } from 'react';
+import { Alert, View, StyleSheet } from 'react-native';
+import { GoogleSignin, isSuccessResponse, isErrorWithCode, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../context';
 
 export const GoogleButton: React.FC = () => {
+  const [isInProgress, setIsInProgress] = useState(false);
+  const navigation = useNavigation();
+  const { setAuthState } = useAuth();
+
   const handleGoogleLogin = async () => {
+    if (isInProgress) return;
+    
+    setIsInProgress(true);
     try {
-      const googleUrl = authService.getGoogleOAuthUrl();
-      const canOpen = await Linking.canOpenURL(googleUrl);
+      console.log('🔵 Starting native Google Sign-In...');
       
-      if (canOpen) {
-        await Linking.openURL(googleUrl);
-      } else {
-        console.error('Cannot open Google OAuth URL');
+      // Check if device supports Google Play Services
+      await GoogleSignin.hasPlayServices();
+      
+      // Sign in and get user info
+      const response = await GoogleSignin.signIn();
+      
+      if (isSuccessResponse(response)) {
+        console.log('✅ Got user info from Google:', response.data);
+        const { idToken, user } = response.data;
+        
+        console.log('📧 Email:', user.email);
+        console.log('👤 Name:', user.name);
+        console.log('🖼️ Photo:', user.photo);
+        console.log('🆔 ID Token:', idToken);
+
+        if (!idToken) {
+          throw new Error('No ID token received from Google');
+        }
+
+        console.log('🔄 Sending idToken to server...');
+
+        // Send idToken to your server to register/login user
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+        const serverResponse = await fetch(`${apiUrl}/v1/auth/google/mobile`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ idToken }),
+        });
+
+        const data = await serverResponse.json();
+
+        if (!serverResponse.ok || !data.success) {
+          throw new Error(data.message || 'Server authentication failed');
+        }
+
+        console.log('✅ Server authentication successful');
+        console.log('📦 Full Server Response:', JSON.stringify(data, null, 2));
+        console.log('👤 User Data:', data.data.user);
+        console.log('🔑 Access Token:', data.data.accessToken);
+
+        // Store access token
+        await AsyncStorage.setItem('token', data.data.accessToken);
+        
+        // Store complete user data for UI
+        const userData = {
+          ...data.data.user,
+          photo: user.photo,
+          googleId: user.id,
+        };
+        await AsyncStorage.setItem('googleUser', JSON.stringify(userData));
+        
+        // Update auth context with server data
+        await setAuthState(data.data.accessToken, data.data.user);
+
+        Alert.alert('Success', `Welcome ${data.data.user.firstName}!\n\nEmail: ${data.data.user.email}\nRole: ${data.data.user.role}`);
       }
-    } catch (error) {
-      console.error('Google login error:', error);
+    } catch (error: any) {
+      console.error('❌ Google login error:', error);
+      
+      let errorMessage = 'Failed to sign in with Google. Please try again.';
+      
+      if (isErrorWithCode(error)) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          errorMessage = 'Sign-in was cancelled';
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+          errorMessage = 'Sign-in is already in progress';
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          errorMessage = 'Google Play Services not available';
+        }
+      }
+      
+      Alert.alert('Login Failed', error.message || errorMessage);
+    } finally {
+      setIsInProgress(false);
     }
   };
 
   return (
-    <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-      <View style={styles.iconContainer}>
-        <Text style={styles.googleIcon}>G</Text>
-      </View>
-      <Text style={styles.googleButtonText}>Continue with Google</Text>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={handleGoogleLogin}
+        disabled={isInProgress}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  googleButton: {
-    flexDirection: 'row',
+  container: {
+    marginTop: 16,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.white,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: SIZES.radiusSmall,
-    marginTop: SIZES.md,
-    borderWidth: 1,
-    borderColor: COLORS.darkGray,
-  },
-  iconContainer: {
-    width: 24,
-    height: 24,
-    marginRight: SIZES.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  googleIcon: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4285F4',
-  },
-  googleButtonText: {
-    color: COLORS.background,
-    fontSize: SIZES.body,
-    fontWeight: '600',
   },
 });

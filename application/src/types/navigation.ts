@@ -4,6 +4,10 @@ export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
   Profile: undefined;
+  AuthCallback: {
+    token: string;
+    user: string;
+  };
 };
 
 export type AuthStackParamList = {
