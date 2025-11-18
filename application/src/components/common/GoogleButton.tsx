@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { Alert, View, StyleSheet } from 'react-native';
-import { GoogleSignin, isSuccessResponse, isErrorWithCode, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+import { Alert, View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../context';
+import { COLORS, SIZES } from '../../constants';
+import { AntDesign } from '@expo/vector-icons';
 
-export const GoogleButton: React.FC = () => {
+interface GoogleButtonProps {
+  mode?: 'signin' | 'signup';
+}
+
+export const GoogleButton: React.FC<GoogleButtonProps> = ({ mode = 'signin' }) => {
   const [isInProgress, setIsInProgress] = useState(false);
   const navigation = useNavigation();
   const { setAuthState } = useAuth();
+
+  const buttonText = mode === 'signup' ? 'Sign up with Google' : 'Sign in with Google';
 
   const handleGoogleLogin = async () => {
     if (isInProgress) return;
@@ -97,20 +105,51 @@ export const GoogleButton: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <GoogleSigninButton
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={handleGoogleLogin}
-        disabled={isInProgress}
-      />
-    </View>
+    <TouchableOpacity 
+      style={[styles.button, isInProgress && styles.buttonDisabled]} 
+      onPress={handleGoogleLogin}
+      disabled={isInProgress}
+      activeOpacity={0.8}
+    >
+      {isInProgress ? (
+        <ActivityIndicator color="#fff" size="small" />
+      ) : (
+        <>
+          <View style={styles.iconContainer}>
+            <AntDesign name="google" size={20} color={COLORS.primary} />
+          </View>
+          <Text style={styles.buttonText}>{buttonText}</Text>
+        </>
+      )}
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 16,
+  button: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: SIZES.radiusLarge,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    width: '100%',
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  iconContainer: {
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

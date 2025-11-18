@@ -27,25 +27,33 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 16,
-    borderRadius: SIZES.radiusXLarge,
+    borderRadius: 12,
     marginTop: 15,
     alignItems: 'center',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   primaryButton: {
     backgroundColor: COLORS.primary,
-    paddingHorizontal: 120,
-    borderRadius: SIZES.radiusLarge,
+    paddingHorizontal: 60,
+    paddingVertical: 18,
   },
   secondaryButton: {
     backgroundColor: COLORS.secondary,
     paddingHorizontal: 50,
   },
   buttonText: {
-    fontWeight: 'bold',
+    fontWeight: '700',
+    letterSpacing: 0.5,
   },
   primaryText: {
     color: COLORS.white,
-    fontSize: 28,
+    fontSize: 20,
+    textTransform: 'uppercase',
   },
   secondaryText: {
     color: COLORS.lightGray,

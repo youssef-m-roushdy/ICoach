@@ -28,7 +28,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({ activeTab, onTabPress })
               activeTab === 'Login' ? styles.activeText : styles.inactiveText
             ]}
           >
-            Log in
+            Sign In
           </Text>
         </TouchableOpacity>
       </View>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontSize: SIZES.body,
     fontWeight: 'bold',
-    textTransform: 'lowercase',
+    textTransform: 'capitalize',
   },
   inactiveText: {
     opacity: 0.6,

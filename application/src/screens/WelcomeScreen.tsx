@@ -30,23 +30,31 @@ export default function WelcomeScreen() {
       <View style={styles.overlay}>
         {/* Header */}
         <View style={styles.header}>
-          <Image source={require('../../assets/icon.png')} style={styles.logo} />
+          <View style={styles.logoContainer}>
+            <Image source={require('../../assets/icon.png')} style={styles.logo} />
+          </View>
           <LanguageSelector />
         </View>
 
         {/* Main Content */}
         <View style={styles.content}>
-          <Text style={styles.title}>{t('welcome')}</Text>
-          <Text style={styles.title}>{t('to')}</Text>
-          <Text style={styles.mainTitle}>{t('appName')}</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{t('welcome')}</Text>
+            <Text style={styles.title}>{t('to')}</Text>
+            <Text style={styles.mainTitle}>{t('appName')}</Text>
+          </View>
 
-          <Text style={styles.subtitle}>{t('subtitle')}</Text>
+          <View style={styles.subtitleContainer}>
+            <Text style={styles.subtitle}>{t('subtitle')}</Text>
+          </View>
 
-          <CustomButton
-            title={t('getStarted')}
-            variant="primary"
-            onPress={() => navigation.navigate('SignIn')}
-          />
+          <View style={styles.buttonContainer}>
+            <CustomButton
+              title={t('getStarted')}
+              variant="primary"
+              onPress={() => navigation.navigate('SignIn')}
+            />
+          </View>
         </View>
 
         <StatusBar style="light" />
@@ -59,50 +67,74 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: COLORS.background,
-    justifyContent: 'flex-end',
   },
   image: {
-    marginBottom: 100,
+    marginBottom: 120,
   },
   overlay: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: 50,
-    paddingBottom: 60,
+    paddingTop: 60,
+    paddingBottom: 80,
   },
   header: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: SIZES.lg,
+    paddingHorizontal: SIZES.xl,
+  },
+  logoContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 10,
+    borderRadius: 15,
   },
   logo: {
-    width: 80,
-    height: 60,
+    width: 70,
+    height: 50,
     resizeMode: 'contain',
   },
   content: {
     alignItems: 'center',
-    paddingHorizontal: SIZES.lg,
+    paddingHorizontal: SIZES.xl,
+    gap: 20,
+  },
+  titleContainer: {
+    alignItems: 'center',
+    marginBottom: 10,
   },
   title: {
     color: COLORS.primary,
-    fontSize: SIZES.h1,
+    fontSize: SIZES.h1 + 4,
     fontWeight: 'bold',
-    textTransform: 'lowercase',
+    textTransform: 'capitalize',
+    letterSpacing: 1,
   },
   mainTitle: {
     color: COLORS.primary,
-    fontSize: SIZES.h2,
+    fontSize: SIZES.h2 + 8,
     fontWeight: 'bold',
-    marginBottom: SIZES.lg,
+    marginTop: 8,
+    textShadowColor: 'rgba(76, 175, 80, 0.3)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
+  },
+  subtitleContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 12,
+    marginVertical: 20,
   },
   subtitle: {
-    color: COLORS.gray,
-    fontSize: SIZES.small,
+    color: COLORS.lightGray,
+    fontSize: SIZES.body,
     textAlign: 'center',
-    marginBottom: SIZES.xxl,
-    width: 300,
+    lineHeight: 22,
+    width: 280,
+  },
+  buttonContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
   },
 });

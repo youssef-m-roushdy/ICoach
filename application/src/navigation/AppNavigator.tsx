@@ -4,8 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { useAuth } from '../context';
 import WelcomeScreen from '../screens/WelcomeScreen';
-import SignInScreen from '../screens/SignInScreen';
-import LoginScreen from '../screens/LoginScreen';
+import SignupScreen from '../screens/SignupScreen';
+import SigninScreen from '../screens/SigninScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AuthCallbackScreen from '../screens/AuthCallbackScreen';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
@@ -30,8 +30,8 @@ export const AppNavigator: React.FC = () => {
         {!isAuthenticated ? (
           <>
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="SignIn" component={SignupScreen} />
+            <Stack.Screen name="Login" component={SigninScreen} />
             <Stack.Screen name="AuthCallback" component={AuthCallbackScreen} />
           </>
         ) : (
