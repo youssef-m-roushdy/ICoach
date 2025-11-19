@@ -26,7 +26,8 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 12,
     marginTop: 15,
     alignItems: 'center',
@@ -39,12 +40,9 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     backgroundColor: COLORS.primary,
-    paddingHorizontal: 60,
-    paddingVertical: 18,
   },
   secondaryButton: {
     backgroundColor: COLORS.secondary,
-    paddingHorizontal: 50,
   },
   buttonText: {
     fontWeight: '700',

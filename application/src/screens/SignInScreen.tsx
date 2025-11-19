@@ -21,30 +21,39 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 export default function SignInScreen() {
   const navigation = useNavigation<SignInScreenNavigationProp>();
   const { login } = useAuth();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!emailOrUsername || !password) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await authService.login({ email, password });
+      const response = await authService.login({ emailOrUsername, password });
+      
+      console.log('🔐 Login Response:', JSON.stringify(response, null, 2));
+      console.log('✅ Success:', response.success);
+      console.log('📦 Data:', response.data);
+      console.log('👤 User:', response.data?.user);
+      console.log('🎫 Access Token:', response.data?.accessToken);
+      console.log('🔄 Refresh Token:', response.data?.refreshToken);
 
       if (response.success && response.data) {
         await login(
           response.data.user,
-          response.data.token,
+          response.data.accessToken,
           response.data.refreshToken
         );
         Alert.alert('Success', 'Logged in successfully!');
       }
     } catch (error: any) {
+      console.error('❌ Login Error:', error);
+      console.error('❌ Error Message:', error.message);
+      console.error('❌ Error Stack:', error.stack);
       Alert.alert('Login Failed', error.message || 'Invalid credentials');
     } finally {
       setIsLoading(false);
@@ -66,10 +75,9 @@ export default function SignInScreen() {
         <Text style={styles.title}>Login</Text> 
 
         <CustomInput 
-          placeholder="Enter your email" 
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
+          placeholder="Enter your email or username" 
+          value={emailOrUsername}
+          onChangeText={setEmailOrUsername}
           autoCapitalize="none"
         />
         <CustomInput 

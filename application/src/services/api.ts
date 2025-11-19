@@ -2,7 +2,7 @@
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 interface LoginCredentials {
-  email: string;
+  emailOrUsername: string;
   password: string;
 }
 
@@ -19,7 +19,7 @@ interface AuthResponse {
   message?: string;
   data?: {
     user: any;
-    token: string;
+    accessToken: string;
     refreshToken?: string;
   };
 }

@@ -135,8 +135,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: SIZES.radiusLarge,
     marginTop: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
     width: '100%',
   },
   buttonDisabled: {

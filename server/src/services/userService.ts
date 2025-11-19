@@ -425,7 +425,7 @@ export class UserService {
   /**
    * Generate access token
    */
-  private static generateAccessToken(id: number, email: string, role: string): string {
+  static generateAccessToken(id: number, email: string, role: string): string {
     const secret = process.env.JWT_SECRET;
     if (!secret) {
       throw new Error('JWT_SECRET is not defined');
@@ -443,7 +443,7 @@ export class UserService {
   /**
    * Generate refresh token
    */
-  private static generateRefreshToken(id: number): string {
+  static generateRefreshToken(id: number): string {
     const secret = process.env.JWT_REFRESH_SECRET;
     if (!secret) {
       throw new Error('JWT_REFRESH_SECRET is not defined');

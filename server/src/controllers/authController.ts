@@ -2,6 +2,8 @@ import type { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/userService.js';
 import type { UserAttributes } from '../models/index.js';
 import { OAuth2Client } from 'google-auth-library';
+import User from '../models/sql/User.js';
+import crypto from 'crypto';
 
 export class AuthController {
   /**
@@ -100,23 +102,47 @@ export class AuthController {
         return;
       }
 
-      // Create user object from Google payload
-      const googleUser: any = {
-        email: payload.email,
-        username: payload.email.split('@')[0] || 'user',
-        firstName: payload.given_name || '',
-        lastName: payload.family_name || '',
-        role: 'user',
-        isActive: true,
-        isEmailVerified: payload.email_verified || false,
-        authProvider: 'google',
-      };
+      // Check if user already exists with this email
+      let user = await User.findByEmail(payload.email);
 
-      // Handle OAuth (create or get user, generate tokens)
-      const result = await UserService.handleGoogleOAuth(googleUser as UserAttributes);
+      if (user) {
+        // User exists - check if they signed up with Google or regular method
+        if (user.authProvider !== 'google') {
+          res.status(400).json({
+            success: false,
+            message: `This email is already registered with ${user.authProvider} authentication. Please use ${user.authProvider} to login.`
+          });
+          return;
+        }
+        
+        // Update last login
+        user.lastLogin = new Date();
+        await user.save();
+      } else {
+        // Create new user from Google profile
+        const username = payload.email.split('@')[0] + '_' + crypto.randomBytes(4).toString('hex');
+        
+        user = await User.create({
+          email: payload.email,
+          username: username,
+          firstName: payload.given_name || payload.name || 'User',
+          lastName: payload.family_name || '',
+          password: null, // No password for OAuth users
+          avatar: payload.picture || null,
+          isEmailVerified: payload.email_verified || true, // Google email is already verified
+          isActive: true,
+          role: 'user',
+          authProvider: 'google',
+          lastLogin: new Date(),
+        });
+      }
+
+      // Generate tokens
+      const accessToken = UserService.generateAccessToken(user.id, user.email, user.role);
+      const refreshToken = UserService.generateRefreshToken(user.id);
 
       // Set refresh token as HTTP-only cookie
-      res.cookie('refreshToken', result.refreshToken, {
+      res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
@@ -128,20 +154,8 @@ export class AuthController {
         success: true,
         message: 'Google authentication successful',
         data: {
-          accessToken: result.accessToken,
-          user: {
-            id: result.user.id,
-            email: result.user.email,
-            username: result.user.username,
-            firstName: result.user.firstName,
-            lastName: result.user.lastName,
-            role: result.user.role,
-            isActive: result.user.isActive,
-            isEmailVerified: result.user.isEmailVerified,
-            authProvider: result.user.authProvider,
-            createdAt: result.user.createdAt,
-            updatedAt: result.user.updatedAt,
-          }
+          accessToken: accessToken,
+          user: user.toJSON()
         }
       });
     } catch (error) {
