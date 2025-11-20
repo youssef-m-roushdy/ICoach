@@ -5,7 +5,7 @@ import { RootStackParamList } from '../types';
 import { useAuth } from '../context';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignupScreen from '../screens/SignupScreen';
-import SigninScreen from '../screens/SigninScreen';
+import SignInScreen from '../screens/SignInScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AuthCallbackScreen from '../screens/AuthCallbackScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
@@ -35,7 +35,7 @@ export const AppNavigator: React.FC = () => {
           <>
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="SignIn" component={SignupScreen} />
-            <Stack.Screen name="Login" component={SigninScreen} />
+            <Stack.Screen name="Login" component={SignInScreen} />
             <Stack.Screen name="AuthCallback" component={AuthCallbackScreen} />
           </>
         ) : needsOnboarding ? (
