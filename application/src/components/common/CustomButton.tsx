@@ -4,20 +4,32 @@ import { COLORS, SIZES } from '../../constants';
 
 interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'outline';
 }
 
 export const CustomButton: React.FC<CustomButtonProps> = ({ 
   title, 
   variant = 'secondary',
+  style,
   ...props 
 }) => {
   return (
     <TouchableOpacity 
-      style={[styles.button, variant === 'primary' ? styles.primaryButton : styles.secondaryButton]}
+      style={[
+        styles.button, 
+        variant === 'primary' ? styles.primaryButton : 
+        variant === 'outline' ? styles.outlineButton :
+        styles.secondaryButton,
+        style
+      ]}
       {...props}
     >
-      <Text style={[styles.buttonText, variant === 'primary' ? styles.primaryText : styles.secondaryText]}>
+      <Text style={[
+        styles.buttonText, 
+        variant === 'primary' ? styles.primaryText : 
+        variant === 'outline' ? styles.outlineText :
+        styles.secondaryText
+      ]}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -44,6 +56,13 @@ const styles = StyleSheet.create({
   secondaryButton: {
     backgroundColor: COLORS.secondary,
   },
+  outlineButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
   buttonText: {
     fontWeight: '700',
     letterSpacing: 0.5,
@@ -55,6 +74,10 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: COLORS.lightGray,
+    fontSize: SIZES.h4,
+  },
+  outlineText: {
+    color: COLORS.primary,
     fontSize: SIZES.h4,
   },
 });

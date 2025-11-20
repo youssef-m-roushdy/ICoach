@@ -1,0 +1,402 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../types';
+import { CustomInput, CustomButton } from '../components/common';
+import { COLORS, SIZES } from '../constants';
+import { userService } from '../services';
+import { useAuth } from '../context';
+
+type OnboardingNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Onboarding'>;
+
+export default function OnboardingScreen() {
+  const navigation = useNavigation<OnboardingNavigationProp>();
+  const { user, token, updateUser } = useAuth();
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Step 1: Personal Information
+  const [gender, setGender] = useState<'male' | 'female' | ''>('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+
+  // Step 2: Body Measurements
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [bodyFatPercentage, setBodyFatPercentage] = useState('');
+
+  // Step 3: Fitness Goals
+  const [fitnessGoal, setFitnessGoal] = useState<'weight_loss' | 'muscle_gain' | 'maintenance' | ''>('');
+  const [activityLevel, setActivityLevel] = useState<'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | 'extra_active' | ''>('');
+
+  const handleNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      handleSubmit();
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSkip = () => {
+    navigation.replace('Home');
+  };
+
+  const handleSubmit = async () => {
+    if (!token) {
+      Alert.alert('Error', 'Authentication token not found');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const bodyData: any = {};
+
+      // Add data from step 1
+      if (gender) bodyData.gender = gender;
+      if (dateOfBirth) bodyData.dateOfBirth = dateOfBirth;
+
+      // Add data from step 2
+      if (height) bodyData.height = parseFloat(height);
+      if (weight) bodyData.weight = parseFloat(weight);
+      if (bodyFatPercentage) bodyData.bodyFatPercentage = parseFloat(bodyFatPercentage);
+
+      // Add data from step 3
+      if (fitnessGoal) bodyData.fitnessGoal = fitnessGoal;
+      if (activityLevel) bodyData.activityLevel = activityLevel;
+
+      // Only submit if at least one field is filled
+      if (Object.keys(bodyData).length > 0) {
+        const response = await userService.updateBodyInformation(bodyData, token);
+        
+        // Update user context with the new data
+        if (response.data && user) {
+          updateUser({ ...user, ...response.data });
+        }
+        
+        Alert.alert('Success', 'Profile completed successfully!', [
+          { text: 'OK', onPress: () => navigation.replace('Home') }
+        ]);
+      } else {
+        navigation.replace('Home');
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to update profile');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderStepIndicator = () => (
+    <View style={styles.stepIndicator}>
+      {[1, 2, 3].map((step) => (
+        <View
+          key={step}
+          style={[
+            styles.stepDot,
+            currentStep === step && styles.stepDotActive,
+            currentStep > step && styles.stepDotCompleted,
+          ]}
+        />
+      ))}
+    </View>
+  );
+
+  const renderStep1 = () => (
+    <View style={styles.stepContainer}>
+      <Text style={styles.stepTitle}>Personal Information</Text>
+      <Text style={styles.stepSubtitle}>Tell us about yourself</Text>
+
+      <Text style={styles.label}>Gender</Text>
+      <View style={styles.optionsRow}>
+        <TouchableOpacity
+          style={[styles.optionButton, gender === 'male' && styles.optionButtonActive]}
+          onPress={() => setGender('male')}
+        >
+          <Text style={[styles.optionText, gender === 'male' && styles.optionTextActive]}>Male</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, gender === 'female' && styles.optionButtonActive]}
+          onPress={() => setGender('female')}
+        >
+          <Text style={[styles.optionText, gender === 'female' && styles.optionTextActive]}>Female</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
+      <CustomInput
+        placeholder="1990-01-01"
+        value={dateOfBirth}
+        onChangeText={setDateOfBirth}
+      />
+    </View>
+  );
+
+  const renderStep2 = () => (
+    <View style={styles.stepContainer}>
+      <Text style={styles.stepTitle}>Body Measurements</Text>
+      <Text style={styles.stepSubtitle}>Help us personalize your experience</Text>
+
+      <Text style={styles.label}>Height (cm)</Text>
+      <CustomInput
+        placeholder="170"
+        value={height}
+        onChangeText={setHeight}
+        keyboardType="numeric"
+      />
+
+      <Text style={styles.label}>Weight (kg)</Text>
+      <CustomInput
+        placeholder="70"
+        value={weight}
+        onChangeText={setWeight}
+        keyboardType="numeric"
+      />
+
+      <Text style={styles.label}>Body Fat Percentage (optional)</Text>
+      <CustomInput
+        placeholder="15"
+        value={bodyFatPercentage}
+        onChangeText={setBodyFatPercentage}
+        keyboardType="numeric"
+      />
+    </View>
+  );
+
+  const renderStep3 = () => (
+    <View style={styles.stepContainer}>
+      <Text style={styles.stepTitle}>Fitness Goals</Text>
+      <Text style={styles.stepSubtitle}>What are you aiming for?</Text>
+
+      <Text style={styles.label}>Fitness Goal</Text>
+      <View style={styles.optionsColumn}>
+        <TouchableOpacity
+          style={[styles.optionButton, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
+          onPress={() => setFitnessGoal('weight_loss')}
+        >
+          <Text style={[styles.optionText, fitnessGoal === 'weight_loss' && styles.optionTextActive]}>
+            Weight Loss
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
+          onPress={() => setFitnessGoal('muscle_gain')}
+        >
+          <Text style={[styles.optionText, fitnessGoal === 'muscle_gain' && styles.optionTextActive]}>
+            Muscle Gain
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, fitnessGoal === 'maintenance' && styles.optionButtonActive]}
+          onPress={() => setFitnessGoal('maintenance')}
+        >
+          <Text style={[styles.optionText, fitnessGoal === 'maintenance' && styles.optionTextActive]}>
+            Maintenance
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.label}>Activity Level</Text>
+      <View style={styles.optionsColumn}>
+        <TouchableOpacity
+          style={[styles.optionButton, activityLevel === 'sedentary' && styles.optionButtonActive]}
+          onPress={() => setActivityLevel('sedentary')}
+        >
+          <Text style={[styles.optionText, activityLevel === 'sedentary' && styles.optionTextActive]}>
+            Sedentary
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, activityLevel === 'lightly_active' && styles.optionButtonActive]}
+          onPress={() => setActivityLevel('lightly_active')}
+        >
+          <Text style={[styles.optionText, activityLevel === 'lightly_active' && styles.optionTextActive]}>
+            Lightly Active
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, activityLevel === 'moderately_active' && styles.optionButtonActive]}
+          onPress={() => setActivityLevel('moderately_active')}
+        >
+          <Text style={[styles.optionText, activityLevel === 'moderately_active' && styles.optionTextActive]}>
+            Moderately Active
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, activityLevel === 'very_active' && styles.optionButtonActive]}
+          onPress={() => setActivityLevel('very_active')}
+        >
+          <Text style={[styles.optionText, activityLevel === 'very_active' && styles.optionTextActive]}>
+            Very Active
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.optionButton, activityLevel === 'extra_active' && styles.optionButtonActive]}
+          onPress={() => setActivityLevel('extra_active')}
+        >
+          <Text style={[styles.optionText, activityLevel === 'extra_active' && styles.optionTextActive]}>
+            Extra Active
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {renderStepIndicator()}
+
+        {currentStep === 1 && renderStep1()}
+        {currentStep === 2 && renderStep2()}
+        {currentStep === 3 && renderStep3()}
+
+        <View style={styles.buttonContainer}>
+          {currentStep > 1 && (
+            <CustomButton
+              title="Back"
+              variant="outline"
+              onPress={handleBack}
+              style={styles.backButton}
+            />
+          )}
+          {isLoading ? (
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          ) : (
+            <CustomButton
+              title={currentStep === 3 ? 'Complete' : 'Next'}
+              variant="secondary"
+              onPress={handleNext}
+              style={styles.nextButton}
+            />
+          )}
+        </View>
+
+        <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
+          <Text style={styles.skipText}>Skip for now</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
+  scrollContent: {
+    padding: SIZES.xl,
+  },
+  stepIndicator: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: SIZES.xl,
+  },
+  stepDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: COLORS.gray,
+    marginHorizontal: 6,
+  },
+  stepDotActive: {
+    backgroundColor: COLORS.primary,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+  },
+  stepDotCompleted: {
+    backgroundColor: COLORS.secondary,
+  },
+  stepContainer: {
+    marginBottom: SIZES.xl,
+  },
+  stepTitle: {
+    fontSize: SIZES.h2,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    marginBottom: SIZES.sm,
+    textAlign: 'center',
+  },
+  stepSubtitle: {
+    fontSize: SIZES.body,
+    color: COLORS.gray,
+    marginBottom: SIZES.xl,
+    textAlign: 'center',
+  },
+  label: {
+    fontSize: SIZES.body,
+    color: COLORS.white,
+    marginBottom: SIZES.sm,
+    marginTop: SIZES.md,
+  },
+  optionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: SIZES.md,
+  },
+  optionsColumn: {
+    marginBottom: SIZES.md,
+  },
+  optionButton: {
+    flex: 1,
+    backgroundColor: COLORS.inputBackground,
+    padding: SIZES.md,
+    borderRadius: SIZES.radiusSmall,
+    marginHorizontal: 4,
+    marginVertical: 4,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  optionButtonActive: {
+    backgroundColor: COLORS.primary,
+    borderColor: COLORS.secondary,
+  },
+  optionText: {
+    color: COLORS.white,
+    textAlign: 'center',
+    fontSize: SIZES.body,
+  },
+  optionTextActive: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: SIZES.xl,
+  },
+  backButton: {
+    flex: 1,
+    marginRight: SIZES.sm,
+  },
+  nextButton: {
+    flex: 1,
+    marginLeft: SIZES.sm,
+  },
+  skipButton: {
+    alignSelf: 'center',
+    marginTop: SIZES.lg,
+    padding: SIZES.sm,
+  },
+  skipText: {
+    color: COLORS.gray,
+    fontSize: SIZES.body,
+    textDecorationLine: 'underline',
+  },
+});

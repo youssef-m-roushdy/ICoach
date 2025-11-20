@@ -181,3 +181,40 @@ export const authService = {
     }
   },
 };
+
+interface BodyInformationData {
+  gender?: 'male' | 'female' | 'other';
+  dateOfBirth?: string;
+  height?: number;
+  weight?: number;
+  fitnessGoal?: 'weight_loss' | 'muscle_gain' | 'maintenance';
+  activityLevel?: 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | 'extra_active';
+  bodyFatPercentage?: number;
+}
+
+export const userService = {
+  // Update body information
+  async updateBodyInformation(data: BodyInformationData, token: string): Promise<any> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/users/body-information`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to update body information');
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Update body information error:', error);
+      throw error;
+    }
+  },
+};

@@ -8,13 +8,14 @@ import SignupScreen from '../screens/SignupScreen';
 import SigninScreen from '../screens/SigninScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AuthCallbackScreen from '../screens/AuthCallbackScreen';
+import OnboardingScreen from '../screens/OnboardingScreen';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { COLORS } from '../constants';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const AppNavigator: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return (
@@ -23,6 +24,9 @@ export const AppNavigator: React.FC = () => {
       </View>
     );
   }
+
+  // Check if user needs onboarding (no body information filled)
+  const needsOnboarding = isAuthenticated && user && !hasCompletedBodyInformation(user);
 
   return (
     <NavigationContainer>
@@ -34,6 +38,11 @@ export const AppNavigator: React.FC = () => {
             <Stack.Screen name="Login" component={SigninScreen} />
             <Stack.Screen name="AuthCallback" component={AuthCallbackScreen} />
           </>
+        ) : needsOnboarding ? (
+          <>
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+          </>
         ) : (
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
@@ -41,6 +50,19 @@ export const AppNavigator: React.FC = () => {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+  );
+};
+
+// Helper function to check if user has completed body information
+const hasCompletedBodyInformation = (user: any): boolean => {
+  return !!(
+    user.gender ||
+    user.dateOfBirth ||
+    user.height ||
+    user.weight ||
+    user.fitnessGoal ||
+    user.activityLevel ||
+    user.bodyFatPercentage
   );
 };
 

@@ -10,6 +10,7 @@ interface AuthContextType {
   login: (user: User, token: string, refreshToken?: string) => Promise<void>;
   logout: () => Promise<void>;
   setAuthState: (token: string, user: User) => Promise<void>;
+  updateUser: (user: User) => void;
   token: string | null;
 }
 
@@ -95,6 +96,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const updateUser = (userData: User) => {
+    setUser(userData);
+    AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -104,6 +110,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         login,
         logout,
         setAuthState,
+        updateUser,
         token,
       }}
     >
