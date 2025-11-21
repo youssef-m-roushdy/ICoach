@@ -62,7 +62,7 @@ export default function SignInScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/home.png')}
+      source={require('../../assets/home.jpeg')}
       style={styles.background}
       resizeMode="contain"
     >
