@@ -8,9 +8,14 @@ import {
   Image,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context';
 import { COLORS, SIZES } from '../constants';
+import type { RootStackParamList } from '../types';
+
+type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 interface GoogleUser {
   email: string;
@@ -21,6 +26,7 @@ interface GoogleUser {
 }
 
 export default function HomeScreen() {
+  const navigation = useNavigation<HomeNavigationProp>();
   const { user, logout } = useAuth();
   const route = useRoute();
   const [googleUser, setGoogleUser] = useState<GoogleUser | null>(null);
@@ -63,19 +69,29 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        {googleUser?.photo && (
-          <Image 
-            source={{ uri: googleUser.photo }} 
-            style={styles.profileImage}
-          />
-        )}
-        <Text style={styles.title}>Welcome to ICoach! 🎉</Text>
-        <Text style={styles.subtitle}>
-          Hello, {displayName}!
-        </Text>
-        {displayEmail && (
-          <Text style={styles.email}>{displayEmail}</Text>
-        )}
+        <View style={styles.headerTop}>
+          <View>
+            {googleUser?.photo && (
+              <Image 
+                source={{ uri: googleUser.photo }} 
+                style={styles.profileImage}
+              />
+            )}
+            <Text style={styles.title}>Welcome to ICoach! 🎉</Text>
+            <Text style={styles.subtitle}>
+              Hello, {displayName}!
+            </Text>
+            {displayEmail && (
+              <Text style={styles.email}>{displayEmail}</Text>
+            )}
+          </View>
+          <TouchableOpacity 
+            style={styles.profileButton}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <MaterialIcons name="person" size={28} color={COLORS.primary} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {googleUser && (
@@ -132,7 +148,16 @@ const styles = StyleSheet.create({
   header: {
     padding: SIZES.xl,
     paddingTop: 60,
-    alignItems: 'center',
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  profileButton: {
+    padding: SIZES.sm,
+    backgroundColor: COLORS.inputBackground,
+    borderRadius: SIZES.radiusSmall,
   },
   profileImage: {
     width: 80,

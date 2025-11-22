@@ -192,7 +192,66 @@ interface BodyInformationData {
   bodyFatPercentage?: number;
 }
 
+interface UpdateProfileData {
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  email?: string;
+  bio?: string;
+  phone?: string;
+  avatar?: string;
+}
+
 export const userService = {
+  // Get user profile
+  async getProfile(token: string): Promise<any> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/users/profile`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get profile');
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Get profile error:', error);
+      throw error;
+    }
+  },
+
+  // Update user profile
+  async updateProfile(data: UpdateProfileData, token: string): Promise<any> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/users/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to update profile');
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
+  },
+
   // Update body information
   async updateBodyInformation(data: BodyInformationData, token: string): Promise<any> {
     try {

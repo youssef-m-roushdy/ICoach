@@ -4,6 +4,8 @@ export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
   Profile: undefined;
+  EditProfile: undefined;
+  EditBodyInfo: undefined;
   Onboarding: undefined;
   AuthCallback: {
     token: string;
@@ -20,6 +22,8 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
   Home: undefined;
   Profile: undefined;
+  EditProfile: undefined;
+  EditBodyInfo: undefined;
   Onboarding: undefined;
 };
 

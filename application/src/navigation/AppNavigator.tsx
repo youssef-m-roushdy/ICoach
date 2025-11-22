@@ -9,6 +9,9 @@ import SignInScreen from '../screens/SignInScreen';
 import HomeScreen from '../screens/HomeScreen';
 import AuthCallbackScreen from '../screens/AuthCallbackScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
+import EditBodyInfoScreen from '../screens/EditBodyInfoScreen';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { COLORS } from '../constants';
 
@@ -42,10 +45,16 @@ export const AppNavigator: React.FC = () => {
           <>
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} />
           </>
         ) : (
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} />
           </>
         )}
       </Stack.Navigator>

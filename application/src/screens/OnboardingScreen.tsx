@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types';
@@ -266,22 +267,18 @@ export default function OnboardingScreen() {
 
         <View style={styles.buttonContainer}>
           {currentStep > 1 && (
-            <CustomButton
-              title="Back"
-              variant="outline"
-              onPress={handleBack}
-              style={styles.backButton}
-            />
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+              <Text style={styles.backButtonText}>Back</Text>
+            </TouchableOpacity>
           )}
           {isLoading ? (
             <ActivityIndicator size="large" color={COLORS.primary} />
           ) : (
-            <CustomButton
-              title={currentStep === 3 ? 'Complete' : 'Next'}
-              variant="secondary"
-              onPress={handleNext}
-              style={styles.nextButton}
-            />
+            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+              <Text style={styles.nextButtonText}>{currentStep === 3 ? 'Finish' : 'Next'}</Text>
+              <MaterialIcons name="arrow-forward" size={24} color={COLORS.primary} />
+            </TouchableOpacity>
           )}
         </View>
 
@@ -379,15 +376,37 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: SIZES.xl,
   },
   backButton: {
-    flex: 1,
-    marginRight: SIZES.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    paddingVertical: SIZES.md,
+    paddingHorizontal: SIZES.lg,
+    borderRadius: SIZES.radiusSmall,
+    gap: SIZES.sm,
+  },
+  backButtonText: {
+    color: COLORS.white,
+    fontSize: SIZES.body,
+    fontWeight: '600',
   },
   nextButton: {
-    flex: 1,
-    marginLeft: SIZES.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    paddingVertical: SIZES.md,
+    paddingHorizontal: SIZES.lg,
+    borderRadius: SIZES.radiusSmall,
+    gap: SIZES.sm,
+  },
+  nextButtonText: {
+    color: COLORS.primary,
+    fontSize: SIZES.body,
+    fontWeight: 'bold',
   },
   skipButton: {
     alignSelf: 'center',
