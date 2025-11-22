@@ -22,13 +22,15 @@ type ProfileNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Prof
 export default function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigationProp>();
   const { user: authUser, token, logout } = useAuth();
-  const [userData, setUserData] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState<any>(authUser);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Always fetch fresh profile data from API
-    loadProfile();
-  }, []);
+    // Use auth user data from context
+    if (authUser) {
+      setUserData(authUser);
+    }
+  }, [authUser]);
 
   const loadProfile = async () => {
     if (!token) {
@@ -37,8 +39,6 @@ export default function ProfileScreen() {
     }
 
     console.log('🔍 ProfileScreen - Loading profile...');
-    console.log('🎫 Token:', token);
-    console.log('👤 Auth User:', authUser);
 
     setIsLoading(true);
     try {
@@ -48,20 +48,13 @@ export default function ProfileScreen() {
       // Use API response data, which has all the body info
       if (response.data) {
         setUserData(response.data);
-      } else if (authUser) {
-        // Fallback to context user if API fails
-        setUserData(authUser);
       }
     } catch (error: any) {
       console.error('❌ Profile Error:', error);
       console.error('❌ Error Message:', error.message);
       
-      // On error, try to use context user data
-      if (authUser) {
-        setUserData(authUser);
-      }
-      
-      Alert.alert('Error', error.message || 'Failed to load profile');
+      // Keep using context user data on error
+      Alert.alert('Info', 'Using cached profile data');
     } finally {
       setIsLoading(false);
     }

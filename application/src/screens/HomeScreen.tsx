@@ -63,45 +63,31 @@ export default function HomeScreen() {
     }
   };
 
-  const displayName = googleUser?.firstName || user?.username || 'User';
+  const displayName = googleUser?.firstName 
+    ? `${googleUser.firstName} ${googleUser.lastName}` 
+    : user?.firstName && user?.lastName
+    ? `${user.firstName} ${user.lastName}`
+    : user?.username || 'User';
   const displayEmail = googleUser?.email || user?.email || '';
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <View>
-            {googleUser?.photo && (
-              <Image 
-                source={{ uri: googleUser.photo }} 
-                style={styles.profileImage}
-              />
-            )}
-            <Text style={styles.title}>Welcome to ICoach! 🎉</Text>
-            <Text style={styles.subtitle}>
-              Hello, {displayName}!
-            </Text>
-            {displayEmail && (
-              <Text style={styles.email}>{displayEmail}</Text>
+        <View style={styles.profileSection}>
+          {googleUser?.photo && (
+            <Image 
+              source={{ uri: googleUser.photo }} 
+              style={styles.profileImage}
+            />
+          )}
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{displayName}</Text>
+            {user?.username && (
+              <Text style={styles.username}>@{user.username}</Text>
             )}
           </View>
-          <TouchableOpacity 
-            style={styles.profileButton}
-            onPress={() => navigation.navigate('Profile')}
-          >
-            <MaterialIcons name="person" size={28} color={COLORS.primary} />
-          </TouchableOpacity>
         </View>
       </View>
-
-      {googleUser && (
-        <View style={styles.userInfoCard}>
-          <Text style={styles.infoTitle}>Google Account Info</Text>
-          <Text style={styles.infoText}>📧 Email: {googleUser.email}</Text>
-          <Text style={styles.infoText}>👤 Name: {googleUser.firstName} {googleUser.lastName}</Text>
-          <Text style={styles.infoText}>🆔 Google ID: {googleUser.googleId}</Text>
-        </View>
-      )}
 
       <View style={styles.content}>
         <View style={styles.card}>
@@ -149,23 +135,30 @@ const styles = StyleSheet.create({
     padding: SIZES.xl,
     paddingTop: 60,
   },
-  headerTop: {
+  profileSection: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  profileButton: {
-    padding: SIZES.sm,
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: SIZES.radiusSmall,
+    alignItems: 'center',
+    gap: SIZES.md,
   },
   profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: SIZES.md,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     borderWidth: 2,
     borderColor: COLORS.primary,
+  },
+  userInfo: {
+    flex: 1,
+  },
+  userName: {
+    fontSize: SIZES.h3,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    marginBottom: SIZES.xs,
+  },
+  username: {
+    fontSize: SIZES.body,
+    color: COLORS.gray,
   },
   title: {
     fontSize: SIZES.h2,

@@ -7,3 +7,4 @@ export { default as OnboardingScreen } from './OnboardingScreen';
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as EditProfileScreen } from './EditProfileScreen';
 export { default as EditBodyInfoScreen } from './EditBodyInfoScreen';
+export { default as FoodsScreen } from './FoodsScreen';

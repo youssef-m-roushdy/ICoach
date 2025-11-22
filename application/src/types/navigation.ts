@@ -2,15 +2,25 @@ export type RootStackParamList = {
   Welcome: undefined;
   SignIn: undefined;
   Login: undefined;
+  MainDrawer: undefined;
+  Onboarding: undefined;
   Home: undefined;
   Profile: undefined;
   EditProfile: undefined;
   EditBodyInfo: undefined;
-  Onboarding: undefined;
+  Foods: undefined;
   AuthCallback: {
     token: string;
     user: string;
   };
+};
+
+export type DrawerParamList = {
+  Home: undefined;
+  Profile: undefined;
+  EditProfile: undefined;
+  EditBodyInfo: undefined;
+  Foods: undefined;
 };
 
 export type AuthStackParamList = {
@@ -24,6 +34,7 @@ export type MainStackParamList = {
   Profile: undefined;
   EditProfile: undefined;
   EditBodyInfo: undefined;
+  Foods: undefined;
   Onboarding: undefined;
 };
 
