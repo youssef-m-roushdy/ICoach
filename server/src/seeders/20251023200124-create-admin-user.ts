@@ -13,7 +13,7 @@ export async function up (queryInterface: QueryInterface, Sequelize: typeof Data
     'SELECT id FROM users WHERE email = :email OR username = :username',
     {
       replacements: { 
-        email: 'admin@icoach.com', 
+        email: 'Admin@123!', 
         username: 'admin' 
       },
       type: QueryTypes.SELECT

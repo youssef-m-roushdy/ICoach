@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     ALLOWED_EXTENSIONS: set = {".jpg", ".jpeg", ".png", ".webp"}
     
     # CORS Configuration
-    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:8081,exp://192.168.1.6:8081"
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://localhost:8081,http://localhost:19000,http://localhost:19001,exp://localhost:8081,exp://192.168.1.6:8081"
     
     @property
     def cors_origins_list(self) -> list[str]:
