@@ -20,8 +20,6 @@ python main.py
 ### Step 3: Test the API
 Open your browser and go to:
 - **API Documentation**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/health
-
 ---
 
 ## 📁 Project Structure Overview
@@ -45,18 +43,13 @@ AI/
 
 ## 🧪 Testing the API
 
-### 1. Test Health Check
-```bash
-curl http://localhost:8000/health
-```
-
-### 2. Test Food Prediction
+### 1. Test Food Prediction
 ```bash
 # Replace with your image path
 python test_api.py /path/to/food-image.jpg
 ```
 
-### 3. Using the Web UI
+### 2. Using the Web UI
 Visit http://localhost:8000/docs and:
 1. Click on `/api/food/predict`
 2. Click "Try it out"

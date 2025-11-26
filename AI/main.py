@@ -11,9 +11,9 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from food_predict_api.config import get_settings
-from food_predict_api.routers import food_router
-from food_predict_api.services import get_model
+from AI_API_Features.config import get_settings
+from AI_API_Features.routers import food_router, workout_router
+from AI_API_Features.services import get_model
 
 # Configure logging
 logging.basicConfig(
@@ -109,6 +109,7 @@ async def shutdown_event():
 
 # Include routers
 app.include_router(food_router)
+app.include_router(workout_router)
 
 
 # Run with: uvicorn main:app --reload --host 0.0.0.0 --port 8000
