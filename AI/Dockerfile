@@ -24,8 +24,8 @@ RUN pip install --upgrade pip setuptools wheel \
 COPY . /app
 
 # Environment variables for the application (can be overridden at runtime)
-ENV MODEL_PATH=/app/best_model_food100.keras
-ENV CLASS_NAMES_PATH=/app/class_names.json
+ENV MODEL_PATH=/app/food_predict_feature/best_model_food100.keras
+ENV CLASS_NAMES_PATH=/app/food_predict_feature/class_names.json
 
 EXPOSE 8000
 
