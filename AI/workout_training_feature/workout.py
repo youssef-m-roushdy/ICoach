@@ -65,7 +65,7 @@ if df is not None and not df.empty:
 
     # --- فحص الأعمدة المطلوبة ---
     # *** تم التعديل هنا: إضافة 'id' ***
-    required_cols = ['body_part', 'target_area', 'level', 'name', 'gif_link', 'id']
+    required_cols = ['body_part', 'target_area', 'level', 'name', 'local_image_path', 'id']
     missing_cols = [col for col in required_cols if col not in df.columns]
     
     if missing_cols:
@@ -123,13 +123,8 @@ if df is not None and not df.empty:
                     col1, col2 = st.columns([1, 2]) 
 
                     with col1:
-                        if pd.notna(row['gif_link']):
-                            # Check if it's a URL or local file path
-                            gif_path = str(row['gif_link'])
-                            if gif_path.startswith(('http://', 'https://')):
-                                st.image(gif_path, caption=row['name'], width='stretch')
-                            else:
-                                st.info("GIF is a local file path, not accessible")
+                        if pd.notna(row['local_image_path']):
+                            st.image(row['local_image_path'], caption=row['name'], use_container_width=True)
                         else:
                             st.write("No GIF available")
 
