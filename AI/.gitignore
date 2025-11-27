@@ -44,7 +44,6 @@ saved_model/
 checkpoints/
 
 # Dataset files (usually large)
-*.csv
 *.xlsx
 *.xls
 *.zip
