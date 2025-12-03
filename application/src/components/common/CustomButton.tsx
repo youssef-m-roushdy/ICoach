@@ -1,35 +1,61 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, TouchableOpacityProps } from 'react-native';
+import { 
+  TouchableOpacity, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacityProps, 
+  ViewStyle,  
+  TextStyle   
+} from 'react-native';
 import { COLORS, SIZES } from '../../constants';
+
 
 interface CustomButtonProps extends TouchableOpacityProps {
   title: string;
   variant?: 'primary' | 'secondary' | 'outline';
+
+  buttonStyle?: ViewStyle; 
+  textStyle?: TextStyle;
 }
 
 export const CustomButton: React.FC<CustomButtonProps> = ({ 
   title, 
   variant = 'secondary',
-  style,
+  
+  buttonStyle,
+  textStyle,
+
   ...props 
 }) => {
+  
+  
+  const baseButtonStyles = [
+    styles.button, 
+    variant === 'primary' ? styles.primaryButton : 
+    variant === 'outline' ? styles.outlineButton :
+    styles.secondaryButton,
+  ];
+
+  
+  const baseTextStyles = [
+    styles.buttonText, 
+    variant === 'primary' ? styles.primaryText : 
+    variant === 'outline' ? styles.outlineText :
+    styles.secondaryText
+  ];
+
   return (
     <TouchableOpacity 
-      style={[
-        styles.button, 
-        variant === 'primary' ? styles.primaryButton : 
-        variant === 'outline' ? styles.outlineButton :
-        styles.secondaryButton,
-        style
+     style={[
+        ...baseButtonStyles,
+        buttonStyle, 
+        props.disabled && styles.disabledButton, 
       ]}
       {...props}
     >
       <Text style={[
-        styles.buttonText, 
-        variant === 'primary' ? styles.primaryText : 
-        variant === 'outline' ? styles.outlineText :
-        styles.secondaryText
-      ]}>
+        ...baseTextStyles,
+        textStyle, ]}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -62,6 +88,9 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     shadowOpacity: 0,
     elevation: 0,
+  },
+  disabledButton: { 
+    opacity: 0.5,
   },
   buttonText: {
     fontWeight: '700',
