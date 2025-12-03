@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context';
 import { COLORS, SIZES } from '../constants';
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logoutButtonText: {
-    color: COLORS.lightGray,
+    color :"#ef4444",
     fontWeight: 'bold',
     fontSize: SIZES.h4,
   },
