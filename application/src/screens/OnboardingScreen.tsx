@@ -434,8 +434,8 @@ const styles = StyleSheet.create({
    },
   
    genderImage: {
-    width: '80%', 
-    height: '80%',
+    width: '100%', 
+    height: '100%',
   },
 
   genderLabelText: {
@@ -494,8 +494,7 @@ const styles = StyleSheet.create({
   skipButtonStyle: {
     backgroundColor: 'transparent',
     alignSelf: 'center',
-    padding: SIZES.sm,
-    borderWidth: 0, 
+    padding: SIZES.sm,  borderWidth: 0, 
   },
   skipButtonTextStyle: {
     color: COLORS.gray,
