@@ -50,11 +50,14 @@ COPY --from=builder /app/config ./config
 # Copy .sequelizerc for database migrations
 COPY --from=builder /app/.sequelizerc ./
 
-# Copy food_nutrition_data.json for seeding
-COPY --from=builder /app/food_nutrition_data.json ./
+# Copy data directory (contains food_nutrition_data.json and workouts_data.csv for seeding)
+COPY --from=builder /app/data ./data
 
 # Copy food_images directory for seeding (IMPORTANT for Cloudinary upload)
 COPY --from=builder /app/food_images ./food_images
+
+# Copy public directory (contains workout_gifs for static serving)
+COPY --from=builder /app/public ./public
 
 # Create necessary directories and set permissions
 RUN mkdir -p logs uploads && \

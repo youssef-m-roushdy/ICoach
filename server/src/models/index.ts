@@ -6,7 +6,7 @@ import * as sqlModels from './sql/index.js';
 export const SQL = sqlModels;
 
 // Export User model for convenience
-export const { User } = sqlModels;
+export const { User, Food, Workout } = sqlModels;
 
 // Export types
-export type { UserAttributes, UserCreationAttributes } from './sql/index.js';
+export type { UserAttributes, UserCreationAttributes, FoodAttributes, FoodCreationAttributes, WorkoutAttributes } from './sql/index.js';

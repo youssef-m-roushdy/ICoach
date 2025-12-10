@@ -580,7 +580,8 @@ const options = {
     : [
         './src/routes/v1/authRoutes.ts',
         './src/routes/v1/userRoutes.ts',
-        './src/routes/v1/foodRoutes.ts'
+        './src/routes/v1/foodRoutes.ts',
+        './src/routes/v1/workouts.ts'
       ],  // In development, explicitly list all route files
 };
 

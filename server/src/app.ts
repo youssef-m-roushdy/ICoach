@@ -5,11 +5,16 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { configurePassport } from './config/passport.js';
 import { initializeDatabases } from './config/database.js';
 import { setupSwagger } from './config/swagger.js';
 import apiRoutes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config();
@@ -74,6 +79,9 @@ app.use(express.urlencoded({
 
 // Cookie parser middleware
 app.use(cookieParser());
+
+// Serve static files (workout GIFs)
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 // Setup Swagger documentation
 setupSwagger(app);

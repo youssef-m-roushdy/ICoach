@@ -17,11 +17,11 @@ dist/
 README.md
 QUICKSTART.md
 API_README.md
+DOCKER_GUIDE.md
 # Exclude test and documentation files
 test_api.py
 quick_test.py
 run.txt
-# Keep the model files, class names, and CSV data
+# Keep the model files and class names
 #food_predict_feature/best_model_food100.keras
 #food_predict_feature/class_names.json
-#workout_training_feature/body_parts_final.csv

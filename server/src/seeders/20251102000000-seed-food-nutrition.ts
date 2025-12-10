@@ -12,8 +12,8 @@ const __dirname = path.dirname(__filename);
 /** @type {import('sequelize-cli').Migration} */
 export async function up (queryInterface: QueryInterface, Sequelize: typeof DataTypes) {
   try {
-    // Read the food nutrition data JSON file (in server directory)
-    const jsonFilePath = path.join(__dirname, '../../food_nutrition_data.json');
+    // Read the food nutrition data JSON file (in data directory)
+    const jsonFilePath = path.join(__dirname, '..', '..', 'data', 'food_nutrition_data.json');
     const foodData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
 
     // Check if foods table already has data

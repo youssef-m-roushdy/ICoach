@@ -6,9 +6,8 @@ This guide explains how to build and run the iCoach AI API using Docker.
 
 The Docker image includes:
 - **Food Recognition API** - AI-powered food detection with nutritional data
-- **Workout API** - Exercise recommendations with filters and pagination
 - All required dependencies (TensorFlow, FastAPI, etc.)
-- Pre-trained ML model and workout database
+- Pre-trained ML model for food recognition
 
 ## 🚀 Quick Start
 
@@ -85,15 +84,6 @@ Once running, access the API at:
 
 - `POST /api/food/predict` - Predict food from image
 - `POST /api/food/predict-top` - Get top K predictions
-
-### Workout Endpoints
-
-- `GET /api/workout/health` - Workout API health check
-- `GET /api/workout/exercises` - Get exercises with filters & pagination
-- `GET /api/workout/exercise/{id}` - Get specific exercise by ID
-- `GET /api/workout/body-parts` - List all body parts
-- `GET /api/workout/target-areas` - List target areas
-- `GET /api/workout/levels` - List difficulty levels
 
 ## 🐳 Docker Commands Cheat Sheet
 
@@ -184,7 +174,6 @@ ports:
 Ensure these files exist:
 - `food_predict_feature/best_model_food100.keras`
 - `food_predict_feature/class_names.json`
-- `workout_training_feature/body_parts_final.csv`
 
 ### Permission Issues
 
