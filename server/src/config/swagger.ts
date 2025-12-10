@@ -566,6 +566,90 @@ const options = {
               }
             }
           }
+        },
+        SavedWorkout: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'Unique identifier for the saved workout',
+              example: 1
+            },
+            userId: {
+              type: 'integer',
+              description: 'ID of the user who saved the workout',
+              example: 1
+            },
+            workoutId: {
+              type: 'integer',
+              description: 'ID of the saved workout',
+              example: 5
+            },
+            workout: {
+              type: 'object',
+              description: 'Full workout details',
+              properties: {
+                id: {
+                  type: 'integer',
+                  example: 5
+                },
+                name: {
+                  type: 'string',
+                  example: 'Push-ups'
+                },
+                body_part: {
+                  type: 'string',
+                  example: 'chest'
+                },
+                target_area: {
+                  type: 'string',
+                  example: 'upper chest'
+                },
+                level: {
+                  type: 'string',
+                  example: 'beginner'
+                },
+                equipment: {
+                  type: 'string',
+                  nullable: true,
+                  example: 'none'
+                },
+                description: {
+                  type: 'string',
+                  nullable: true,
+                  example: 'Classic push-up exercise'
+                },
+                gif_link: {
+                  type: 'string',
+                  nullable: true,
+                  example: 'https://example.com/pushup.gif'
+                }
+              }
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'When the workout was saved',
+              example: '2025-12-10T15:30:00.000Z'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Last update time',
+              example: '2025-12-10T15:30:00.000Z'
+            }
+          }
+        },
+        SaveWorkoutRequest: {
+          type: 'object',
+          required: ['workoutId'],
+          properties: {
+            workoutId: {
+              type: 'integer',
+              description: 'ID of the workout to save',
+              example: 5
+            }
+          }
         }
       }
     },
@@ -581,7 +665,8 @@ const options = {
         './src/routes/v1/authRoutes.ts',
         './src/routes/v1/userRoutes.ts',
         './src/routes/v1/foodRoutes.ts',
-        './src/routes/v1/workouts.ts'
+        './src/routes/v1/workouts.ts',
+        './src/routes/v1/savedWorkoutRoutes.ts'
       ],  // In development, explicitly list all route files
 };
 

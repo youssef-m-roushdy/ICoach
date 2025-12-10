@@ -3,6 +3,7 @@ import { UserService } from '../services/userService.js';
 import { ImageService } from '../services/imageService.js';
 import { AppError } from '../utils/errors.js';
 import { cookieConfig } from '../config/jwt.js';
+import { SavedWorkout, Workout } from '../models/sql/index.js';
 
 export class UserController {
   /**
@@ -495,6 +496,56 @@ export class UserController {
         message: 'Profile picture deleted successfully',
         data: {
           user: updatedUser,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Get user's saved workouts
+   */
+  static async getSavedWorkouts(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const user = (req as any).user;
+      if (!user) {
+        throw new AppError('Authentication required', 401);
+      }
+
+      const { page = 1, limit = 20, bodyPart, level } = req.query;
+      const offset = (Number(page) - 1) * Number(limit);
+
+      // Build where clause for workout filtering
+      const workoutWhere: any = {};
+      if (bodyPart) workoutWhere.body_part = bodyPart;
+      if (level) workoutWhere.level = level;
+
+      const { count, rows } = await SavedWorkout.findAndCountAll({
+        where: { userId: user.id },
+        include: [
+          {
+            model: Workout,
+            as: 'workout',
+            where: Object.keys(workoutWhere).length > 0 ? workoutWhere : undefined,
+          },
+        ],
+        limit: Number(limit),
+        offset: offset,
+        order: [['createdAt', 'DESC']],
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'User saved workouts retrieved successfully',
+        data: {
+          savedWorkouts: rows,
+          pagination: {
+            total: count,
+            page: Number(page),
+            limit: Number(limit),
+            totalPages: Math.ceil(count / Number(limit)),
+          },
         },
       });
     } catch (error) {

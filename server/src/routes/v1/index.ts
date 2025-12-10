@@ -3,6 +3,7 @@ import userRoutes from './userRoutes.js';
 import authRoutes from './authRoutes.js';
 import foodRoutes from './foodRoutes.js';
 import workoutRoutes from './workouts.js';
+import savedWorkoutRoutes from './savedWorkoutRoutes.js';
 
 const router = Router();
 
@@ -11,5 +12,6 @@ router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
 router.use('/foods', foodRoutes);
 router.use('/workouts', workoutRoutes);
+router.use('/saved-workouts', savedWorkoutRoutes);
 
 export default router;

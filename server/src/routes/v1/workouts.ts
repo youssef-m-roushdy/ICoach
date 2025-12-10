@@ -8,12 +8,12 @@ import {
   getWorkoutFilters,
 } from '../../controllers/workoutController.js';
 import { authenticate, authorize } from '../../middleware/auth.js';
-import { handleValidationErrors } from '../../middleware/validation.js';
 import {
   validateCreateWorkout,
   validateUpdateWorkout,
   validateWorkoutQuery,
-} from '../../types/workout.types.js';
+} from '../../middleware/validations/index.js';
+import { uploadWorkoutGif } from '../../middleware/upload.js';
 
 const router = Router();
 
@@ -156,7 +156,7 @@ const router = Router();
  *                   type: string
  *                   example: "Authentication required"
  */
-router.get('/', authenticate, validateWorkoutQuery, handleValidationErrors, getWorkouts);
+router.get('/', authenticate, validateWorkoutQuery, getWorkouts);
 
 /**
  * @swagger
@@ -313,7 +313,7 @@ router.get('/:id', authenticate, getWorkoutById);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -354,8 +354,8 @@ router.get('/:id', authenticate, getWorkoutById);
  *                 example: "https://example.com/exercise.gif"
  *               local_image_path:
  *                 type: string
- *                 description: Local server path to exercise GIF
- *                 example: "/public/workout_gifs/exercise_269.gif"
+ *                 format: binary
+ *                 description: Upload a GIF file from your device to store locally in /public/workout/
  *     responses:
  *       201:
  *         description: Workout created successfully
@@ -435,8 +435,8 @@ router.post(
   '/',
   authenticate,
   authorize('admin'),
+  uploadWorkoutGif,
   validateCreateWorkout,
-  handleValidationErrors,
   createWorkout
 );
 
@@ -464,7 +464,7 @@ router.post(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -499,8 +499,8 @@ router.post(
  *                 example: "https://example.com/exercise.gif"
  *               local_image_path:
  *                 type: string
- *                 description: Local server path to exercise GIF
- *                 example: "/public/workout_gifs/exercise_1.gif"
+ *                 format: binary
+ *                 description: Upload a GIF file from your device to store locally in /public/workout/
  *     responses:
  *       200:
  *         description: Workout updated successfully
@@ -567,8 +567,8 @@ router.put(
   '/:id',
   authenticate,
   authorize('admin'),
+  uploadWorkoutGif,
   validateUpdateWorkout,
-  handleValidationErrors,
   updateWorkout
 );
 

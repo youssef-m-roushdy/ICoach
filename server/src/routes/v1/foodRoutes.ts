@@ -3,6 +3,11 @@ import { FoodController } from '../../controllers/foodController.js';
 import { authenticate, authorize } from '../../middleware/auth.js';
 import { asyncHandler } from '../../middleware/errorHandler.js';
 import { uploadFoodImage, handleMulterError } from '../../middleware/upload.js';
+import {
+  validateCreateFood,
+  validateUpdateFood,
+  validateFoodQuery,
+} from '../../middleware/validations/index.js';
 
 const router = Router();
 
@@ -98,7 +103,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  */
-router.get('/', authenticate, asyncHandler(FoodController.getAllFoods));
+router.get('/', authenticate, validateFoodQuery, asyncHandler(FoodController.getAllFoods));
 
 /**
  * @swagger
@@ -361,7 +366,7 @@ router.get('/:id', authenticate, asyncHandler(FoodController.getFoodById));
  *       500:
  *         description: Internal server error
  */
-router.post('/', authenticate, authorize('admin'), uploadFoodImage, handleMulterError, asyncHandler(FoodController.createFood));
+router.post('/', authenticate, authorize('admin'), uploadFoodImage, handleMulterError, validateCreateFood, asyncHandler(FoodController.createFood));
 
 /**
  * @swagger
@@ -446,7 +451,7 @@ router.post('/', authenticate, authorize('admin'), uploadFoodImage, handleMulter
  *       500:
  *         description: Internal server error
  */
-router.put('/:id', authenticate, authorize('admin'), uploadFoodImage, handleMulterError, asyncHandler(FoodController.updateFood));
+router.put('/:id', authenticate, authorize('admin'), uploadFoodImage, handleMulterError, validateUpdateFood, asyncHandler(FoodController.updateFood));
 
 /**
  * @swagger

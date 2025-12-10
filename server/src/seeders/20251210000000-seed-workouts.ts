@@ -45,7 +45,13 @@ export async function up(queryInterface: QueryInterface) {
   // Bulk insert workouts
   await queryInterface.bulkInsert('workouts', workouts, {});
   
+  // Reset the sequence to the maximum ID to prevent duplicate key errors
+  await queryInterface.sequelize.query(
+    `SELECT setval('workouts_id_seq', (SELECT MAX(id) FROM workouts));`
+  );
+  
   console.log('✅ Workout exercises seeded successfully!');
+  console.log('✅ Sequence reset to max ID');
 }
 
 export async function down(queryInterface: QueryInterface) {

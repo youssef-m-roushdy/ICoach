@@ -1,6 +1,8 @@
 import multer from 'multer';
 import type { Request } from 'express';
 import { AppError } from '../utils/errors.js';
+import path from 'path';
+import fs from 'fs';
 
 // File filter to accept only images
 const imageFileFilter = (
@@ -18,6 +20,21 @@ const imageFileFilter = (
 
 // Use memory storage (we'll upload directly to Cloudinary)
 const storage = multer.memoryStorage();
+
+// Disk storage for workout GIFs (local backup)
+const workoutStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(process.cwd(), 'public', 'workout_gifs');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'workout-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
 
 // Multer configuration for single image upload
 export const uploadSingle = multer({
@@ -55,6 +72,15 @@ export const uploadFoodImage = multer({
     fileSize: 5 * 1024 * 1024, // 5MB max for food images
   },
 }).single('foodImage');
+
+// Multer configuration for workout GIFs (local backup storage)
+export const uploadWorkoutGif = multer({
+  storage: workoutStorage,
+  fileFilter: imageFileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB max for workout GIFs
+  },
+}).single('local_image_path');
 
 // Error handler for multer errors
 export const handleMulterError = (error: any, req: Request, res: any, next: any) => {

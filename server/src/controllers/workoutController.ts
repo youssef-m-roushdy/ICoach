@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Workout } from '../models/sql/index.js';
 import { Op } from 'sequelize';
+import path from 'path';
+import fs from 'fs';
 
 /**
  * Get all workouts with optional filtering and pagination
@@ -112,6 +114,11 @@ export const createWorkout = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    // Log request body to debug
+    console.log('Request body:', req.body);
+    console.log('Request file:', req.file);
+    
+    // Only extract allowed fields
     const {
       body_part,
       target_area,
@@ -120,19 +127,32 @@ export const createWorkout = async (
       level,
       description,
       gif_link,
-      local_image_path,
     } = req.body;
 
-    const workout = await Workout.create({
+    // Handle uploaded file
+    let local_image_path = null;
+    if (req.file) {
+      // Store relative path to the uploaded file
+      local_image_path = `/public/workout_gifs/${req.file.filename}`;
+    }
+
+    // Create workout with only allowed fields (no id)
+    const workoutData: any = {
       body_part,
       target_area,
       name,
       equipment,
       level,
-      description,
-      gif_link,
-      local_image_path,
-    });
+    };
+
+    // Add optional fields only if they have values
+    if (description) workoutData.description = description;
+    if (gif_link) workoutData.gif_link = gif_link;
+    if (local_image_path) workoutData.local_image_path = local_image_path;
+
+    console.log('Creating workout with data:', workoutData);
+
+    const workout = await Workout.create(workoutData);
 
     res.status(201).json({
       success: true,
@@ -162,7 +182,6 @@ export const updateWorkout = async (
       level,
       description,
       gif_link,
-      local_image_path,
     } = req.body;
 
     const workout = await Workout.findByPk(id);
@@ -173,6 +192,20 @@ export const updateWorkout = async (
         message: 'Workout not found',
       });
       return;
+    }
+
+    // Handle uploaded file
+    let local_image_path = workout.local_image_path;
+    if (req.file) {
+      // Delete old file if exists
+      if (workout.local_image_path) {
+        const oldFilePath = path.join(process.cwd(), workout.local_image_path);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
+      // Store relative path to the new uploaded file
+      local_image_path = `/public/workout_gifs/${req.file.filename}`;
     }
 
     await workout.update({

@@ -1,9 +1,15 @@
 import { body, query } from 'express-validator';
+import { handleValidationErrors } from '../validation.js';
 
 /**
- * Validation rules for creating a workout
+ * Create Workout Validation
  */
 export const validateCreateWorkout = [
+  body('id')
+    .not()
+    .exists()
+    .withMessage('ID should not be provided when creating a workout'),
+  
   body('body_part')
     .notEmpty()
     .withMessage('Body part is required')
@@ -34,17 +40,19 @@ export const validateCreateWorkout = [
     .trim(),
   
   body('gif_link')
-    .optional()
+    .optional({ checkFalsy: true })
     .isURL()
     .withMessage('GIF link must be a valid URL'),
   
   body('local_image_path')
     .optional()
     .trim(),
+  
+  handleValidationErrors,
 ];
 
 /**
- * Validation rules for updating a workout
+ * Update Workout Validation
  */
 export const validateUpdateWorkout = [
   body('body_part')
@@ -89,10 +97,12 @@ export const validateUpdateWorkout = [
   body('local_image_path')
     .optional()
     .trim(),
+  
+  handleValidationErrors,
 ];
 
 /**
- * Validation rules for workout query parameters
+ * Workout Query Validation
  */
 export const validateWorkoutQuery = [
   query('page')
@@ -124,4 +134,6 @@ export const validateWorkoutQuery = [
   query('search')
     .optional()
     .trim(),
+  
+  handleValidationErrors,
 ];
