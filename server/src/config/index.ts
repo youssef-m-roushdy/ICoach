@@ -12,8 +12,8 @@ export const config = {
     version: 'v1',
     prefix: '/api',
     rateLimit: {
-      windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 100, // requests per window
+      windowMs: process.env.RATE_LIMIT_WINDOW_MS ? parseInt(process.env.RATE_LIMIT_WINDOW_MS) : 15 * 60 * 1000, // 15 minutes
+      max: process.env.RATE_LIMIT_MAX_REQUESTS ? parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) : 100, // requests per window
     },
   },
   
@@ -22,19 +22,6 @@ export const config = {
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
     optionsSuccessStatus: 200,
-  },
-  
-  // Upload Configuration
-  upload: {
-    maxFileSize: 5 * 1024 * 1024, // 5MB
-    allowedMimeTypes: [
-      'image/jpeg',
-      'image/jpg',
-      'image/png',
-      'image/gif',
-      'application/pdf',
-    ],
-    destination: './uploads/',
   },
   
   // Email Configuration (using Nodemailer with SMTP)

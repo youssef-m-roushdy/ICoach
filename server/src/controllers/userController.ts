@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/userService.js';
 import { ImageService } from '../services/imageService.js';
 import { AppError } from '../utils/errors.js';
+import { cookieConfig } from '../config/jwt.js';
 
 export class UserController {
   /**
@@ -35,7 +36,7 @@ export class UserController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        maxAge: cookieConfig.maxAge,
       });
 
       res.status(200).json({
@@ -69,7 +70,7 @@ export class UserController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        maxAge: cookieConfig.maxAge,
       });
 
       res.status(200).json({

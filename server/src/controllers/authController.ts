@@ -4,6 +4,7 @@ import type { UserAttributes } from '../models/index.js';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/sql/User.js';
 import crypto from 'crypto';
+import { cookieConfig } from '../config/jwt.js';
 
 export class AuthController {
   /**
@@ -30,7 +31,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        maxAge: cookieConfig.maxAge,
       });
 
       // Return JSON with token for testing (you can change this to redirect later)
@@ -141,12 +142,12 @@ export class AuthController {
       const accessToken = UserService.generateAccessToken(user.id, user.email, user.role);
       const refreshToken = UserService.generateRefreshToken(user.id);
 
-      // Set refresh token as HTTP-only cookie
+      // Set refresh token as HTTP-only cookie with strict sameSite for security
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        sameSite: 'strict',
+        maxAge: cookieConfig.maxAge,
       });
 
       // Return JWT and user data directly (no redirect needed!)

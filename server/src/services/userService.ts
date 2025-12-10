@@ -5,6 +5,7 @@ import jwt, { type SignOptions } from 'jsonwebtoken';
 import crypto from 'crypto';
 import { Op } from 'sequelize';
 import { EmailService } from './emailService.js';
+import { jwtConfig } from '../config/jwt.js';
 
 export class UserService {
   /**
@@ -426,15 +427,15 @@ export class UserService {
    * Generate access token
    */
   static generateAccessToken(id: number, email: string, role: string): string {
-    const secret = process.env.JWT_SECRET;
+    const secret = jwtConfig.secret;
     if (!secret) {
       throw new Error('JWT_SECRET is not defined');
     }
     
     const options: SignOptions = {
-      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-      issuer: 'icoach-api',
-      audience: 'icoach-app',
+      expiresIn: jwtConfig.expiresIn,
+      issuer: jwtConfig.issuer,
+      audience: jwtConfig.audience,
     } as SignOptions;
     
     return jwt.sign({ id, email, role }, secret, options);
@@ -444,15 +445,15 @@ export class UserService {
    * Generate refresh token
    */
   static generateRefreshToken(id: number): string {
-    const secret = process.env.JWT_REFRESH_SECRET;
+    const secret = jwtConfig.refreshSecret;
     if (!secret) {
       throw new Error('JWT_REFRESH_SECRET is not defined');
     }
     
     const options: SignOptions = {
-      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
-      issuer: 'icoach-api',
-      audience: 'icoach-app',
+      expiresIn: jwtConfig.refreshExpiresIn,
+      issuer: jwtConfig.issuer,
+      audience: jwtConfig.audience,
     } as SignOptions;
     
     return jwt.sign({ id, type: 'refresh' }, secret, options);
@@ -466,7 +467,7 @@ export class UserService {
     refreshToken: string;
   }> {
     try {
-      const secret = process.env.JWT_REFRESH_SECRET;
+      const secret = jwtConfig.refreshSecret;
       if (!secret) {
         throw new ValidationError('JWT_REFRESH_SECRET is not defined');
       }
