@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/workout", tags=["workout"])
 
 # Load CSV data once when module is imported
-CSV_PATH = Path(__file__).parent.parent.parent / "workout_training_feature" / "body_parts_final.csv"
+CSV_PATH = Path(__file__).parent.parent.parent / "workout_training_feature" / "exercises_fixed.csv"
 
 try:
     # Load and clean the data
