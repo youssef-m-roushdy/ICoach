@@ -13,7 +13,6 @@ import {
   validateUpdateWorkout,
   validateWorkoutQuery,
 } from '../../middleware/validations/index.js';
-import { uploadWorkoutGif } from '../../middleware/upload.js';
 
 const router = Router();
 
@@ -313,7 +312,7 @@ router.get('/:id', authenticate, getWorkoutById);
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
@@ -322,6 +321,7 @@ router.get('/:id', authenticate, getWorkoutById);
  *               - name
  *               - equipment
  *               - level
+ *               - gif_link
  *             properties:
  *               body_part:
  *                 type: string
@@ -347,15 +347,11 @@ router.get('/:id', authenticate, getWorkoutById);
  *                 type: string
  *                 description: Detailed description of the exercise
  *                 example: "An upper chest exercise performed on an incline bench"
- *               gif_link:
- *                 type: string
- *                 format: uri
- *                 description: External URL to exercise demonstration GIF
- *                 example: "https://example.com/exercise.gif"
- *               local_image_path:
- *                 type: string
- *                 format: binary
- *                 description: Upload a GIF file from your device to store locally in /public/workout/
+               gif_link:
+                 type: string
+                 format: uri
+                 description: Cloud storage URL to exercise demonstration GIF (AWS S3, Cloudinary, Azure, etc.)
+                 example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
  *     responses:
  *       201:
  *         description: Workout created successfully
@@ -435,7 +431,6 @@ router.post(
   '/',
   authenticate,
   authorize('admin'),
-  uploadWorkoutGif,
   validateCreateWorkout,
   createWorkout
 );
@@ -464,7 +459,7 @@ router.post(
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
@@ -495,12 +490,8 @@ router.post(
  *               gif_link:
  *                 type: string
  *                 format: uri
- *                 description: External URL to exercise demonstration GIF
- *                 example: "https://example.com/exercise.gif"
- *               local_image_path:
- *                 type: string
- *                 format: binary
- *                 description: Upload a GIF file from your device to store locally in /public/workout/
+ *                 description: Cloud storage URL to exercise demonstration GIF (AWS S3, Cloudinary, Azure, etc.)
+ *                 example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
  *     responses:
  *       200:
  *         description: Workout updated successfully
@@ -567,7 +558,6 @@ router.put(
   '/:id',
   authenticate,
   authorize('admin'),
-  uploadWorkoutGif,
   validateUpdateWorkout,
   updateWorkout
 );

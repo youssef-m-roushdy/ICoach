@@ -17,8 +17,7 @@ export interface WorkoutAttributes {
   equipment?: string;
   level: string;
   description?: string;
-  gif_link?: string;
-  local_image_path?: string;
+  gif_link: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,8 +29,6 @@ export interface WorkoutCreationAttributes
     | 'id'
     | 'equipment'
     | 'description'
-    | 'gif_link'
-    | 'local_image_path'
     | 'createdAt'
     | 'updatedAt'
   > {}
@@ -49,8 +46,7 @@ class Workout extends Model<
   declare equipment: string | null;
   declare level: string;
   declare description: string | null;
-  declare gif_link: string | null;
-  declare local_image_path: string | null;
+  declare gif_link: string;
 
   // Timestamps
   declare readonly createdAt: CreationOptional<Date>;
@@ -90,11 +86,7 @@ Workout.init(
     },
     gif_link: {
       type: DataTypes.STRING(500),
-      allowNull: true,
-    },
-    local_image_path: {
-      type: DataTypes.STRING(500),
-      allowNull: true,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,
