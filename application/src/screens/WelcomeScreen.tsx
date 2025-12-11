@@ -14,7 +14,10 @@ import type { RootStackParamList } from '../types';
 import { CustomButton, LanguageSelector } from '../components/common';
 import { COLORS, SIZES } from '../constants';
 
-type WelcomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
+type WelcomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Welcome'
+>;
 
 export default function WelcomeScreen() {
   const navigation = useNavigation<WelcomeScreenNavigationProp>();
@@ -30,9 +33,12 @@ export default function WelcomeScreen() {
       <View style={styles.overlay}>
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Image source={require('../../assets/icon.png')} style={styles.logo} />
-          </View>
+          {/* Logo WITHOUT container */}
+          <Image
+            source={require('../../assets/icon.png')}
+            style={styles.logo}
+          />
+
           <LanguageSelector />
         </View>
 
@@ -84,16 +90,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: SIZES.xl,
   },
-  logoContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    padding: 10,
-    borderRadius: 15,
-  },
+
+  // Removed logoContainer completely
   logo: {
     width: 70,
     height: 50,
     resizeMode: 'contain',
   },
+
   content: {
     alignItems: 'center',
     paddingHorizontal: SIZES.xl,
