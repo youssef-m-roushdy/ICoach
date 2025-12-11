@@ -1,7 +1,7 @@
 [
   {
     "name": "adds_soup",
-    "pic": "food_images/adds_soup.jpg",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/adds_soup.jpg",
     "per_100g": {
       "calories_kcal": 70.0,
       "protein_g": 4.0,
@@ -12,7 +12,7 @@
   },
   {
     "name": "aesh_baldy",
-    "pic": "food_images/aesh_baldy.jpg",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/aesh_baldy.jpg",
     "per_100g": {
       "calories_kcal": 260.0,
       "protein_g": 9.0,
@@ -23,7 +23,7 @@
   },
   {
     "name": "aolaas",
-    "pic": "food_images/aolaas.jpg",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/aolaas.jpg",
     "per_100g": {
       "calories_kcal": 95.0,
       "protein_g": 2.0,
@@ -34,7 +34,7 @@
   },
   {
     "name": "apple",
-    "pic": "food_images/apple.jpg",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/apple.jpg",
     "per_100g": {
       "calories_kcal": 52.0,
       "protein_g": 0.3,
@@ -45,7 +45,7 @@
   },
   {
     "name": "apple_pie",
-    "pic": "food_images/apple_pie.jpg",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/apple_pie.jpg",
     "per_100g": {
       "calories_kcal": 237.0,
       "protein_g": 2.4,
@@ -56,1036 +56,1036 @@
   },
   {
     "name": "bamya",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/bamya.jpg",
     "per_100g": {
       "calories_kcal": 90.0,
       "protein_g": 2.0,
       "carbohydrate_g": 8.0,
       "fat_g": 5.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/bamya.jpg"
+    }
   },
   {
     "name": "banana",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/banana.jpg",
     "per_100g": {
       "calories_kcal": 89.0,
       "protein_g": 1.1,
       "carbohydrate_g": 23.0,
       "fat_g": 0.3,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/banana.jpg"
+    }
   },
   {
     "name": "basbousa",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/basbousa.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 5.0,
       "carbohydrate_g": 50.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/basbousa.jpg"
+    }
   },
   {
     "name": "bashamil",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/bashamil.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 10.0,
       "carbohydrate_g": 25.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/bashamil.jpg"
+    }
   },
   {
     "name": "breakfast_burrito",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/breakfast_burrito.jpg",
     "per_100g": {
       "calories_kcal": 270.0,
       "protein_g": 12.0,
       "carbohydrate_g": 25.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/breakfast_burrito.jpg"
+    }
   },
   {
     "name": "caesar_salad",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/caesar_salad.jpg",
     "per_100g": {
       "calories_kcal": 180.0,
       "protein_g": 10.0,
       "carbohydrate_g": 7.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/caesar_salad.jpg"
+    }
   },
   {
     "name": "cannoli",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cannoli.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 7.0,
       "carbohydrate_g": 35.0,
       "fat_g": 21.0,
       "sugar_g": 20.0
-    },
-    "pic": "food_images/cannoli.jpg"
+    }
   },
   {
     "name": "carrot",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/carrot.jpg",
     "per_100g": {
       "calories_kcal": 41.0,
       "protein_g": 1.0,
       "carbohydrate_g": 10.0,
       "fat_g": 0.2,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/carrot.jpg"
+    }
   },
   {
     "name": "cheese_plate",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cheese_plate.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 22.0,
       "carbohydrate_g": 3.0,
       "fat_g": 28.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/cheese_plate.jpg"
+    }
   },
   {
     "name": "cheesecake",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cheesecake.jpg",
     "per_100g": {
       "calories_kcal": 360.0,
       "protein_g": 6.0,
       "carbohydrate_g": 30.0,
       "fat_g": 25.0,
       "sugar_g": 25.0
-    },
-    "pic": "food_images/cheesecake.jpg"
+    }
   },
   {
     "name": "chicken_wings",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/chicken_wings.jpg",
     "per_100g": {
       "calories_kcal": 300.0,
       "protein_g": 20.0,
       "carbohydrate_g": 10.0,
       "fat_g": 22.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/chicken_wings.jpg"
+    }
   },
   {
     "name": "chocolate_cake",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/chocolate_cake.jpg",
     "per_100g": {
       "calories_kcal": 390.0,
       "protein_g": 5.0,
       "carbohydrate_g": 55.0,
       "fat_g": 18.0,
       "sugar_g": 40.0
-    },
-    "pic": "food_images/chocolate_cake.jpg"
+    }
   },
   {
     "name": "cinabon",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cinabon.jpg",
     "per_100g": {
       "calories_kcal": 420.0,
       "protein_g": 4.0,
       "carbohydrate_g": 60.0,
       "fat_g": 18.0,
       "sugar_g": 30.0
-    },
-    "pic": "food_images/cinabon.jpg"
+    }
   },
   {
     "name": "creme_brulee",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/creme_brulee.jpg",
     "per_100g": {
       "calories_kcal": 300.0,
       "protein_g": 4.0,
       "carbohydrate_g": 25.0,
       "fat_g": 20.0,
       "sugar_g": 25.0
-    },
-    "pic": "food_images/creme_brulee.jpg"
+    }
   },
   {
     "name": "cucumber",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cucumber.jpg",
     "per_100g": {
       "calories_kcal": 15.0,
       "protein_g": 0.6,
       "carbohydrate_g": 3.6,
       "fat_g": 0.1,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/cucumber.jpg"
+    }
   },
   {
     "name": "cup_cakes",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cup_cakes.jpg",
     "per_100g": {
       "calories_kcal": 390.0,
       "protein_g": 4.5,
       "carbohydrate_g": 56.0,
       "fat_g": 18.0,
       "sugar_g": 38.0
-    },
-    "pic": "food_images/cup_cakes.jpg"
+    }
   },
   {
     "name": "deviled_eggs",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/deviled_eggs.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 11.0,
       "carbohydrate_g": 2.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/deviled_eggs.jpg"
+    }
   },
   {
     "name": "donuts",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/donuts.jpg",
     "per_100g": {
       "calories_kcal": 400.0,
       "protein_g": 5.0,
       "carbohydrate_g": 55.0,
       "fat_g": 20.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/donuts.jpg"
+    }
   },
   {
     "name": "eggs_benedict",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/eggs_benedict.jpg",
     "per_100g": {
       "calories_kcal": 230.0,
       "protein_g": 11.0,
       "carbohydrate_g": 10.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/eggs_benedict.jpg"
+    }
   },
   {
     "name": "falafel",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/falafel.jpg",
     "per_100g": {
       "calories_kcal": 340.0,
       "protein_g": 14.0,
       "carbohydrate_g": 32.0,
       "fat_g": 18.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/falafel.jpg"
+    }
   },
   {
     "name": "fatta",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fatta.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 12.0,
       "carbohydrate_g": 23.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/fatta.jpg"
+    }
   },
   {
     "name": "fig",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fig.jpg",
     "per_100g": {
       "calories_kcal": 74.0,
       "protein_g": 0.8,
       "carbohydrate_g": 19.0,
       "fat_g": 0.3,
       "sugar_g": 16.0
-    },
-    "pic": "food_images/fig.jpg"
+    }
   },
   {
     "name": "fish",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fish.jpg",
     "per_100g": {
       "calories_kcal": 240.0,
       "protein_g": 20.0,
       "carbohydrate_g": 10.0,
       "fat_g": 12.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/fish.jpg"
+    }
   },
   {
     "name": "fish_and_chips",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fish_and_chips.jpg",
     "per_100g": {
       "calories_kcal": 250.0,
       "protein_g": 14.0,
       "carbohydrate_g": 25.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/fish_and_chips.jpg"
+    }
   },
   {
     "name": "fool",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fool.jpg",
     "per_100g": {
       "calories_kcal": 160.0,
       "protein_g": 8.0,
       "carbohydrate_g": 16.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/fool.jpg"
+    }
   },
   {
     "name": "french_fries",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/french_fries.jpg",
     "per_100g": {
       "calories_kcal": 300.0,
       "protein_g": 4.0,
       "carbohydrate_g": 37.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/french_fries.jpg"
+    }
   },
   {
     "name": "french_onion_soup",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/french_onion_soup.jpg",
     "per_100g": {
       "calories_kcal": 55.0,
       "protein_g": 2.5,
       "carbohydrate_g": 6.0,
       "fat_g": 4.0,
       "sugar_g": 3.0
-    },
-    "pic": "food_images/french_onion_soup.jpg"
+    }
   },
   {
     "name": "french_toast",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/french_toast.jpg",
     "per_100g": {
       "calories_kcal": 210.0,
       "protein_g": 8.0,
       "carbohydrate_g": 22.0,
       "fat_g": 8.0,
       "sugar_g": 4.0
-    },
-    "pic": "food_images/french_toast.jpg"
+    }
   },
   {
     "name": "fried_calamari",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fried_calamari.jpg",
     "per_100g": {
       "calories_kcal": 230.0,
       "protein_g": 15.0,
       "carbohydrate_g": 10.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/fried_calamari.jpg"
+    }
   },
   {
     "name": "frozen_yogurt",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/frozen_yogurt.jpg",
     "per_100g": {
       "calories_kcal": 140.0,
       "protein_g": 4.0,
       "carbohydrate_g": 25.0,
       "fat_g": 4.0,
       "sugar_g": 23.0
-    },
-    "pic": "food_images/frozen_yogurt.jpg"
+    }
   },
   {
     "name": "garlic_bread",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/garlic_bread.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 8.0,
       "carbohydrate_g": 40.0,
       "fat_g": 18.0,
       "sugar_g": 3.0
-    },
-    "pic": "food_images/garlic_bread.jpg"
+    }
   },
   {
     "name": "golash",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/golash.jpg",
     "per_100g": {
       "calories_kcal": 270.0,
       "protein_g": 10.0,
       "carbohydrate_g": 22.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/golash.jpg"
+    }
   },
   {
     "name": "grape",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/grape.jpg",
     "per_100g": {
       "calories_kcal": 69.0,
       "protein_g": 0.7,
       "carbohydrate_g": 18.0,
       "fat_g": 0.2,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/grape.jpg"
+    }
   },
   {
     "name": "grilled_cheese_sandwich",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/grilled_cheese_sandwich.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 12.0,
       "carbohydrate_g": 28.0,
       "fat_g": 22.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/grilled_cheese_sandwich.jpg"
+    }
   },
   {
     "name": "grilled_salmon",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/grilled_salmon.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 22.0,
       "carbohydrate_g": 0.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/grilled_salmon.jpg"
+    }
   },
   {
     "name": "hamburger",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/hamburger.jpg",
     "per_100g": {
       "calories_kcal": 300.0,
       "protein_g": 17.0,
       "carbohydrate_g": 26.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/hamburger.jpg"
+    }
   },
   {
     "name": "hawawshy",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/hawawshy.jpg",
     "per_100g": {
       "calories_kcal": 250.0,
       "protein_g": 13.0,
       "carbohydrate_g": 20.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/hawawshy.jpg"
+    }
   },
   {
     "name": "hot_dog",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/hot_dog.jpg",
     "per_100g": {
       "calories_kcal": 300.0,
       "protein_g": 11.0,
       "carbohydrate_g": 24.0,
       "fat_g": 19.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/hot_dog.jpg"
+    }
   },
   {
     "name": "ice_cream",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/ice_cream.jpg",
     "per_100g": {
       "calories_kcal": 210.0,
       "protein_g": 4.0,
       "carbohydrate_g": 25.0,
       "fat_g": 13.0,
       "sugar_g": 23.0
-    },
-    "pic": "food_images/ice_cream.jpg"
+    }
   },
   {
     "name": "kebda",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/kebda.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 26.0,
       "carbohydrate_g": 5.0,
       "fat_g": 7.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/kebda.jpg"
+    }
   },
   {
     "name": "kofta",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/kofta.jpg",
     "per_100g": {
       "calories_kcal": 250.0,
       "protein_g": 18.0,
       "carbohydrate_g": 4.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/kofta.jpg"
+    }
   },
   {
     "name": "konafa",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/konafa.jpg",
     "per_100g": {
       "calories_kcal": 380.0,
       "protein_g": 7.0,
       "carbohydrate_g": 47.0,
       "fat_g": 25.0,
       "sugar_g": 27.0
-    },
-    "pic": "food_images/konafa.jpg"
+    }
   },
   {
     "name": "koshari",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/koshari.jpg",
     "per_100g": {
       "calories_kcal": 160.0,
       "protein_g": 7.0,
       "carbohydrate_g": 30.0,
       "fat_g": 5.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/koshari.jpg"
+    }
   },
   {
     "name": "lasagna",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/lasagna.jpg",
     "per_100g": {
       "calories_kcal": 180.0,
       "protein_g": 9.0,
       "carbohydrate_g": 18.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/lasagna.jpg"
+    }
   },
   {
     "name": "macaroni_and_cheese",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/macaroni_and_cheese.jpg",
     "per_100g": {
       "calories_kcal": 190.0,
       "protein_g": 8.0,
       "carbohydrate_g": 22.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/macaroni_and_cheese.jpg"
+    }
   },
   {
     "name": "macarons",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/macarons.jpg",
     "per_100g": {
       "calories_kcal": 480.0,
       "protein_g": 9.0,
       "carbohydrate_g": 65.0,
       "fat_g": 20.0,
       "sugar_g": 57.0
-    },
-    "pic": "food_images/macarons.jpg"
+    }
   },
   {
     "name": "mahshi",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/mahshi.jpg",
     "per_100g": {
       "calories_kcal": 125.0,
       "protein_g": 3.0,
       "carbohydrate_g": 16.0,
       "fat_g": 1.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/mahshi.jpg"
+    }
   },
   {
     "name": "mandi",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/mandi.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 16.0,
       "carbohydrate_g": 14.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/mandi.jpg"
+    }
   },
   {
     "name": "mango",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/mango.jpg",
     "per_100g": {
       "calories_kcal": 60.0,
       "protein_g": 0.8,
       "carbohydrate_g": 15.0,
       "fat_g": 0.4,
       "sugar_g": 14.0
-    },
-    "pic": "food_images/mango.jpg"
+    }
   },
   {
     "name": "mansaf",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/mansaf.jpg",
     "per_100g": {
       "calories_kcal": 185.0,
       "protein_g": 10.0,
       "carbohydrate_g": 16.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/mansaf.jpg"
+    }
   },
   {
     "name": "meat",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/meat.jpg",
     "per_100g": {
       "calories_kcal": 230.0,
       "protein_g": 27.0,
       "carbohydrate_g": 0.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/meat.jpg"
+    }
   },
   {
     "name": "mesaqaa",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/mesaqaa.jpg",
     "per_100g": {
       "calories_kcal": 170.0,
       "protein_g": 10.0,
       "carbohydrate_g": 10.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/mesaqaa.jpg"
+    }
   },
   {
     "name": "molokhia",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/molokhia.jpg",
     "per_100g": {
       "calories_kcal": 65.0,
       "protein_g": 4.0,
       "carbohydrate_g": 5.5,
       "fat_g": 3.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/molokhia.jpg"
+    }
   },
   {
     "name": "mombar",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/mombar.jpg",
     "per_100g": {
       "calories_kcal": 250.0,
       "protein_g": 9.0,
       "carbohydrate_g": 17.0,
       "fat_g": 17.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/mombar.jpg"
+    }
   },
   {
     "name": "muaskhan",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/muaskhan.jpg",
     "per_100g": {
       "calories_kcal": 250.0,
       "protein_g": 13.0,
       "carbohydrate_g": 15.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/muaskhan.jpg"
+    }
   },
   {
     "name": "nachos",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/nachos.jpg",
     "per_100g": {
       "calories_kcal": 230.0,
       "protein_g": 10.0,
       "carbohydrate_g": 22.0,
       "fat_g": 13.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/nachos.jpg"
+    }
   },
   {
     "name": "om_ali",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/om_ali.jpg",
     "per_100g": {
       "calories_kcal": 280.0,
       "protein_g": 7.0,
       "carbohydrate_g": 30.0,
       "fat_g": 16.0,
       "sugar_g": 22.0
-    },
-    "pic": "food_images/om_ali.jpg"
+    }
   },
   {
     "name": "omelette",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/omelette.jpg",
     "per_100g": {
       "calories_kcal": 180.0,
       "protein_g": 11.0,
       "carbohydrate_g": 1.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/omelette.jpg"
+    }
   },
   {
     "name": "onion",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/onion.jpg",
     "per_100g": {
       "calories_kcal": 40.0,
       "protein_g": 1.1,
       "carbohydrate_g": 9.0,
       "fat_g": 0.1,
       "sugar_g": 4.0
-    },
-    "pic": "food_images/onion.jpg"
+    }
   },
   {
     "name": "onion_rings",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/onion_rings.jpg",
     "per_100g": {
       "calories_kcal": 280.0,
       "protein_g": 4.0,
       "carbohydrate_g": 35.0,
       "fat_g": 14.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/onion_rings.jpg"
+    }
   },
   {
     "name": "orange",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/orange.jpg",
     "per_100g": {
       "calories_kcal": 47.0,
       "protein_g": 0.9,
       "carbohydrate_g": 12.0,
       "fat_g": 0.1,
       "sugar_g": 9.0
-    },
-    "pic": "food_images/orange.jpg"
+    }
   },
   {
     "name": "pancakes",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/pancakes.jpg",
     "per_100g": {
       "calories_kcal": 260.0,
       "protein_g": 5.0,
       "carbohydrate_g": 40.0,
       "fat_g": 9.0,
       "sugar_g": 18.0
-    },
-    "pic": "food_images/pancakes.jpg"
+    }
   },
   {
     "name": "pastries",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/pastries.jpg",
     "per_100g": {
       "calories_kcal": 400.0,
       "protein_g": 7.0,
       "carbohydrate_g": 45.0,
       "fat_g": 20.0,
       "sugar_g": 25.0
-    },
-    "pic": "food_images/pastries.jpg"
+    }
   },
   {
     "name": "peach",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/peach.jpg",
     "per_100g": {
       "calories_kcal": 39.0,
       "protein_g": 0.9,
       "carbohydrate_g": 10.0,
       "fat_g": 0.3,
       "sugar_g": 8.0
-    },
-    "pic": "food_images/peach.jpg"
+    }
   },
   {
     "name": "pheno",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/pheno.jpg",
     "per_100g": {
       "calories_kcal": 280.0,
       "protein_g": 9.0,
       "carbohydrate_g": 53.0,
       "fat_g": 3.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/pheno.jpg"
+    }
   },
   {
     "name": "pizza",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/pizza.jpg",
     "per_100g": {
       "calories_kcal": 320.0,
       "protein_g": 14.0,
       "carbohydrate_g": 30.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/pizza.jpg"
+    }
   },
   {
     "name": "pomegranate",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/pomegranate.jpg",
     "per_100g": {
       "calories_kcal": 83.0,
       "protein_g": 1.7,
       "carbohydrate_g": 19.0,
       "fat_g": 1.2,
       "sugar_g": 14.0
-    },
-    "pic": "food_images/pomegranate.jpg"
+    }
   },
   {
     "name": "qatayef",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/qatayef.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 7.0,
       "carbohydrate_g": 45.0,
       "fat_g": 16.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/qatayef.jpg"
+    }
   },
   {
     "name": "red_velvet_cake",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/red_velvet_cake.jpg",
     "per_100g": {
       "calories_kcal": 380.0,
       "protein_g": 5.0,
       "carbohydrate_g": 47.0,
       "fat_g": 20.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/red_velvet_cake.jpg"
+    }
   },
   {
     "name": "rice",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/rice.jpg",
     "per_100g": {
       "calories_kcal": 130.0,
       "protein_g": 2.7,
       "carbohydrate_g": 28.0,
       "fat_g": 0.3,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/rice.jpg"
+    }
   },
   {
     "name": "rice_with_milk",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/rice_with_milk.jpg",
     "per_100g": {
       "calories_kcal": 140.0,
       "protein_g": 4.0,
       "carbohydrate_g": 23.0,
       "fat_g": 3.0,
       "sugar_g": 16.0
-    },
-    "pic": "food_images/rice_with_milk.jpg"
+    }
   },
   {
     "name": "risotto",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/risotto.jpg",
     "per_100g": {
       "calories_kcal": 140.0,
       "protein_g": 4.0,
       "carbohydrate_g": 23.0,
       "fat_g": 5.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/risotto.jpg"
+    }
   },
   {
     "name": "sambosa",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/sambosa.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 12.0,
       "carbohydrate_g": 22.0,
       "fat_g": 25.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/sambosa.jpg"
+    }
   },
   {
     "name": "scallops",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/scallops.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 20.0,
       "carbohydrate_g": 5.0,
       "fat_g": 12.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/scallops.jpg"
+    }
   },
   {
     "name": "shawrma",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/shawrma.jpg",
     "per_100g": {
       "calories_kcal": 250.0,
       "protein_g": 14.0,
       "carbohydrate_g": 20.0,
       "fat_g": 15.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/shawrma.jpg"
+    }
   },
   {
     "name": "shrimp",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/shrimp.jpg",
     "per_100g": {
       "calories_kcal": 180.0,
       "protein_g": 24.0,
       "carbohydrate_g": 5.0,
       "fat_g": 6.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/shrimp.jpg"
+    }
   },
   {
     "name": "shrimp_and_grits",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/shrimp_and_grits.jpg",
     "per_100g": {
       "calories_kcal": 175.0,
       "protein_g": 12.0,
       "carbohydrate_g": 14.0,
       "fat_g": 9.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/shrimp_and_grits.jpg"
+    }
   },
   {
     "name": "sojoq",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/sojoq.jpg",
     "per_100g": {
       "calories_kcal": 300.0,
       "protein_g": 18.0,
       "carbohydrate_g": 5.0,
       "fat_g": 22.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/sojoq.jpg"
+    }
   },
   {
     "name": "spaghetti_bolognese",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/spaghetti_bolognese.jpg",
     "per_100g": {
       "calories_kcal": 160.0,
       "protein_g": 8.0,
       "carbohydrate_g": 20.0,
       "fat_g": 6.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/spaghetti_bolognese.jpg"
+    }
   },
   {
     "name": "spaghetti_carbonara",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/spaghetti_carbonara.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 9.0,
       "carbohydrate_g": 20.0,
       "fat_g": 11.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/spaghetti_carbonara.jpg"
+    }
   },
   {
     "name": "spring_rolls",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/spring_rolls.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 8.0,
       "carbohydrate_g": 20.0,
       "fat_g": 8.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/spring_rolls.jpg"
+    }
   },
   {
     "name": "steak",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/steak.jpg",
     "per_100g": {
       "calories_kcal": 280.0,
       "protein_g": 26.0,
       "carbohydrate_g": 3.0,
       "fat_g": 20.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/steak.jpg"
+    }
   },
   {
     "name": "strawberry",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/strawberry.jpg",
     "per_100g": {
       "calories_kcal": 32.0,
       "protein_g": 0.7,
       "carbohydrate_g": 7.7,
       "fat_g": 0.3,
       "sugar_g": 4.9
-    },
-    "pic": "food_images/strawberry.jpg"
+    }
   },
   {
     "name": "sushi",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/sushi.jpg",
     "per_100g": {
       "calories_kcal": 260.0,
       "protein_g": 8.0,
       "carbohydrate_g": 25.0,
       "fat_g": 12.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/sushi.jpg"
+    }
   },
   {
     "name": "tacos",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/tacos.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 9.0,
       "carbohydrate_g": 15.0,
       "fat_g": 11.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/tacos.jpg"
+    }
   },
   {
     "name": "takoyaki",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/takoyaki.jpg",
     "per_100g": {
       "calories_kcal": 170.0,
       "protein_g": 8.0,
       "carbohydrate_g": 20.0,
       "fat_g": 8.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/takoyaki.jpg"
+    }
   },
   {
     "name": "tiramisu",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/tiramisu.jpg",
     "per_100g": {
       "calories_kcal": 320.0,
       "protein_g": 6.0,
       "carbohydrate_g": 29.0,
       "fat_g": 20.0,
       "sugar_g": 24.0
-    },
-    "pic": "food_images/tiramisu.jpg"
+    }
   },
   {
     "name": "tomato",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/tomato.jpg",
     "per_100g": {
       "calories_kcal": 18.0,
       "protein_g": 0.9,
       "carbohydrate_g": 3.9,
       "fat_g": 0.2,
       "sugar_g": 2.6
-    },
-    "pic": "food_images/tomato.jpg"
+    }
   },
   {
     "name": "tuna",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/tuna.jpg",
     "per_100g": {
       "calories_kcal": 200.0,
       "protein_g": 27.0,
       "carbohydrate_g": 0.0,
       "fat_g": 10.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/tuna.jpg"
+    }
   },
   {
     "name": "tuna_tartare",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/tuna_tartare.jpg",
     "per_100g": {
       "calories_kcal": 160.0,
       "protein_g": 21.0,
       "carbohydrate_g": 2.0,
       "fat_g": 8.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/tuna_tartare.jpg"
+    }
   },
   {
     "name": "waffles",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/waffles.jpg",
     "per_100g": {
       "calories_kcal": 350.0,
       "protein_g": 6.0,
       "carbohydrate_g": 50.0,
       "fat_g": 18.0,
       "sugar_g": 25.0
-    },
-    "pic": "food_images/waffles.jpg"
+    }
   },
   {
     "name": "waraa_enb",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/waraa_enb.jpg",
     "per_100g": {
       "calories_kcal": 120.0,
       "protein_g": 3.0,
       "carbohydrate_g": 16.0,
       "fat_g": 6.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/waraa_enb.jpg"
+    }
   },
   {
     "name": "yougurt",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/yougurt.jpg",
     "per_100g": {
       "calories_kcal": 60.0,
       "protein_g": 3.5,
       "carbohydrate_g": 5.0,
       "fat_g": 3.0,
       "sugar_g": 0.0
-    },
-    "pic": "food_images/yougurt.jpg"
+    }
   },
   {
     "name": "zalbya",
+    "pic_link": "https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/zalbya.jpg",
     "per_100g": {
       "calories_kcal": 400.0,
       "protein_g": 5.0,
       "carbohydrate_g": 60.0,
       "fat_g": 20.0,
       "sugar_g": 36.0
-    },
-    "pic": "food_images/zalbya.jpg"
+    }
   }
 ]
