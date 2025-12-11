@@ -259,10 +259,10 @@ router.get('/filters', authenticate, getWorkoutFilters);
  *                     description:
  *                       type: string
  *                       example: "An upper chest exercise using an incline bench"
-                       gif_link:
-                         type: string
-                         example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
-                       createdAt:
+ *                     gif_link:
+ *                       type: string
+ *                       example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
+ *                     createdAt:
  *                       type: string
  *                       format: date-time
  *                     updatedAt:
@@ -337,11 +337,11 @@ router.get('/:id', authenticate, getWorkoutById);
  *                 type: string
  *                 description: Detailed description of the exercise
  *                 example: "An upper chest exercise performed on an incline bench"
-               gif_link:
-                 type: string
-                 format: uri
-                 description: Cloud storage URL to exercise demonstration GIF (AWS S3, Cloudinary, Azure, etc.)
-                 example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
+ *               gif_link:
+ *                 type: string
+ *                 format: uri
+ *                 description: Cloud storage URL to exercise demonstration GIF (AWS S3, Cloudinary, Azure, etc.)
+ *                 example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
  *     responses:
  *       201:
  *         description: Workout created successfully
