@@ -114,12 +114,7 @@ const router = Router();
  *                         example: "An upper chest exercise using an incline bench"
  *                       gif_link:
  *                         type: string
- *                         nullable: true
- *                         example: "https://example.com/exercise.gif"
- *                       local_image_path:
- *                         type: string
- *                         nullable: true
- *                         example: "/public/workout_gifs/exercise_1.gif"
+ *                         example: \"https://your-bucket.s3.amazonaws.com/workouts/exercise.gif\"
  *                       createdAt:
  *                         type: string
  *                         format: date-time
@@ -264,15 +259,10 @@ router.get('/filters', authenticate, getWorkoutFilters);
  *                     description:
  *                       type: string
  *                       example: "An upper chest exercise using an incline bench"
- *                     gif_link:
- *                       type: string
- *                       nullable: true
- *                       example: "https://example.com/exercise.gif"
- *                     local_image_path:
- *                       type: string
- *                       nullable: true
- *                       example: "/public/workout_gifs/exercise_1.gif"
- *                     createdAt:
+                       gif_link:
+                         type: string
+                         example: "https://your-bucket.s3.amazonaws.com/workouts/exercise.gif"
+                       createdAt:
  *                       type: string
  *                       format: date-time
  *                     updatedAt:
@@ -392,10 +382,6 @@ router.get('/:id', authenticate, getWorkoutById);
  *                       example: "An upper chest exercise"
  *                     gif_link:
  *                       type: string
- *                       nullable: true
- *                     local_image_path:
- *                       type: string
- *                       nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -526,10 +512,6 @@ router.post(
  *                       type: string
  *                     gif_link:
  *                       type: string
- *                       nullable: true
- *                     local_image_path:
- *                       type: string
- *                       nullable: true
  *                     createdAt:
  *                       type: string
  *                       format: date-time

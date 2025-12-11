@@ -34,8 +34,7 @@ export async function up(queryInterface: QueryInterface) {
     equipment: record.equipment || null,
     level: record.level,
     description: record.description || null,
-    gif_link: record.gif_link || null,
-    local_image_path: record.local_image_path || null,
+    gif_link: record.gif_link || 'https://via.placeholder.com/400x300.gif?text=No+GIF+Available',
     created_at: new Date(),
     updated_at: new Date(),
   }));

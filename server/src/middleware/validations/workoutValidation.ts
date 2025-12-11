@@ -89,11 +89,7 @@ export const validateUpdateWorkout = [
   body('gif_link')
     .optional({ checkFalsy: true })
     .isURL()
-    .withMessage('GIF link must be a valid URL'),
-  
-  body('local_image_path')
-    .optional({ checkFalsy: true })
-    .trim(),
+    .withMessage('GIF link must be a valid URL from your cloud storage (AWS S3, Cloudinary, Azure, etc.)'),
   
   handleValidationErrors,
 ];

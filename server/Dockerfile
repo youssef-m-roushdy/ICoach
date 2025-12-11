@@ -56,9 +56,6 @@ COPY --from=builder /app/data ./data
 # Copy food_images directory for seeding (IMPORTANT for Cloudinary upload)
 COPY --from=builder /app/food_images ./food_images
 
-# Copy public directory (contains workout_gifs for static serving)
-COPY --from=builder /app/public ./public
-
 # Create necessary directories and set permissions
 RUN mkdir -p logs uploads && \
     chown -R nodejs:nodejs /app
