@@ -1,5 +1,5 @@
 export { default as WelcomeScreen } from './WelcomeScreen';
-export { default as SignUpScreen } from './SignUpScreen';
+export { default as SignUpScreen } from './SignupScreen';
 export { default as SignInScreen } from './SignInScreen';
 export { default as HomeScreen } from './HomeScreen';
 export { default as AuthCallbackScreen } from './AuthCallbackScreen';
@@ -8,3 +8,4 @@ export { default as ProfileScreen } from './ProfileScreen';
 export { default as EditProfileScreen } from './EditProfileScreen';
 export { default as EditBodyInfoScreen } from './EditBodyInfoScreen';
 export { default as FoodsScreen } from './FoodsScreen';
+export { default as MessagesScreen } from './MessagesScreen'; // ✅ هذا السطر صحيح

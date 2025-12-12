@@ -6,18 +6,22 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  SafeAreaView, 
+  Platform, 
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import LinearGradient from 'react-native-linear-gradient';
-
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context';
 import { COLORS, SIZES } from '../constants';
 import type { RootStackParamList } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 
-type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+type HomeNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
 
 interface GoogleUser {
   email: string;
@@ -29,7 +33,8 @@ interface GoogleUser {
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavigationProp>();
-  const { user, logout } = useAuth();
+  // 💡 ملاحظة: يجب أن يحتوي نوع الـ User في useAuth على خاصية photo?: string لتجنب التحذيرات
+  const { user, logout } = useAuth(); 
   const route = useRoute();
   const [googleUser, setGoogleUser] = useState<GoogleUser | null>(null);
 
@@ -59,24 +64,37 @@ export default function HomeScreen() {
     }
   };
 
-  const displayName = googleUser?.firstName
-    ? googleUser.firstName + ' ' + googleUser.lastName
-    : user?.firstName && user?.lastName
-    ? user.firstName + ' ' + user.lastName
-    : user?.username || 'User';
+  const displayName =
+    googleUser?.firstName
+      ? `${googleUser.firstName} ${googleUser.lastName}`
+      : user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.username || 'User';
+
+  // 🎯 التعديل لحل مشكلة photo: 
+  const profileImageSource = googleUser?.photo 
+    ? { uri: googleUser.photo } 
+    // ✅ نستخدم (user as any) للوصول إلى photo إذا كانت موجودة في الـ object ولكن غير معرفة في النوع
+    : user && (user as any).photo 
+    ? { uri: (user as any).photo } 
+    : undefined;
+
 
   return (
     <LinearGradient
       colors={['#080808', '#121212', '#1A1A1A']}
       style={styles.container}
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollViewContent} 
+      >
         
-        {/* HEADER */}
-        <View style={styles.header}>
+        {/* ==== HEADER (Profile Section) ==== */}
+        <View style={styles.header}> 
           <View style={styles.profileSection}>
-            {googleUser?.photo ? (
-              <Image source={{ uri: googleUser.photo }} style={styles.profileImage} />
+            {profileImageSource ? (
+              <Image source={profileImageSource} style={styles.profileImage} />
             ) : (
               <View style={styles.placeholderImage} />
             )}
@@ -90,7 +108,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* CONTENT CARDS */}
+        {/* ==== CARDS ==== */}
         <View style={styles.content}>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>🍎 Nutrition Tracking</Text>
@@ -121,12 +139,28 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* LOGOUT */}
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
+      </ScrollView>
+
+      {/* ==== ثابت الشريط السفلي (BOTTOM BAR) ==== */}
+      <View style={styles.bottomBar}>
+        
+        {/* صورة البروفايل */}
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          {profileImageSource ? (
+              <Image source={profileImageSource} style={styles.bottomProfileImage} />
+            ) : (
+              <View style={styles.bottomPlaceholderImage} />
+            )}
         </TouchableOpacity>
 
-      </ScrollView>
+        {/* زر تسجيل الخروج */}
+        <TouchableOpacity style={styles.bottomLogoutButton} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={24} color="#EF4444" style={{ marginRight: 5 }} />
+          <Text style={styles.bottomLogoutButtonText}>Logout</Text>
+        </TouchableOpacity>
+
+      </View>
+      <SafeAreaView style={styles.safeAreaBottom} /> 
     </LinearGradient>
   );
 }
@@ -135,10 +169,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  
+  scrollViewContent: {
+    paddingBottom: 80, 
+  },
 
   header: {
-    padding: SIZES.xl,
-    paddingTop: 70,
+    paddingHorizontal: SIZES.xl,
+    paddingTop: 10,
   },
 
   profileSection: {
@@ -200,21 +238,61 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 
-  logoutButton: {
-    backgroundColor: '#202020',
-    paddingVertical: 16,
-    borderRadius: 50,
-    marginHorizontal: 30,
-    marginTop: 20,
-    marginBottom: 40,
+  // **********************************
+  // الأنماط للشريط السفلي الثابت
+  // **********************************
+
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 70, 
+    backgroundColor: '#333333', 
+    flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ef444444',
+    justifyContent: 'space-between',
+    paddingHorizontal: SIZES.xl,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.1)',
+  },
+  
+  bottomProfileImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
   },
 
-  logoutButtonText: {
-    color: '#ef4444',
-    fontSize: 18,
+  bottomPlaceholderImage: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    backgroundColor: '#555',
+  },
+
+  bottomLogoutButton: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 18,
+    backgroundColor: 'transparent', 
+    borderWidth: 1.5,
+    borderColor: COLORS.primary, 
+    elevation: 0, 
+    shadowOpacity: 0, 
+  },
+
+  bottomLogoutButtonText: {
+    color: COLORS.primary, 
+    fontSize: 16,
     fontWeight: 'bold',
   },
+
+  safeAreaBottom: {
+    backgroundColor: '#333333',
+    height: Platform.OS === 'ios' ? 30 : 0, 
+  }
 });

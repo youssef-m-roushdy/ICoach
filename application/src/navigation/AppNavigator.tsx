@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
+// ❌ تم حذف الاستيراد: import { RootStackParamList } from '../types';
 import { useAuth } from '../context';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignUpScreen from '../screens/SignupScreen';
@@ -13,6 +13,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import EditBodyInfoScreen from '../screens/EditBodyInfoScreen';
 import FoodsScreen from '../screens/FoodsScreen';
+import MessagesScreen from '../screens/MessagesScreen'; 
+
 import { 
   ActivityIndicator, 
   View, 
@@ -25,6 +27,23 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS, SIZES } from '../constants';
+
+// ✅ الحل: تم وضع تعريف الأنواع هنا مؤقتاً لحل خطأ 'Messages'
+export type RootStackParamList = {
+  Welcome: undefined;
+  SignIn: undefined;
+  Login: undefined;
+  AuthCallback: undefined;
+  Onboarding: undefined;
+  Home: undefined;
+  Profile: undefined;
+  EditProfile: undefined;
+  EditBodyInfo: undefined;
+  Foods: undefined;
+  // 🎯 هذا هو السطر الذي يحل المشكلة
+  Messages: undefined; 
+};
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -52,7 +71,7 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
     }
   };
 
-  const handleNavigate = (screen: string) => {
+  const handleNavigate = (screen: keyof RootStackParamList) => { // استخدام الأنواع
     onClose();
     navigation.navigate(screen);
   };
@@ -103,6 +122,15 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
             >
               <MaterialIcons name="restaurant" size={24} color={COLORS.primary} />
               <Text style={drawerStyles.menuText}>Foods</Text>
+            </TouchableOpacity>
+            
+            {/* ✅ زر الرسائل */}
+            <TouchableOpacity 
+              style={drawerStyles.menuItem}
+              onPress={() => handleNavigate('Messages')}
+            >
+              <MaterialIcons name="message" size={24} color={COLORS.primary} />
+              <Text style={drawerStyles.menuText}>Messages</Text>
             </TouchableOpacity>
           </View>
 
@@ -172,19 +200,54 @@ export const AppNavigator: React.FC = () => {
           ) : needsOnboarding ? (
             <>
               <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'ICoach' }} />
+              <Stack.Screen 
+                name="Home" 
+                component={HomeScreen} 
+                options={({ navigation }) => ({ 
+                  title: 'ICoach',
+                  // 🎯 إضافة زر الرسائل على اليمين هنا
+                  headerRight: () => (
+                    <TouchableOpacity
+                      style={{ marginRight: 15 }}
+                      onPress={() => navigation.navigate('Messages' as any)}
+                    >
+                      {/* استخدام MaterialIcons كرمز للرسائل */}
+                      <MaterialIcons name="message" size={28} color={COLORS.primary} />
+                    </TouchableOpacity>
+                  ),
+                })} 
+              />
               <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
+              {/* ✅ شاشة الرسائل */}
+              <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
             </>
           ) : (
             <>
-              <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'ICoach' }} />
+              <Stack.Screen 
+                name="Home" 
+                component={HomeScreen} 
+                options={({ navigation }) => ({
+                  title: 'ICoach',
+                  // 🎯 إضافة زر الرسائل على اليمين هنا
+                  headerRight: () => (
+                    <TouchableOpacity
+                      style={{ marginRight: 15 }}
+                      onPress={() => navigation.navigate('Messages' as any)}
+                    >
+                      <MaterialIcons name="message" size={28} color={COLORS.primary} />
+                    </TouchableOpacity>
+                  ),
+                })} 
+              />
               <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
+              {/* ✅ شاشة الرسائل */}
+              <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
             </>
           )}
         </Stack.Navigator>
@@ -223,7 +286,7 @@ const drawerStyles = StyleSheet.create({
     flex: 1,
   },
   drawer: {
-    width: SCREEN_WIDTH,
+    width: SCREEN_WIDTH * 0.75,
     backgroundColor: COLORS.background,
   },
   container: {
