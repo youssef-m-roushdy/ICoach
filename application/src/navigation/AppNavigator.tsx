@@ -80,16 +80,16 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
     <Modal
       visible={visible}
       transparent
-      animationType="slide"
+      animationType="none" // تم تغيير animationType إلى 'none' للسماح بالتحكم اليدوي
       onRequestClose={onClose}
     >
       <View style={drawerStyles.overlay}>
-        <TouchableOpacity 
-          style={drawerStyles.overlayTouchable} 
-          activeOpacity={1} 
-          onPress={onClose}
-        />
-        <View style={drawerStyles.drawer}>
+        {/*
+          نضع Drawer أولاً في شجرة المكونات
+          مع استخدام position: 'absolute' و left: 0
+          لضمان ظهوره على اليسار بشكل ثابت
+        */}
+        <View style={drawerStyles.drawer}> 
           <View style={drawerStyles.header}>
             <TouchableOpacity 
               style={drawerStyles.closeButton}
@@ -144,6 +144,16 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
             </TouchableOpacity>
           </View>
         </View>
+        
+        {/*
+          هذا المكون يغطي باقي الشاشة ويغلق القائمة عند الضغط عليه.
+          نضع الـ View هنا لضمان أنه يغطي المساحة المتبقية على اليمين.
+        */}
+        <TouchableOpacity 
+          style={drawerStyles.overlayTouchable} 
+          activeOpacity={1} 
+          onPress={onClose}
+        />
       </View>
     </Modal>
   );
@@ -276,18 +286,27 @@ const hasCompletedBodyInformation = (user: any): boolean => {
   );
 };
 
+// 🎯 الأنماط المعدلة
 const drawerStyles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    flexDirection: 'row',
+    // 🛠️ تم التغيير: لجعل القائمة تظهر من اليسار، نستخدم ترتيب المكونات العادي
+    flexDirection: 'row', 
   },
   overlayTouchable: {
+    // هذا سيأخذ المساحة المتبقية على اليمين
     flex: 1,
   },
   drawer: {
     width: SCREEN_WIDTH * 0.75,
     backgroundColor: COLORS.background,
+    // 🛠️ التعديل الرئيسي: لتثبيت القائمة على اليسار
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: 10, // تأكد من أنه فوق الـ overlayTouchable
   },
   container: {
     flex: 1,
