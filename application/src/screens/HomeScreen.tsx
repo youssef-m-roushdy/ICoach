@@ -10,16 +10,17 @@ import {
   Platform, 
   Alert 
 } from 'react-native';
+// Note: Assuming 'RootStackParamList' is correctly defined in '../types'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialIcons, Feather } from '@expo/vector-icons'; 
 import { useAuth } from '../context';
-import type { RootStackParamList } from '../types';
+import type { RootStackParamList } from '../types'; 
 import { LinearGradient } from 'expo-linear-gradient';
 import MediaPickerSheet from '../components/MediaPickerSheet'; 
 
-// 🛑 تعريف الألوان والأحجام (بدون استخدام ملف الثوابت)
+// 🛑 تعريف الألوان والأحجام
 const GOLD = '#FFD700';
 const GRAY = '#888888'; 
 const BLACK = '#000000';
@@ -35,7 +36,7 @@ const SIZES = {
     md: 16,
 }; 
 
-
+// تعريف نوع الـ Navigation (افتراضاً أن RootStackParamList موجود)
 type HomeNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Home'
@@ -49,13 +50,12 @@ interface GoogleUser {
   googleId: string;
 }
 
-// 🚨🚨🚨 يجب تعديل مسار الصورة هذا 🚨🚨🚨
-// استخدمت مسار افتراضي، يرجى تغييره ليناسب مكان الشعار لديك
+// ✅ مسار الصورة
 const iCoachLogo = require('../../assets/icon.png'); 
 
 
 // ------------------------------------------------
-// 🌟 Dummy Story Data (No Change) 
+// 🌟 Dummy Story Data 
 // ------------------------------------------------
 const baseStories = [
   { id: 'me', name: 'Your Story', image: 'profile' },
@@ -82,7 +82,7 @@ const expandedStories = createExpandedStories();
 
 
 // ------------------------------------------------
-// 🎯 Story Item Component (No Change)
+// 🎯 Story Item Component 
 // ------------------------------------------------
 interface StoryItemProps {
     item: typeof expandedStories[0];
@@ -138,7 +138,7 @@ const StoryItem: React.FC<StoryItemProps> = ({ item, profileImageSource, onYourS
 
 
 // ------------------------------------------------
-// 🍽️ Meal Item Component (الاسم يسار، القفل وسط، السهم يمين)
+// 🍽️ Meal Item Component 
 // ------------------------------------------------
 interface MealItemProps {
     title: string;
@@ -205,7 +205,7 @@ const MealItem: React.FC<MealItemProps> = ({ title, onPress }) => {
 };
 
 // ------------------------------------------------
-// 🗓️ Daily Routine Component (No Change)
+// 🗓️ Daily Routine Component 
 // ------------------------------------------------
 const mealRoutine = [
     { name: 'Breakfast', key: 'breakfast' },
@@ -239,16 +239,16 @@ const DailyRoutine: React.FC = () => {
 };
 
 // ------------------------------------------------
-// 🏠 Main HomeScreen Component (التعديل الرئيسي في useEffect)
+// 🏠 Main HomeScreen Component 
 // ------------------------------------------------
 export default function HomeScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Home'>>();
+  const navigation = useNavigation<HomeNavigationProp>();
   const { user, logout } = useAuth(); 
   const route = useRoute();
   const [googleUser, setGoogleUser] = useState<GoogleUser | null>(null);
   const [isSheetVisible, setIsSheetVisible] = useState(false); 
 
-  // ⭐️⭐️⭐️ التعديل هنا: لتعيين الصورة بدلاً من العنوان النصي ⭐️⭐️⭐️
+  // ⭐️⭐️⭐️ التعديل هنا: استخدام أيقونة MaterialIcons "auto-awesome" للذكاء الاصطناعي ⭐️⭐️⭐️
   useEffect(() => {
     // تحديد الخيارات للهيدر الحالي
     navigation.setOptions({
@@ -256,19 +256,53 @@ export default function HomeScreen() {
         headerTitle: () => (
             <Image 
                 source={iCoachLogo} 
-                style={headerStyles.logoImage} // استخدام نمط جديد لضبط الحجم
+                style={headerStyles.logoImage} 
                 resizeMode="contain" 
             />
         ),
-        // يتم وضع الصورة في المنتصف افتراضيا، يمكن استخدام headerLeft/headerRight لضبط الأزرار الجانبية
-        // بالنسبة لأيقونة المنيو (الخطوط الثلاثة) وأيقونة الرسالة (الفقاعة)، يتم التحكم فيها عبر إعدادات الـ Navigator الأخرى
+        // الأيقونة اليسرى (لفتح الـ Drawer - يجب أن يكون مدعومًا من الـ Navigator الخارجي)
+        headerLeft: () => (
+            <TouchableOpacity onPress={() => {
+                // ملاحظة: navigation.openDrawer() يعمل فقط إذا كان هذا المكون ضمن Drawer Navigator
+                if (navigation.openDrawer) {
+                    (navigation as any).openDrawer(); // استخدام as any لتجنب أخطاء النوع إذا لم يكن openDrawer معرفاً
+                } else {
+                    Alert.alert("Menu Disabled", "The menu button is not configured to open a drawer from this screen.");
+                }
+            }}>
+                <Feather name="menu" size={SIZES.xl} color={GOLD} style={headerStyles.iconMargin} /> 
+            </TouchableOpacity>
+        ),
+        // الأيقونات اليمنى (Chatbot والرسائل)
+        headerRight: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                
+                {/* 1. الأيقونة الجديدة: Chatbot / AI (auto-awesome) */}
+                <TouchableOpacity 
+                    onPress={() => Alert.alert("Chatbot", "Opening AI Assistant...")}
+                    style={headerStyles.iconSpacing} 
+                >
+                    <MaterialIcons name="auto-awesome" size={SIZES.xl} color={GOLD} /> 
+                </TouchableOpacity>
+                
+                {/* 2. أيقونة الرسائل الحالية (chatbox-outline) */}
+                <TouchableOpacity 
+                    onPress={() => {
+                         // افتراض أن شاشة Messages معرفة في RootStackParamList
+                         navigation.navigate('Messages' as any); 
+                    }}
+                >
+                    <Ionicons name="chatbox-outline" size={SIZES.xl} color={GOLD} style={headerStyles.iconMargin} /> 
+                </TouchableOpacity>
+            </View>
+        ),
     });
     
     const params = route.params as any;
     if (params?.userData) {
       setGoogleUser(params.userData);
     } else loadGoogleUser();
-  }, [navigation, route.params]); // إضافة navigation كـ dependency للتأكد من التنفيذ
+  }, [navigation, route.params]); 
 
   const loadGoogleUser = async () => {
     try {
@@ -312,11 +346,6 @@ export default function HomeScreen() {
       colors={[BACKGROUND_DARK, '#121212', '#1A1A1A']}
       style={styles.container}
     >
-      {/* 🛑 تم إزالة الهيدر المخصص اليدوي (SafeAreaView + customHeader) 
-      لأن التعديل يتم الآن عبر React Navigation
-      
-      يجب أن يكون الهيدر (المُعدل الآن بالصورة) مرئياً بشكل طبيعي الآن.
-      */}
       
       <ScrollView 
         showsVerticalScrollIndicator={false}
@@ -348,10 +377,8 @@ export default function HomeScreen() {
         </View>
         
         {/* ==== CARD LIST (Nutrition, Workout, etc.) ==== */}
-        {/* بما أنك أرسلت صورة للبطاقات، سأفترض أنها في هذا المكان */}
         <View style={styles.content}>
              <Text style={[styles.routineTitle, { marginBottom: 15 }]}>Features</Text>
-             {/* هنا يجب أن تكون البطاقات (Nutrition Tracking, Workout Plans, etc.) */}
              {/* قمت بإضافة مكونات dummy مؤقتة لملء المساحة */}
              <Text style={styles.infoText}>Nutrition Tracking Card Here...</Text>
              <Text style={styles.infoText}>Workout Plans Card Here...</Text>
@@ -397,17 +424,24 @@ export default function HomeScreen() {
 // ------------------------------------------------
 const headerStyles = StyleSheet.create({
     logoImage: {
-        width: 90, // العرض المناسب ليحل محل النص "iCoach"
-        height: 30,  // الارتفاع
-        marginLeft: 10, // لضبط المحاذاة قليلاً إلى اليسار
-        // قد تحتاج إلى إزالة tintColor إذا كان شعارك ملوناً
+        width: 90, 
+        height: 30,  
+        marginLeft: 10, 
         tintColor: GOLD, 
     },
+    iconMargin: {
+        // فاصل صغير للأيقونات الجانبية (مثل المسافة اليمنى لزر المنيو، أو اليسرى لزر الرسائل)
+        marginHorizontal: 5, 
+    },
+    // ⭐️ النمط الجديد لتوفير مسافة بين أيقونات الهيدر اليمنى
+    iconSpacing: {
+        marginRight: 15, // مسافة بين أيقونة الشات بوت وأيقونة الرسائل
+    }
 });
 
 
 // ------------------------------------------------
-// 🎨 Meal Styles (التعديلات السابقة محفوظة)
+// 🎨 Meal Styles 
 // ------------------------------------------------
 const mealStyles = StyleSheet.create({
     container: {
@@ -475,7 +509,7 @@ const mealStyles = StyleSheet.create({
 
 
 // ------------------------------------------------
-// 🎨 Story Styles (No Change)
+// 🎨 Story Styles 
 // ------------------------------------------------
 const STORY_SIZE = 70;
 const storyStyles = StyleSheet.create({
@@ -530,7 +564,7 @@ const storyStyles = StyleSheet.create({
 });
 
 // ------------------------------------------------
-// 🎨 General Styles (تم إزالة أنماط الهيدر اليدوي)
+// 🎨 General Styles 
 // ------------------------------------------------
 const styles = StyleSheet.create({
   container: {
