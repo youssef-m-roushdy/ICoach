@@ -16,7 +16,8 @@
       "bundelIdentifier": "com.icoach.application",
       "supportsTablet": true,
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSContactsUsageDescription": "Allows iCoach to find your contacts who are already using the app." 
       }
     },
     "android": {
@@ -26,7 +27,8 @@
       },
       "package": "com.icoach.application",
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["READ_CONTACTS"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

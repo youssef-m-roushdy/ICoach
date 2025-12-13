@@ -7,7 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   TouchableOpacity,
-} from 'react-native';
+  Image, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -18,6 +18,8 @@ import { userService } from '../services';
 import { useAuth } from '../context';
 
 type OnboardingNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Onboarding'>;
+const maleImageSource = require('../../assets/male.png'); 
+const femaleImageSource = require('../../assets/female.png'); 
 
 export default function OnboardingScreen() {
   const navigation = useNavigation<OnboardingNavigationProp>();
@@ -25,16 +27,14 @@ export default function OnboardingScreen() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Step 1: Personal Information
-  const [gender, setGender] = useState<'male' | 'female' | ''>('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+   const [gender, setGender] = useState<'male' | 'female' | ''>('');
+  const [dateOfBirth, setDateOfBirth] = useState('25-11-2004');
 
-  // Step 2: Body Measurements
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [bodyFatPercentage, setBodyFatPercentage] = useState('');
 
-  // Step 3: Fitness Goals
+  
   const [fitnessGoal, setFitnessGoal] = useState<'weight_loss' | 'muscle_gain' | 'maintenance' | ''>('');
   const [activityLevel, setActivityLevel] = useState<'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | 'extra_active' | ''>('');
 
@@ -66,24 +66,24 @@ export default function OnboardingScreen() {
     try {
       const bodyData: any = {};
 
-      // Add data from step 1
+      
       if (gender) bodyData.gender = gender;
       if (dateOfBirth) bodyData.dateOfBirth = dateOfBirth;
 
-      // Add data from step 2
+      
       if (height) bodyData.height = parseFloat(height);
       if (weight) bodyData.weight = parseFloat(weight);
       if (bodyFatPercentage) bodyData.bodyFatPercentage = parseFloat(bodyFatPercentage);
 
-      // Add data from step 3
+     
       if (fitnessGoal) bodyData.fitnessGoal = fitnessGoal;
       if (activityLevel) bodyData.activityLevel = activityLevel;
 
-      // Only submit if at least one field is filled
+     
       if (Object.keys(bodyData).length > 0) {
         const response = await userService.updateBodyInformation(bodyData, token);
         
-        // Update user context with the new data
+       
         if (response.data && user) {
           updateUser({ ...user, ...response.data });
         }
@@ -121,25 +121,79 @@ export default function OnboardingScreen() {
       <Text style={styles.stepTitle}>Personal Information</Text>
       <Text style={styles.stepSubtitle}>Tell us about yourself</Text>
 
-      <Text style={styles.label}>Gender</Text>
-      <View style={styles.optionsRow}>
+      <View style={styles.optionsRowCenter}>
+        
+      
         <TouchableOpacity
-          style={[styles.optionButton, gender === 'male' && styles.optionButtonActive]}
+          style={[
+            styles.genderOptionButton, 
+            { borderColor: gender === 'male' ? COLORS.primary : COLORS.inputBackground } 
+          ]}
           onPress={() => setGender('male')}
         >
-          <Text style={[styles.optionText, gender === 'male' && styles.optionTextActive]}>Male</Text>
+         
+          <View 
+            style={[
+              styles.genderImageArea, 
+              { backgroundColor: gender === 'male' ? COLORS.primary : COLORS.inputBackground }
+            ]}
+          >
+           
+            <Image 
+              source={maleImageSource} 
+              style={styles.genderImage}
+              resizeMode="contain" 
+            />
+          </View>
+
+          
+          <Text 
+            style={[
+              styles.genderLabelText, 
+              { color: gender === 'male' ? COLORS.primary : COLORS.white }
+            ]}
+          >
+            Male
+          </Text>
         </TouchableOpacity>
+
+       
         <TouchableOpacity
-          style={[styles.optionButton, gender === 'female' && styles.optionButtonActive]}
+          style={[
+            styles.genderOptionButton, 
+            { borderColor: gender === 'female' ? COLORS.primary : COLORS.inputBackground } 
+          ]}
           onPress={() => setGender('female')}
         >
-          <Text style={[styles.optionText, gender === 'female' && styles.optionTextActive]}>Female</Text>
+          
+          <View 
+            style={[
+              styles.genderImageArea, 
+              { backgroundColor: gender === 'female' ? COLORS.primary : COLORS.inputBackground } 
+            ]}
+          >
+          
+            <Image 
+              source={femaleImageSource} 
+              style={styles.genderImage}
+              resizeMode="contain"
+            />
+          </View>
+          
+           <Text 
+            style={[
+              styles.genderLabelText, 
+              { color: gender === 'female' ? COLORS.primary : COLORS.white }
+            ]}
+          >
+            Female
+          </Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
+      <Text style={[styles.label, { marginTop: SIZES.xl }]}>Date of Birth (YYYY-MM-DD)</Text>
       <CustomInput
-        placeholder="1990-01-01"
+        placeholder="YYYY-MM-DD"
         value={dateOfBirth}
         onChangeText={setDateOfBirth}
       />
@@ -184,7 +238,7 @@ export default function OnboardingScreen() {
 
       <Text style={styles.label}>Fitness Goal</Text>
       <View style={styles.optionsColumn}>
-        <TouchableOpacity
+       <TouchableOpacity
           style={[styles.optionButton, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('weight_loss')}
         >
@@ -196,6 +250,7 @@ export default function OnboardingScreen() {
           style={[styles.optionButton, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('muscle_gain')}
         >
+        
           <Text style={[styles.optionText, fitnessGoal === 'muscle_gain' && styles.optionTextActive]}>
             Muscle Gain
           </Text>
@@ -258,6 +313,12 @@ export default function OnboardingScreen() {
 
   return (
     <View style={styles.container}>
+       {currentStep > 1 && (
+        <TouchableOpacity style={styles.backButtonTop} onPress={handleBack}>
+          <MaterialIcons name="arrow-back-ios" size={24} color={COLORS.white} />
+        </TouchableOpacity>
+      )}
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {renderStepIndicator()}
 
@@ -266,25 +327,28 @@ export default function OnboardingScreen() {
         {currentStep === 3 && renderStep3()}
 
         <View style={styles.buttonContainer}>
-          {currentStep > 1 && (
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-              <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
-              <Text style={styles.backButtonText}>Back</Text>
-            </TouchableOpacity>
-          )}
-          {isLoading ? (
+        {isLoading ? (
             <ActivityIndicator size="large" color={COLORS.primary} />
           ) : (
-            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-              <Text style={styles.nextButtonText}>{currentStep === 3 ? 'Finish' : 'Next'}</Text>
-              <MaterialIcons name="arrow-forward" size={24} color={COLORS.primary} />
-            </TouchableOpacity>
+            <CustomButton
+              title={currentStep === 3 ? 'Finish' : 'Next'}
+              onPress={handleNext}
+           disabled={currentStep === 1 && !gender} 
+              buttonStyle={styles.customButtonStyle}
+              textStyle={styles.customButtonTextStyle}
+            />
           )}
         </View>
 
-        <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-          <Text style={styles.skipText}>Skip for now</Text>
-        </TouchableOpacity>
+        <CustomButton
+          title="Skip for now"
+          onPress={handleSkip}
+          buttonStyle={styles.skipButtonStyle}
+          textStyle={styles.skipButtonTextStyle}
+        />
+        
+        <View style={styles.bottomBar} /> 
+
       </ScrollView>
     </View>
   );
@@ -296,35 +360,35 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   scrollContent: {
-    padding: SIZES.xl,
+    paddingHorizontal: SIZES.xl,
+    paddingTop: SIZES.lg,
+    paddingBottom: SIZES.xxl,
   },
   stepIndicator: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: SIZES.xl,
+    marginBottom: SIZES.xl * 2,
   },
   stepDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: COLORS.gray,
-    marginHorizontal: 6,
+    marginHorizontal: 4,
   },
   stepDotActive: {
     backgroundColor: COLORS.primary,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   stepDotCompleted: {
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.primary,
   },
-  stepContainer: {
-    marginBottom: SIZES.xl,
-  },
+  stepContainer: {},
   stepTitle: {
-    fontSize: SIZES.h2,
+    fontSize: SIZES.h1,
     fontWeight: 'bold',
     color: COLORS.white,
     marginBottom: SIZES.sm,
@@ -333,15 +397,55 @@ const styles = StyleSheet.create({
   stepSubtitle: {
     fontSize: SIZES.body,
     color: COLORS.gray,
-    marginBottom: SIZES.xl,
+    marginBottom: SIZES.xl * 2,
     textAlign: 'center',
   },
   label: {
     fontSize: SIZES.body,
-    color: COLORS.white,
+    color: COLORS.gray,
     marginBottom: SIZES.sm,
     marginTop: SIZES.md,
+    textAlign: 'left',
   },
+  
+  optionsRowCenter: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SIZES.lg,
+    marginBottom: SIZES.md,
+  },
+  genderOptionButton: {
+    flex: 1,
+    maxWidth: 150,
+    backgroundColor: COLORS.background, 
+    padding: 0, 
+    borderRadius: SIZES.radiusSmall, 
+    borderWidth: 2, 
+    borderColor: COLORS.inputBackground, 
+    alignItems: 'center',
+    overflow: 'hidden', 
+  },
+ 
+  genderImageArea: {
+    width: '100%',
+    height: 150, 
+    justifyContent: 'center',
+    alignItems: 'center',
+   },
+  
+   genderImage: {
+    width: '100%', 
+    height: '100%',
+  },
+
+  genderLabelText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    paddingVertical: SIZES.md,
+    fontSize: SIZES.body,
+  },
+  
+  
   optionsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -351,11 +455,9 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.md,
   },
   optionButton: {
-    flex: 1,
     backgroundColor: COLORS.inputBackground,
     padding: SIZES.md,
     borderRadius: SIZES.radiusSmall,
-    marginHorizontal: 4,
     marginVertical: 4,
     borderWidth: 2,
     borderColor: 'transparent',
@@ -373,49 +475,46 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontWeight: 'bold',
   },
+  
+  
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: SIZES.xl,
+    marginTop: SIZES.xl * 2,
+    marginBottom: SIZES.md,
   },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    paddingVertical: SIZES.md,
-    paddingHorizontal: SIZES.lg,
+  customButtonStyle: {
+    backgroundColor: COLORS.primary,
     borderRadius: SIZES.radiusSmall,
-    gap: SIZES.sm,
-  },
-  backButtonText: {
-    color: COLORS.white,
-    fontSize: SIZES.body,
-    fontWeight: '600',
-  },
-  nextButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
     paddingVertical: SIZES.md,
-    paddingHorizontal: SIZES.lg,
-    borderRadius: SIZES.radiusSmall,
-    gap: SIZES.sm,
   },
-  nextButtonText: {
-    color: COLORS.primary,
-    fontSize: SIZES.body,
+  customButtonTextStyle: {
+    color: COLORS.background,
+    fontSize: SIZES.h3,
     fontWeight: 'bold',
   },
-  skipButton: {
+  skipButtonStyle: {
+    backgroundColor: 'transparent',
     alignSelf: 'center',
-    marginTop: SIZES.lg,
-    padding: SIZES.sm,
+    padding: SIZES.sm,  borderWidth: 0, 
   },
-  skipText: {
+  skipButtonTextStyle: {
     color: COLORS.gray,
     fontSize: SIZES.body,
     textDecorationLine: 'underline',
+  },
+
+  backButtonTop: {
+    position: 'absolute',
+    top: 50,
+    left: SIZES.xl,
+    zIndex: 10,
+    padding: SIZES.sm,
+  },
+  bottomBar: {
+    height: 4,
+    width: 100,
+    backgroundColor: COLORS.white,
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginTop: SIZES.xl,
   },
 });
