@@ -58,7 +58,7 @@ id,body part,target_area,name,equipment,level,description,gif_link
 57,back,Upper Back / Traps,Reverse Pec Deck (Rear Delt Fly Machine),Machine,Beginner,Works rear delts and traps for upper back development.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_56.gif
 58,back,Lower Back,Lower Back Extension (Hyperextension),Machine,Beginner,Strengthens spinal erectors and lower back stability.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_57.gif
 59,back,Lats / Upper Back,Pull-Up (Wide Grip),Bodyweight,Intermediate,Excellent compound movement for back width.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_58.gif
-60,back,Lats / Middle Back,Chin-Up (Underhand Grip),Bodyweight,Intermediate,Focuses on lower lats and biceps involvement.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_59.gif
+60,back,Lats / Middle Back,Chin-Up (Underhand Grip),Bodyweight,Intermediate,Focuses on lower lats and biceps involvement.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554118/exercise_59.gif
 61,back,Middle Back,Inverted Row,Bodyweight,Beginner,Horizontal pull for mid-back and scapular control.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_60.gif
 62,back,Lower Back,Back Extension (Floor or Bench),Bodyweight,Beginner,Bodyweight version of hyperextension for lower back.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_61.gif
 63,back,Middle Back,Resistance Band Row,Band,Beginner,Simulates cable row for mid-back development.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_62.gif
@@ -226,7 +226,7 @@ id,body part,target_area,name,equipment,level,description,gif_link
 225,abs,Lower Back,Back Extension (Machine or Bench),Machine,Intermediate,Controlled movement to strengthen lower back.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_224.gif
 226,abs,Lower Back / Hamstrings,Good Morning,Barbell,Advanced,Works lower back and posterior chain together.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_225.gif
 227,abs,Transverse Abdominis,Dead Bug,Bodyweight,Beginner,Excellent for core control and spine safety.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_226.gif
-228,abs,Transverse Abdominis / Obliques,Pallof Press,Cable,Intermediate,Anti-rotation exercise improving deep core stability.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_227.gif
+228,abs,Transverse Abdominis / Obliques,Pallof Press,Cable,Intermediate,Anti-rotation exercise improving deep core stability.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554465/exercise_227.gif
 229,cardio,Running / Full Body,Treadmill Running,Machine,Beginner,Controlled running workout on treadmill for endurance.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_228.gif
 230,cardio,Running / Full Body,Outdoor Running,,Beginner,Improves cardiovascular health and stamina.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_229.gif
 231,cardio,Running / Lower Body,Sprints (Track or Treadmill),,Intermediate,Short bursts for fat burning and explosive power.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_230.gif
@@ -266,4 +266,3 @@ id,body part,target_area,name,equipment,level,description,gif_link
 266,neck,Rear Neck (Extension),Resistance Band Neck Extension,Band,Beginner,Builds rear neck muscles through band resistance.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_265.gif
 267,neck,Side Neck (Lateral Flexion),Resistance Band Lateral Flexion,Band,Beginner,Improves neck stability with side tension.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_266.gif
 268,neck,Full Neck / Rear Neck,Bridge (Wrestler’s Bridge),Bodyweight,Advanced,Builds strong posterior neck and balance (used in wrestling).,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_267.gif
-269,neck,Front Neck,Reverse Bridge (Front Bridge),Bodyweight,Advanced,Strengthens front neck and cervical control.,https://res.cloudinary.com/dsdkaxbl3/image/upload/v1765554039/exercise_268.gif
