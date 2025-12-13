@@ -39,12 +39,6 @@ export const validateCreateWorkout = [
     .optional()
     .trim(),
   
-  body('gif_link')
-    .notEmpty()
-    .withMessage('GIF link is required')
-    .isURL()
-    .withMessage('GIF link must be a valid URL from your cloud storage (AWS S3, Cloudinary, Azure, etc.)'),
-  
   handleValidationErrors,
 ];
 
@@ -82,14 +76,13 @@ export const validateUpdateWorkout = [
     .withMessage('Level cannot be empty')
     .trim(),
   
-  body('description')
+  body('level')
     .optional()
     .trim(),
   
-  body('gif_link')
-    .optional({ checkFalsy: true })
-    .isURL()
-    .withMessage('GIF link must be a valid URL from your cloud storage (AWS S3, Cloudinary, Azure, etc.)'),
+  body('description')
+    .optional()
+    .trim(),
   
   handleValidationErrors,
 ];

@@ -65,6 +65,56 @@ export class ImageService {
   }
 
   /**
+   * Upload workout GIF to Cloudinary
+   * @param buffer - GIF buffer from multer
+   * @param workoutName - Name of the workout for organizing files
+   * @returns Upload result with URL and metadata
+   */
+  static async uploadWorkoutGif(
+    buffer: Buffer,
+    workoutName: string
+  ): Promise<CloudinaryUploadResult> {
+    return new Promise((resolve, reject) => {
+      // Sanitize workout name for use as filename
+      const sanitizedName = workoutName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'workout_gifs',
+          resource_type: 'image',
+          format: 'gif',
+          public_id: `excercise_${sanitizedName}`,
+          transformation: [
+            { quality: 'auto' }, // Optimize GIF quality
+          ],
+        },
+        (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
+          if (error) {
+            reject(error);
+          } else if (result) {
+            resolve({
+              publicId: result.public_id,
+              url: result.url,
+              secureUrl: result.secure_url,
+              width: result.width,
+              height: result.height,
+              format: result.format,
+              resourceType: result.resource_type,
+            });
+          }
+        }
+      );
+
+      // Convert buffer to stream and pipe to Cloudinary
+      const bufferStream = Readable.from(buffer);
+      bufferStream.pipe(uploadStream);
+    });
+  }
+
+  /**
    * Upload profile picture with specific transformations
    * @param buffer - Image buffer
    * @param userId - User ID for organizing images

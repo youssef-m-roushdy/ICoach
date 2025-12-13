@@ -1,6 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Workout } from '../models/sql/index.js';
 import { Op } from 'sequelize';
+import { ImageService } from '../services/imageService.js';
+import { AppError } from '../utils/errors.js';
 
 /**
  * Get all workouts with optional filtering and pagination
@@ -119,8 +121,22 @@ export const createWorkout = async (
       equipment,
       level,
       description,
-      gif_link,
     } = req.body;
+
+    // Handle GIF upload
+    let gif_link: string;
+    
+    if (req.file) {
+      // Upload GIF to Cloudinary
+      const uploadResult = await ImageService.uploadWorkoutGif(
+        req.file.buffer,
+        name
+      );
+      gif_link = uploadResult.secureUrl;
+    } else {
+      // GIF file is required
+      throw new AppError('Workout GIF is required', 400);
+    }
 
     // Create workout with only allowed fields (no id)
     const workoutData: any = {
@@ -129,7 +145,7 @@ export const createWorkout = async (
       name,
       equipment,
       level,
-      gif_link, // Now required
+      gif_link,
     };
 
     // Add optional fields only if they have values
@@ -164,7 +180,6 @@ export const updateWorkout = async (
       equipment,
       level,
       description,
-      gif_link,
     } = req.body;
 
     const workout = await Workout.findByPk(id);
@@ -177,15 +192,36 @@ export const updateWorkout = async (
       return;
     }
 
-    await workout.update({
+    // Prepare update data
+    const updateData: any = {
       body_part,
       target_area,
       name,
       equipment,
       level,
       description,
-      gif_link,
-    });
+    };
+
+    // Handle optional GIF upload
+    if (req.file) {
+      // Delete old GIF from Cloudinary if it exists
+      if (workout.gif_link) {
+        try {
+          await ImageService.deleteImageByUrl(workout.gif_link);
+        } catch (error) {
+          console.error('Failed to delete old GIF from Cloudinary:', error);
+        }
+      }
+
+      // Upload new GIF
+      const uploadResult = await ImageService.uploadWorkoutGif(
+        req.file.buffer,
+        name || workout.name
+      );
+      updateData.gif_link = uploadResult.secureUrl;
+    }
+
+    await workout.update(updateData);
 
     res.status(200).json({
       success: true,
@@ -216,6 +252,16 @@ export const deleteWorkout = async (
         message: 'Workout not found',
       });
       return;
+    }
+
+    // Delete GIF from Cloudinary if it exists
+    if (workout.gif_link) {
+      try {
+        await ImageService.deleteImageByUrl(workout.gif_link);
+      } catch (error) {
+        // Log error but continue with workout deletion
+        console.error('Failed to delete GIF from Cloudinary:', error);
+      }
     }
 
     await workout.destroy();

@@ -56,6 +56,29 @@ export const uploadFoodImage = multer({
   },
 }).single('foodImage');
 
+// File filter for GIF files only
+const gifFileFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  // Accept only GIF files
+  if (file.mimetype === 'image/gif') {
+    cb(null, true);
+  } else {
+    cb(new AppError('Only GIF files are allowed for workout demonstrations!', 400));
+  }
+};
+
+// Multer configuration for workout GIF uploads
+export const uploadWorkoutGif = multer({
+  storage,
+  fileFilter: gifFileFilter,
+  limits: {
+    fileSize: 7 * 1024 * 1024, // 7MB max for workout GIFs
+  },
+}).single('gif');
+
 // Error handler for multer errors
 export const handleMulterError = (error: any, req: Request, res: any, next: any) => {
   if (error instanceof multer.MulterError) {
