@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { AppError } from '../utils/errors.js';
+import { ValidationError } from '../utils/errors.js';
 
 /**
  * Middleware to handle validation errors from express-validator
@@ -19,10 +19,7 @@ export const handleValidationErrors = (
       ...(error.value !== undefined && { value: error.value }),
     }));
     
-    const appError = new AppError('Validation failed', 400);
-    (appError as any).details = validationErrors;
-    
-    throw appError;
+    throw new ValidationError('Validation failed', validationErrors);
   }
   
   next();

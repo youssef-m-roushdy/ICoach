@@ -1,5 +1,5 @@
 import { User } from '../models/index.js';
-import type { UserAttributes, UserCreationAttributes } from '../models/index.js';
+import type { UserAttributes, UserCreationAttributes, UserWithCalculatedFields } from '../models/index.js';
 import { ValidationError, NotFoundError, ConflictError } from '../utils/errors.js';
 import jwt, { type SignOptions } from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -60,12 +60,23 @@ export class UserService {
   /**
    * Get user by ID
    */
-  static async getUserById(id: number): Promise<UserAttributes> {
+  static async getUserById(id: number): Promise<UserWithCalculatedFields> {
     const user = await User.findByPk(id);
     if (!user) {
       throw new NotFoundError('User not found');
     }
-    return user.toJSON();
+    
+    const userData = user.toJSON();
+    
+    // Add calculated metrics
+    return {
+      ...userData,
+      bmi: user.calculateBMI(),
+      bmiCategory: user.getBMICategory(),
+      recommendedCalories: user.calculateRecommendedCalories(),
+      recommendedWaterIntake: user.calculateBodyRecommnendedWaterIntake(),
+      profileCompleteness: user.getFitnessProfileCompleteness(),
+    };
   }
 
   /**
@@ -149,7 +160,7 @@ export class UserService {
     fitnessGoal?: 'weight_loss' | 'muscle_gain' | 'maintenance';
     activityLevel?: 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | 'extra_active';
     bodyFatPercentage?: number;
-  }): Promise<any> {
+  }): Promise<UserWithCalculatedFields> {
     const user = await User.findByPk(id);
     if (!user) {
       throw new NotFoundError('User not found');
@@ -171,8 +182,10 @@ export class UserService {
       // Add calculated metrics
       return {
         ...updatedUser,
+        bmi: user.calculateBMI(),
         bmiCategory: user.getBMICategory(),
         recommendedCalories: user.calculateRecommendedCalories(),
+        recommendedWaterIntake: user.calculateBodyRecommnendedWaterIntake(),
         profileCompleteness: user.getFitnessProfileCompleteness(),
       };
     } catch (error: any) {

@@ -20,7 +20,7 @@ export {
 };
 
 // Export types
-export type { UserAttributes, UserCreationAttributes } from './User.js';
+export type { UserAttributes, UserCreationAttributes, UserWithCalculatedFields } from './User.js';
 export type { FoodAttributes, FoodCreationAttributes } from './Food.js';
 export type { WorkoutAttributes, WorkoutCreationAttributes } from './Workout.js';
 export type { SavedWorkoutAttributes, SavedWorkoutCreationAttributes } from './SavedWorkout.js';

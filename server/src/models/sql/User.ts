@@ -175,6 +175,15 @@ class User extends Model<
     return Math.round(dailyCalories);
   }
 
+  calculateBodyRecommnendedWaterIntake(): number | null {
+    if (!this.weight) {
+      return null;
+    }
+    // General recommendation: 35 ml per kg of body weight
+    const waterIntakeLiters = (this.weight * 35) / 1000;
+    return Math.round(waterIntakeLiters * 100) / 100; // Round to 2 decimal places
+  }
+
   // Get fitness profile completeness percentage
   getFitnessProfileCompleteness(): number {
     const fitnessFields = [
@@ -529,6 +538,14 @@ User.init(
     },
   }
 );
+
+// Extended user response with calculated fields
+export interface UserWithCalculatedFields extends Omit<UserAttributes, 'password'> {
+  bmiCategory: string | null;
+  recommendedCalories: number | null;
+  recommendedWaterIntake: number | null;
+  profileCompleteness: number;
+}
 
 export default User;
 export type { UserAttributes, UserCreationAttributes };

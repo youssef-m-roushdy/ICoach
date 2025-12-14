@@ -23,9 +23,8 @@ export const errorHandler = (
     errorCode = error.name.replace('Error', '').toUpperCase();
     
     // Add validation details if available
-    if (error.name === 'ValidationError' && (error as any).details) {
+    if ((error as any).details) {
       details = (error as any).details;
-      errorCode = 'VALIDATION_ERROR';
     }
   } else if (error.name === 'SequelizeValidationError') {
     statusCode = 400;

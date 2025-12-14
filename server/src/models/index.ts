@@ -9,4 +9,4 @@ export const SQL = sqlModels;
 export const { User, Food, Workout } = sqlModels;
 
 // Export types
-export type { UserAttributes, UserCreationAttributes, FoodAttributes, FoodCreationAttributes, WorkoutAttributes } from './sql/index.js';
+export type { UserAttributes, UserCreationAttributes, UserWithCalculatedFields, FoodAttributes, FoodCreationAttributes, WorkoutAttributes } from './sql/index.js';
