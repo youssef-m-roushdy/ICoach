@@ -122,7 +122,7 @@ export const validateBodyInformation = [
   
   body('fitnessGoal')
     .optional()
-    .isIn(['lose_weight', 'maintain_weight', 'gain_weight', 'build_muscle', 'improve_endurance'])
+    .isIn(['lose_weight', 'maintain_weight', 'gain_weight', 'build_muscle', 'improve_endurance', 'muscle_gain'])
     .withMessage('Invalid fitness goal'),
   
   body('activityLevel')

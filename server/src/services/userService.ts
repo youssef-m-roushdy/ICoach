@@ -11,7 +11,7 @@ export class UserService {
   /**
    * Create a new user
    */
-  static async createUser(userData: UserCreationAttributes): Promise<UserAttributes> {
+  static async createUser(userData: UserCreationAttributes): Promise<UserWithCalculatedFields> {
     try {
       // Check if email already exists
       const existingEmail = await User.findByEmail(userData.email);
@@ -48,7 +48,16 @@ export class UserService {
         // Don't fail user creation if email fails
       }
 
-      return user.toJSON();
+      // Return user with calculated fields
+      const userJson = user.toJSON();
+      return {
+        ...userJson,
+        bmi: user.calculateBMI(),
+        bmiCategory: user.getBMICategory(),
+        recommendedCalories: user.calculateRecommendedCalories(),
+        recommendedWaterIntake: user.calculateBodyRecommnendedWaterIntake(),
+        profileCompleteness: user.getFitnessProfileCompleteness(),
+      };
     } catch (error: any) {
       if (error.name === 'SequelizeValidationError') {
         throw new ValidationError('Invalid user data', error.errors);
@@ -239,7 +248,7 @@ export class UserService {
    * Authenticate user (login)
    */
   static async authenticateUser(emailOrUsername: string, password: string): Promise<{
-    user: UserAttributes;
+    user: UserWithCalculatedFields;
     accessToken: string;
     refreshToken: string;
   }> {
@@ -271,8 +280,17 @@ export class UserService {
     const accessToken = this.generateAccessToken(user.id, user.email, user.role);
     const refreshToken = this.generateRefreshToken(user.id);
 
+    // Return user with calculated fields
+    const userJson = user.toJSON();
     return {
-      user: user.toJSON(),
+      user: {
+        ...userJson,
+        bmi: user.calculateBMI(),
+        bmiCategory: user.getBMICategory(),
+        recommendedCalories: user.calculateRecommendedCalories(),
+        recommendedWaterIntake: user.calculateBodyRecommnendedWaterIntake(),
+        profileCompleteness: user.getFitnessProfileCompleteness(),
+      },
       accessToken,
       refreshToken,
     };
