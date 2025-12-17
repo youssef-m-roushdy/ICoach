@@ -7,7 +7,9 @@ import {
   Alert,
   ActivityIndicator,
   TouchableOpacity,
-  Image, } from 'react-native';
+  PanResponder,
+  Dimensions,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -17,9 +19,9 @@ import { COLORS, SIZES } from '../constants';
 import { userService } from '../services';
 import { useAuth } from '../context';
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
 type OnboardingNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Onboarding'>;
-const maleImageSource = require('../../assets/male.png'); 
-const femaleImageSource = require('../../assets/female.png'); 
 
 export default function OnboardingScreen() {
   const navigation = useNavigation<OnboardingNavigationProp>();
@@ -27,16 +29,38 @@ export default function OnboardingScreen() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-   const [gender, setGender] = useState<'male' | 'female' | ''>('');
-  const [dateOfBirth, setDateOfBirth] = useState('25-11-2004');
+  // Step 1: Personal Information
+  const [gender, setGender] = useState<'male' | 'female' | ''>('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
 
+  // Step 2: Body Measurements
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [bodyFatPercentage, setBodyFatPercentage] = useState('');
 
-  
+  // Step 3: Fitness Goals
   const [fitnessGoal, setFitnessGoal] = useState<'weight_loss' | 'muscle_gain' | 'maintenance' | ''>('');
   const [activityLevel, setActivityLevel] = useState<'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | 'extra_active' | ''>('');
+
+  // Swipe gesture handler
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      // Activate if horizontal swipe is more than 20px
+      return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      const { dx } = gestureState;
+      const swipeThreshold = SCREEN_WIDTH * 0.25; // 25% of screen width
+
+      if (dx > swipeThreshold) {
+        // Swipe right - go back
+        handleBack();
+      } else if (dx < -swipeThreshold) {
+        // Swipe left - go next
+        handleNext();
+      }
+    },
+  });
 
   const handleNext = () => {
     if (currentStep < 3) {
@@ -66,24 +90,24 @@ export default function OnboardingScreen() {
     try {
       const bodyData: any = {};
 
-      
+      // Add data from step 1
       if (gender) bodyData.gender = gender;
       if (dateOfBirth) bodyData.dateOfBirth = dateOfBirth;
 
-      
+      // Add data from step 2
       if (height) bodyData.height = parseFloat(height);
       if (weight) bodyData.weight = parseFloat(weight);
       if (bodyFatPercentage) bodyData.bodyFatPercentage = parseFloat(bodyFatPercentage);
 
-     
+      // Add data from step 3
       if (fitnessGoal) bodyData.fitnessGoal = fitnessGoal;
       if (activityLevel) bodyData.activityLevel = activityLevel;
 
-     
+      // Only submit if at least one field is filled
       if (Object.keys(bodyData).length > 0) {
         const response = await userService.updateBodyInformation(bodyData, token);
         
-       
+        // Update user context with the new data
         if (response.data && user) {
           updateUser({ ...user, ...response.data });
         }
@@ -108,8 +132,7 @@ export default function OnboardingScreen() {
           key={step}
           style={[
             styles.stepDot,
-            currentStep === step && styles.stepDotActive,
-            currentStep > step && styles.stepDotCompleted,
+            step <= currentStep && styles.stepDotActive,
           ]}
         />
       ))}
@@ -121,79 +144,25 @@ export default function OnboardingScreen() {
       <Text style={styles.stepTitle}>Personal Information</Text>
       <Text style={styles.stepSubtitle}>Tell us about yourself</Text>
 
-      <View style={styles.optionsRowCenter}>
-        
-      
+      <Text style={styles.label}>Gender</Text>
+      <View style={styles.optionsRow}>
         <TouchableOpacity
-          style={[
-            styles.genderOptionButton, 
-            { borderColor: gender === 'male' ? COLORS.primary : COLORS.inputBackground } 
-          ]}
+          style={[styles.optionButton, gender === 'male' && styles.optionButtonActive]}
           onPress={() => setGender('male')}
         >
-         
-          <View 
-            style={[
-              styles.genderImageArea, 
-              { backgroundColor: gender === 'male' ? COLORS.primary : COLORS.inputBackground }
-            ]}
-          >
-           
-            <Image 
-              source={maleImageSource} 
-              style={styles.genderImage}
-              resizeMode="contain" 
-            />
-          </View>
-
-          
-          <Text 
-            style={[
-              styles.genderLabelText, 
-              { color: gender === 'male' ? COLORS.primary : COLORS.white }
-            ]}
-          >
-            Male
-          </Text>
+          <Text style={[styles.optionText, gender === 'male' && styles.optionTextActive]}>Male</Text>
         </TouchableOpacity>
-
-       
         <TouchableOpacity
-          style={[
-            styles.genderOptionButton, 
-            { borderColor: gender === 'female' ? COLORS.primary : COLORS.inputBackground } 
-          ]}
+          style={[styles.optionButton, gender === 'female' && styles.optionButtonActive]}
           onPress={() => setGender('female')}
         >
-          
-          <View 
-            style={[
-              styles.genderImageArea, 
-              { backgroundColor: gender === 'female' ? COLORS.primary : COLORS.inputBackground } 
-            ]}
-          >
-          
-            <Image 
-              source={femaleImageSource} 
-              style={styles.genderImage}
-              resizeMode="contain"
-            />
-          </View>
-          
-           <Text 
-            style={[
-              styles.genderLabelText, 
-              { color: gender === 'female' ? COLORS.primary : COLORS.white }
-            ]}
-          >
-            Female
-          </Text>
+          <Text style={[styles.optionText, gender === 'female' && styles.optionTextActive]}>Female</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={[styles.label, { marginTop: SIZES.xl }]}>Date of Birth (YYYY-MM-DD)</Text>
+      <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
       <CustomInput
-        placeholder="YYYY-MM-DD"
+        placeholder="1990-01-01"
         value={dateOfBirth}
         onChangeText={setDateOfBirth}
       />
@@ -238,7 +207,7 @@ export default function OnboardingScreen() {
 
       <Text style={styles.label}>Fitness Goal</Text>
       <View style={styles.optionsColumn}>
-       <TouchableOpacity
+        <TouchableOpacity
           style={[styles.optionButton, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('weight_loss')}
         >
@@ -250,7 +219,6 @@ export default function OnboardingScreen() {
           style={[styles.optionButton, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('muscle_gain')}
         >
-        
           <Text style={[styles.optionText, fitnessGoal === 'muscle_gain' && styles.optionTextActive]}>
             Muscle Gain
           </Text>
@@ -312,13 +280,7 @@ export default function OnboardingScreen() {
   );
 
   return (
-    <View style={styles.container}>
-       {currentStep > 1 && (
-        <TouchableOpacity style={styles.backButtonTop} onPress={handleBack}>
-          <MaterialIcons name="arrow-back-ios" size={24} color={COLORS.white} />
-        </TouchableOpacity>
-      )}
-
+    <View style={styles.container} {...panResponder.panHandlers}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {renderStepIndicator()}
 
@@ -326,29 +288,21 @@ export default function OnboardingScreen() {
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
 
-        <View style={styles.buttonContainer}>
-        {isLoading ? (
-            <ActivityIndicator size="large" color={COLORS.primary} />
-          ) : (
-            <CustomButton
-              title={currentStep === 3 ? 'Finish' : 'Next'}
-              onPress={handleNext}
-           disabled={currentStep === 1 && !gender} 
-              buttonStyle={styles.customButtonStyle}
-              textStyle={styles.customButtonTextStyle}
-            />
-          )}
-        </View>
+        {currentStep === 3 && (
+          <View style={styles.finishButtonContainer}>
+            {isLoading ? (
+              <ActivityIndicator size="large" color={COLORS.primary} />
+            ) : (
+              <TouchableOpacity style={styles.finishButton} onPress={handleSubmit}>
+                <Text style={styles.finishButtonText}>Finish</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
 
-        <CustomButton
-          title="Skip for now"
-          onPress={handleSkip}
-          buttonStyle={styles.skipButtonStyle}
-          textStyle={styles.skipButtonTextStyle}
-        />
-        
-        <View style={styles.bottomBar} /> 
-
+        <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
+          <Text style={styles.skipText}>Skip for now</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -360,35 +314,29 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
   },
   scrollContent: {
-    paddingHorizontal: SIZES.xl,
-    paddingTop: SIZES.lg,
-    paddingBottom: SIZES.xxl,
+    padding: SIZES.xl,
   },
   stepIndicator: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: SIZES.xl * 2,
+    marginVertical: SIZES.xl,
   },
   stepDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     backgroundColor: COLORS.gray,
-    marginHorizontal: 4,
+    marginHorizontal: 6,
   },
   stepDotActive: {
     backgroundColor: COLORS.primary,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
   },
-  stepDotCompleted: {
-    backgroundColor: COLORS.primary,
+  stepContainer: {
+    marginBottom: SIZES.xl,
   },
-  stepContainer: {},
   stepTitle: {
-    fontSize: SIZES.h1,
+    fontSize: SIZES.h2,
     fontWeight: 'bold',
     color: COLORS.white,
     marginBottom: SIZES.sm,
@@ -397,55 +345,15 @@ const styles = StyleSheet.create({
   stepSubtitle: {
     fontSize: SIZES.body,
     color: COLORS.gray,
-    marginBottom: SIZES.xl * 2,
+    marginBottom: SIZES.xl,
     textAlign: 'center',
   },
   label: {
     fontSize: SIZES.body,
-    color: COLORS.gray,
+    color: COLORS.white,
     marginBottom: SIZES.sm,
     marginTop: SIZES.md,
-    textAlign: 'left',
   },
-  
-  optionsRowCenter: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: SIZES.lg,
-    marginBottom: SIZES.md,
-  },
-  genderOptionButton: {
-    flex: 1,
-    maxWidth: 150,
-    backgroundColor: COLORS.background, 
-    padding: 0, 
-    borderRadius: SIZES.radiusSmall, 
-    borderWidth: 2, 
-    borderColor: COLORS.inputBackground, 
-    alignItems: 'center',
-    overflow: 'hidden', 
-  },
- 
-  genderImageArea: {
-    width: '100%',
-    height: 150, 
-    justifyContent: 'center',
-    alignItems: 'center',
-   },
-  
-   genderImage: {
-    width: '100%', 
-    height: '100%',
-  },
-
-  genderLabelText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-    paddingVertical: SIZES.md,
-    fontSize: SIZES.body,
-  },
-  
-  
   optionsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -455,9 +363,11 @@ const styles = StyleSheet.create({
     marginBottom: SIZES.md,
   },
   optionButton: {
+    flex: 1,
     backgroundColor: COLORS.inputBackground,
     padding: SIZES.md,
     borderRadius: SIZES.radiusSmall,
+    marginHorizontal: 4,
     marginVertical: 4,
     borderWidth: 2,
     borderColor: 'transparent',
@@ -475,46 +385,49 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontWeight: 'bold',
   },
-  
-  
   buttonContainer: {
-    marginTop: SIZES.xl * 2,
-    marginBottom: SIZES.md,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: SIZES.xl,
   },
-  customButtonStyle: {
-    backgroundColor: COLORS.primary,
-    borderRadius: SIZES.radiusSmall,
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
     paddingVertical: SIZES.md,
+    paddingHorizontal: SIZES.lg,
+    borderRadius: SIZES.radiusSmall,
+    gap: SIZES.sm,
   },
-  customButtonTextStyle: {
-    color: COLORS.background,
-    fontSize: SIZES.h3,
+  backButtonText: {
+    color: COLORS.white,
+    fontSize: SIZES.body,
+    fontWeight: '600',
+  },
+  nextButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    paddingVertical: SIZES.md,
+    paddingHorizontal: SIZES.lg,
+    borderRadius: SIZES.radiusSmall,
+    gap: SIZES.sm,
+  },
+  nextButtonText: {
+    color: COLORS.primary,
+    fontSize: SIZES.body,
     fontWeight: 'bold',
   },
-  skipButtonStyle: {
-    backgroundColor: 'transparent',
+  skipButton: {
     alignSelf: 'center',
-    padding: SIZES.sm,  borderWidth: 0, 
+    marginTop: SIZES.lg,
+    padding: SIZES.sm,
   },
-  skipButtonTextStyle: {
+  skipText: {
     color: COLORS.gray,
     fontSize: SIZES.body,
     textDecorationLine: 'underline',
-  },
-
-  backButtonTop: {
-    position: 'absolute',
-    top: 50,
-    left: SIZES.xl,
-    zIndex: 10,
-    padding: SIZES.sm,
-  },
-  bottomBar: {
-    height: 4,
-    width: 100,
-    backgroundColor: COLORS.white,
-    borderRadius: 2,
-    alignSelf: 'center',
-    marginTop: SIZES.xl,
   },
 });
