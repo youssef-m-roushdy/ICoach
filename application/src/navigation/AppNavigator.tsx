@@ -13,7 +13,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import EditBodyInfoScreen from '../screens/EditBodyInfoScreen';
 import FoodsScreen from '../screens/FoodsScreen';
-import MessagesScreen from '../screens/MessagesScreen'; 
+import MessagesScreen from '../screens/MessagesScreen';
 
 import { 
   ActivityIndicator, 
@@ -40,7 +40,6 @@ export type RootStackParamList = {
   EditProfile: undefined;
   EditBodyInfo: undefined;
   Foods: undefined;
-  // 🎯 هذا هو السطر الذي يحل المشكلة
   Messages: undefined; 
 };
 
@@ -124,7 +123,6 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
               <Text style={drawerStyles.menuText}>Foods</Text>
             </TouchableOpacity>
             
-            {/* ✅ زر الرسائل */}
             <TouchableOpacity 
               style={drawerStyles.menuItem}
               onPress={() => handleNavigate('Messages')}
@@ -231,7 +229,6 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
-              {/* ✅ شاشة الرسائل */}
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
             </>
           ) : (
@@ -256,7 +253,6 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
-              {/* ✅ شاشة الرسائل */}
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
             </>
           )}

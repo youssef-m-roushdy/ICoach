@@ -248,61 +248,12 @@ export default function HomeScreen() {
   const [googleUser, setGoogleUser] = useState<GoogleUser | null>(null);
   const [isSheetVisible, setIsSheetVisible] = useState(false); 
 
-  // ⭐️⭐️⭐️ التعديل هنا: استخدام أيقونة MaterialIcons "auto-awesome" للذكاء الاصطناعي ⭐️⭐️⭐️
   useEffect(() => {
-    // تحديد الخيارات للهيدر الحالي
-    navigation.setOptions({
-        // استخدام خاصية headerTitle لإضافة مكون صورة
-        headerTitle: () => (
-            <Image 
-                source={iCoachLogo} 
-                style={headerStyles.logoImage} 
-                resizeMode="contain" 
-            />
-        ),
-        // الأيقونة اليسرى (لفتح الـ Drawer - يجب أن يكون مدعومًا من الـ Navigator الخارجي)
-        headerLeft: () => (
-            <TouchableOpacity onPress={() => {
-                // ملاحظة: navigation.openDrawer() يعمل فقط إذا كان هذا المكون ضمن Drawer Navigator
-                if (navigation.openDrawer) {
-                    (navigation as any).openDrawer(); // استخدام as any لتجنب أخطاء النوع إذا لم يكن openDrawer معرفاً
-                } else {
-                    Alert.alert("Menu Disabled", "The menu button is not configured to open a drawer from this screen.");
-                }
-            }}>
-                <Feather name="menu" size={SIZES.xl} color={GOLD} style={headerStyles.iconMargin} /> 
-            </TouchableOpacity>
-        ),
-        // الأيقونات اليمنى (Chatbot والرسائل)
-        headerRight: () => (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                
-                {/* 1. الأيقونة الجديدة: Chatbot / AI (auto-awesome) */}
-                <TouchableOpacity 
-                    onPress={() => Alert.alert("Chatbot", "Opening AI Assistant...")}
-                    style={headerStyles.iconSpacing} 
-                >
-                    <MaterialIcons name="auto-awesome" size={SIZES.xl} color={GOLD} /> 
-                </TouchableOpacity>
-                
-                {/* 2. أيقونة الرسائل الحالية (chatbox-outline) */}
-                <TouchableOpacity 
-                    onPress={() => {
-                         // افتراض أن شاشة Messages معرفة في RootStackParamList
-                         navigation.navigate('Messages' as any); 
-                    }}
-                >
-                    <Ionicons name="chatbox-outline" size={SIZES.xl} color={GOLD} style={headerStyles.iconMargin} /> 
-                </TouchableOpacity>
-            </View>
-        ),
-    });
-    
     const params = route.params as any;
     if (params?.userData) {
       setGoogleUser(params.userData);
     } else loadGoogleUser();
-  }, [navigation, route.params]); 
+  }, [route.params]); 
 
   const loadGoogleUser = async () => {
     try {
