@@ -31,7 +31,7 @@ export class UserController {
       const { emailOrUsername, password } = req.body;
       const result = await UserService.authenticateUser(emailOrUsername, password);
       
-      // Set refresh token as HTTP-only cookie
+      // Set refresh token as HTTP-only cookie (for web clients)
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -45,6 +45,7 @@ export class UserController {
         data: {
           user: result.user,
           accessToken: result.accessToken,
+          refreshToken: result.refreshToken, // Also return in body for mobile clients
         },
       });
     } catch (error) {
@@ -57,7 +58,8 @@ export class UserController {
    */
   static async refreshToken(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { refreshToken } = req.cookies;
+      // Support both cookie-based (web) and body-based (mobile) refresh tokens
+      const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
       
       if (!refreshToken) {
         throw new AppError('Refresh token not provided', 401);
@@ -65,7 +67,7 @@ export class UserController {
 
       const result = await UserService.refreshAccessToken(refreshToken);
       
-      // Set new refresh token
+      // Set new refresh token cookie (for web clients)
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -78,6 +80,7 @@ export class UserController {
         message: 'Token refreshed successfully',
         data: {
           accessToken: result.accessToken,
+          refreshToken: result.refreshToken, // Also return in body for mobile clients
         },
       });
     } catch (error) {

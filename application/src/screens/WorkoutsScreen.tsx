@@ -9,6 +9,8 @@ import {
   Image,
   RefreshControl,
   Alert,
+  ScrollView,
+  Modal,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { workoutService } from '../services/api';
@@ -32,6 +34,13 @@ interface PaginationInfo {
   totalPages: number;
 }
 
+interface WorkoutFilters {
+  bodyParts: string[];
+  targetAreas: string[];
+  equipment: string[];
+  levels: string[];
+}
+
 const WorkoutsScreen = () => {
   const { token } = useAuth();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
@@ -44,19 +53,61 @@ const WorkoutsScreen = () => {
     totalPages: 0,
   });
 
+  // Filters
+  const [filters, setFilters] = useState<WorkoutFilters>({
+    bodyParts: [],
+    targetAreas: [],
+    equipment: [],
+    levels: [],
+  });
+  const [selectedBodyPart, setSelectedBodyPart] = useState<string>('');
+  const [selectedTargetArea, setSelectedTargetArea] = useState<string>('');
+  const [selectedEquipment, setSelectedEquipment] = useState<string>('');
+  const [selectedLevel, setSelectedLevel] = useState<string>('');
+  const [showFilterModal, setShowFilterModal] = useState<boolean>(false);
+  const [currentFilter, setCurrentFilter] = useState<'bodyPart' | 'targetArea' | 'equipment' | 'level' | null>(null);
+
+  // Load filters
+  useEffect(() => {
+    loadFilters();
+  }, []);
+
+  // Load workouts when page or filters change
   useEffect(() => {
     loadWorkouts();
-  }, [pagination.page]);
+  }, [pagination.page, selectedBodyPart, selectedTargetArea, selectedEquipment, selectedLevel]);
+
+  const loadFilters = async () => {
+    try {
+      if (!token) return;
+      const response = await workoutService.getWorkoutFilters(token);
+      if (response.success) {
+        // Filter out null values from equipment array
+        const cleanEquipment = response.data.equipment.filter((item: string | null) => item !== null);
+        setFilters({
+          ...response.data,
+          equipment: cleanEquipment,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load filters:', error);
+    }
+  };
 
   const loadWorkouts = async () => {
     try {
       if (!token) return;
       setLoading(true);
 
-      const params = {
+      const params: any = {
         page: pagination.page,
         limit: 5,
       };
+
+      if (selectedBodyPart) params.body_part = selectedBodyPart;
+      if (selectedTargetArea) params.target_area = selectedTargetArea;
+      if (selectedEquipment) params.equipment = selectedEquipment;
+      if (selectedLevel) params.level = selectedLevel;
 
       const result = await workoutService.getWorkouts(token, params);
 
@@ -70,6 +121,14 @@ const WorkoutsScreen = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearFilters = () => {
+    setSelectedBodyPart('');
+    setSelectedTargetArea('');
+    setSelectedEquipment('');
+    setSelectedLevel('');
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
   const onRefresh = async () => {
@@ -187,6 +246,175 @@ const WorkoutsScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Filters */}
+      <View style={styles.filtersContainer}>
+        <View style={styles.filtersHeader}>
+          <Text style={styles.filtersTitle}>Filters</Text>
+          {(selectedBodyPart || selectedTargetArea || selectedEquipment || selectedLevel) && (
+            <TouchableOpacity onPress={clearFilters}>
+              <Text style={styles.clearText}>Clear All</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={styles.filterRow}>
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => {
+                setCurrentFilter('bodyPart');
+                setShowFilterModal(true);
+              }}
+            >
+              <Text style={styles.filterButtonText}>
+                {selectedBodyPart || 'Body Part'}
+              </Text>
+              <Ionicons name="chevron-down" size={16} color="#666" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => {
+                setCurrentFilter('targetArea');
+                setShowFilterModal(true);
+              }}
+            >
+              <Text style={styles.filterButtonText}>
+                {selectedTargetArea || 'Target Area'}
+              </Text>
+              <Ionicons name="chevron-down" size={16} color="#666" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => {
+                setCurrentFilter('equipment');
+                setShowFilterModal(true);
+              }}
+            >
+              <Text style={styles.filterButtonText}>
+                {selectedEquipment || 'Equipment'}
+              </Text>
+              <Ionicons name="chevron-down" size={16} color="#666" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => {
+                setCurrentFilter('level');
+                setShowFilterModal(true);
+              }}
+            >
+              <Text style={styles.filterButtonText}>
+                {selectedLevel || 'Level'}
+              </Text>
+              <Ionicons name="chevron-down" size={16} color="#666" />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* Filter Modal */}
+      <Modal
+        visible={showFilterModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowFilterModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowFilterModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>
+                Select {currentFilter === 'bodyPart' ? 'Body Part' : 
+                        currentFilter === 'targetArea' ? 'Target Area' :
+                        currentFilter === 'equipment' ? 'Equipment' : 'Level'}
+              </Text>
+              <TouchableOpacity onPress={() => setShowFilterModal(false)}>
+                <Ionicons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalScroll}>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={() => {
+                  if (currentFilter === 'bodyPart') setSelectedBodyPart('');
+                  else if (currentFilter === 'targetArea') setSelectedTargetArea('');
+                  else if (currentFilter === 'equipment') setSelectedEquipment('');
+                  else if (currentFilter === 'level') setSelectedLevel('');
+                  setShowFilterModal(false);
+                }}
+              >
+                <Text style={styles.modalOptionText}>All</Text>
+              </TouchableOpacity>
+              {currentFilter === 'bodyPart' && filters.bodyParts.map((part) => (
+                <TouchableOpacity
+                  key={part}
+                  style={styles.modalOption}
+                  onPress={() => {
+                    setSelectedBodyPart(part);
+                    setShowFilterModal(false);
+                  }}
+                >
+                  <Text style={styles.modalOptionText}>{part}</Text>
+                  {selectedBodyPart === part && (
+                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                  )}
+                </TouchableOpacity>
+              ))}
+              {currentFilter === 'targetArea' && filters.targetAreas.map((area) => (
+                <TouchableOpacity
+                  key={area}
+                  style={styles.modalOption}
+                  onPress={() => {
+                    setSelectedTargetArea(area);
+                    setShowFilterModal(false);
+                  }}
+                >
+                  <Text style={styles.modalOptionText}>{area}</Text>
+                  {selectedTargetArea === area && (
+                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                  )}
+                </TouchableOpacity>
+              ))}
+              {currentFilter === 'equipment' && filters.equipment.map((equip) => (
+                <TouchableOpacity
+                  key={equip}
+                  style={styles.modalOption}
+                  onPress={() => {
+                    setSelectedEquipment(equip);
+                    setShowFilterModal(false);
+                  }}
+                >
+                  <Text style={styles.modalOptionText}>{equip}</Text>
+                  {selectedEquipment === equip && (
+                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                  )}
+                </TouchableOpacity>
+              ))}
+              {currentFilter === 'level' && filters.levels.map((level) => (
+                <TouchableOpacity
+                  key={level}
+                  style={styles.modalOption}
+                  onPress={() => {
+                    setSelectedLevel(level);
+                    setShowFilterModal(false);
+                  }}
+                >
+                  <Text style={styles.modalOptionText}>{level}</Text>
+                  {selectedLevel === level && (
+                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
       <FlatList
         data={workouts}
         renderItem={renderWorkoutItem}
@@ -377,6 +605,89 @@ const styles = StyleSheet.create({
     color: '#666',
     paddingBottom: 16,
     backgroundColor: '#fff',
+  },
+  filtersContainer: {
+    backgroundColor: '#fff',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  filtersHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  filtersTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
+  clearText: {
+    fontSize: 14,
+    color: '#FF3B30',
+    fontWeight: '500',
+  },
+  filterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 16,
+  },
+  filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginRight: 12,
+    minWidth: 120,
+    maxWidth: 180,
+  },
+  filterButtonText: {
+    fontSize: 14,
+    color: '#333',
+    marginRight: 6,
+    flexShrink: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '70%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+  },
+  modalScroll: {
+    maxHeight: 400,
+  },
+  modalOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  modalOptionText: {
+    fontSize: 16,
+    color: '#333',
   },
 });
 

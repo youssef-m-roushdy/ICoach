@@ -12,6 +12,7 @@ interface AuthContextType {
   setAuthState: (token: string, user: User) => Promise<void>;
   updateUser: (user: User) => void;
   token: string | null;
+  refreshAccessToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +29,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Load stored auth data on mount
   useEffect(() => {
     loadStoredAuth();
+  }, []);
+
+  // Import and set the global refresh function
+  useEffect(() => {
+    const { setGlobalRefreshTokenFunction } = require('../services/api');
+    setGlobalRefreshTokenFunction(refreshAccessToken);
   }, []);
 
   const loadStoredAuth = async () => {
@@ -101,6 +108,39 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
   };
 
+  const refreshAccessToken = async (): Promise<string | null> => {
+    try {
+      const storedRefreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+      
+      if (!storedRefreshToken) {
+        console.log('No refresh token available');
+        return null;
+      }
+
+      const response = await authService.refreshToken(storedRefreshToken);
+      
+      if (response.success && response.data) {
+        const newAccessToken = response.data.accessToken;
+        setToken(newAccessToken);
+        await AsyncStorage.setItem(TOKEN_KEY, newAccessToken);
+        
+        // Update refresh token if provided
+        if (response.data.refreshToken) {
+          await AsyncStorage.setItem(REFRESH_TOKEN_KEY, response.data.refreshToken);
+        }
+        
+        return newAccessToken;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      // If refresh fails, logout user
+      await logout();
+      return null;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -112,6 +152,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setAuthState,
         updateUser,
         token,
+        refreshAccessToken,
       }}
     >
       {children}

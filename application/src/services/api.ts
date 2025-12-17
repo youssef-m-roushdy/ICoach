@@ -1,6 +1,43 @@
 // API service for backend communication
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
 
+// Global reference to auth refresh function (will be set by AuthContext)
+let globalRefreshTokenFunction: (() => Promise<string | null>) | null = null;
+
+export const setGlobalRefreshTokenFunction = (fn: () => Promise<string | null>) => {
+  globalRefreshTokenFunction = fn;
+};
+
+// API wrapper with automatic token refresh
+export const apiCallWithRefresh = async <T>(
+  apiCall: (token: string) => Promise<T>,
+  token: string,
+  retryCount = 0
+): Promise<T> => {
+  try {
+    return await apiCall(token);
+  } catch (error: any) {
+    // Check if it's an authentication error
+    const isAuthError = 
+      error?.message?.includes('expired') || 
+      error?.message?.includes('Authentication') ||
+      error?.message?.includes('token');
+    
+    // Only retry once with refreshed token
+    if (isAuthError && retryCount === 0 && globalRefreshTokenFunction) {
+      console.log('Token expired, attempting refresh...');
+      const newToken = await globalRefreshTokenFunction();
+      
+      if (newToken) {
+        console.log('Token refreshed successfully, retrying request...');
+        return await apiCallWithRefresh(apiCall, newToken, retryCount + 1);
+      }
+    }
+    
+    throw error;
+  }
+};
+
 interface LoginCredentials {
   emailOrUsername: string;
   password: string;
@@ -205,12 +242,12 @@ interface UpdateProfileData {
 export const userService = {
   // Get user profile
   async getProfile(token: string): Promise<any> {
-    try {
+    return apiCallWithRefresh(async (accessToken) => {
       const response = await fetch(`${API_BASE_URL}/v1/users/profile`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
       
@@ -221,20 +258,17 @@ export const userService = {
       }
       
       return result;
-    } catch (error) {
-      console.error('Get profile error:', error);
-      throw error;
-    }
+    }, token);
   },
 
   // Update user profile
   async updateProfile(data: UpdateProfileData, token: string): Promise<any> {
-    try {
+    return apiCallWithRefresh(async (accessToken) => {
       const response = await fetch(`${API_BASE_URL}/v1/users/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       });
@@ -246,20 +280,17 @@ export const userService = {
       }
       
       return result;
-    } catch (error) {
-      console.error('Update profile error:', error);
-      throw error;
-    }
+    }, token);
   },
 
   // Update body information
   async updateBodyInformation(data: BodyInformationData, token: string): Promise<any> {
-    try {
+    return apiCallWithRefresh(async (accessToken) => {
       const response = await fetch(`${API_BASE_URL}/v1/users/body-information`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify(data),
       });
@@ -271,10 +302,7 @@ export const userService = {
       }
       
       return result;
-    } catch (error) {
-      console.error('Update body information error:', error);
-      throw error;
-    }
+    }, token);
   },
 };
 
@@ -293,7 +321,7 @@ export const workoutService = {
       search?: string;
     }
   ): Promise<any> {
-    try {
+    return apiCallWithRefresh(async (accessToken) => {
       const queryParams = new URLSearchParams();
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -309,7 +337,7 @@ export const workoutService = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
 
@@ -320,20 +348,17 @@ export const workoutService = {
       }
 
       return result;
-    } catch (error) {
-      console.error('Get workouts error:', error);
-      throw error;
-    }
+    }, token);
   },
 
   // Get workout by ID
   async getWorkoutById(workoutId: number, token: string): Promise<any> {
-    try {
+    return apiCallWithRefresh(async (accessToken) => {
       const response = await fetch(`${API_BASE_URL}/v1/workouts/${workoutId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
       });
 
@@ -344,9 +369,27 @@ export const workoutService = {
       }
 
       return result;
-    } catch (error) {
-      console.error('Get workout error:', error);
-      throw error;
-    }
+    }, token);
+  },
+
+  // Get workout filters
+  async getWorkoutFilters(token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/workouts/filters`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get filters');
+      }
+
+      return result;
+    }, token);
   },
 };

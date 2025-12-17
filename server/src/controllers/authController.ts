@@ -26,7 +26,7 @@ export class AuthController {
       // Generate tokens
       const result = await UserService.handleGoogleOAuth(user);
       
-      // Set refresh token as HTTP-only cookie
+      // Set refresh token as HTTP-only cookie (for web clients)
       res.cookie('refreshToken', result.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -41,6 +41,7 @@ export class AuthController {
         data: {
           user: result.user,
           accessToken: result.accessToken,
+          refreshToken: result.refreshToken, // Also return in body for mobile clients
         }
       });
 
@@ -142,7 +143,7 @@ export class AuthController {
       const accessToken = UserService.generateAccessToken(user.id, user.email, user.role);
       const refreshToken = UserService.generateRefreshToken(user.id);
 
-      // Set refresh token as HTTP-only cookie with strict sameSite for security
+      // Set refresh token as HTTP-only cookie with strict sameSite for security (for web clients)
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -156,6 +157,7 @@ export class AuthController {
         message: 'Google authentication successful',
         data: {
           accessToken: accessToken,
+          refreshToken: refreshToken, // Also return in body for mobile clients
           user: user.toJSON()
         }
       });
