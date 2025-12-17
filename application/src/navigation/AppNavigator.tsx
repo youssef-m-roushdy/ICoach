@@ -14,6 +14,7 @@ import EditProfileScreen from '../screens/EditProfileScreen';
 import EditBodyInfoScreen from '../screens/EditBodyInfoScreen';
 import FoodsScreen from '../screens/FoodsScreen';
 import MessagesScreen from '../screens/MessagesScreen';
+import WorkoutsScreen from '../screens/WorkoutsScreen';
 
 import { 
   ActivityIndicator, 
@@ -40,7 +41,8 @@ export type RootStackParamList = {
   EditProfile: undefined;
   EditBodyInfo: undefined;
   Foods: undefined;
-  Messages: undefined; 
+  Messages: undefined;
+  Workouts: undefined; 
 };
 
 
@@ -121,6 +123,14 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
             >
               <MaterialIcons name="restaurant" size={24} color={COLORS.primary} />
               <Text style={drawerStyles.menuText}>Foods</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={drawerStyles.menuItem}
+              onPress={() => handleNavigate('Workouts')}
+            >
+              <MaterialIcons name="fitness-center" size={24} color={COLORS.primary} />
+              <Text style={drawerStyles.menuText}>Workouts</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
@@ -227,6 +237,7 @@ export const AppNavigator: React.FC = () => {
               />
               <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
+              <Stack.Screen name="Workouts" component={WorkoutsScreen} options={{ title: 'Workouts' }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
@@ -251,6 +262,7 @@ export const AppNavigator: React.FC = () => {
               />
               <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
+              <Stack.Screen name="Workouts" component={WorkoutsScreen} options={{ title: 'Workouts' }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />

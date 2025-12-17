@@ -277,3 +277,76 @@ export const userService = {
     }
   },
 };
+
+// Workout Service
+export const workoutService = {
+  // Get workouts with filters and pagination
+  async getWorkouts(
+    token: string,
+    params?: {
+      page?: number;
+      limit?: number;
+      body_part?: string;
+      target_area?: string;
+      equipment?: string;
+      level?: string;
+      search?: string;
+    }
+  ): Promise<any> {
+    try {
+      const queryParams = new URLSearchParams();
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams.append(key, value.toString());
+          }
+        });
+      }
+
+      const url = `${API_BASE_URL}/v1/workouts${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get workouts');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Get workouts error:', error);
+      throw error;
+    }
+  },
+
+  // Get workout by ID
+  async getWorkoutById(workoutId: number, token: string): Promise<any> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/workouts/${workoutId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get workout');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('Get workout error:', error);
+      throw error;
+    }
+  },
+};
