@@ -420,6 +420,23 @@ const styles = StyleSheet.create({
     fontSize: SIZES.body,
     fontWeight: 'bold',
   },
+  finishButtonContainer: {
+    marginTop: SIZES.xl,
+    marginBottom: SIZES.lg,
+  },
+  finishButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: SIZES.md,
+    paddingHorizontal: SIZES.lg,
+    borderRadius: SIZES.radiusSmall,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  finishButtonText: {
+    color: COLORS.white,
+    fontSize: SIZES.body,
+    fontWeight: 'bold',
+  },
   skipButton: {
     alignSelf: 'center',
     marginTop: SIZES.lg,
