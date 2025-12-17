@@ -8,14 +8,22 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Animated,
+  Image,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import Ion from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZES } from '../constants';
+import { foodService } from '../services/api';
+import type { FoodPredictionResponse } from '../services/api';
 
 export default function FoodsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [prediction, setPrediction] = useState<FoodPredictionResponse | null>(null);
   const slideAnim = useState(new Animated.Value(0))[0];
 
   const openSheet = () => {
@@ -35,14 +43,69 @@ export default function FoodsScreen() {
     }).start(() => setModalVisible(false));
   };
 
+  const predictFood = async (imageUri: string) => {
+    setLoading(true);
+    try {
+      const data = await foodService.predictFood(imageUri);
+      setPrediction(data);
+      setSelectedImage(imageUri);
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Failed to identify food. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const openCamera = () => {
     closeSheet();
-    launchCamera({ mediaType: 'photo' }, (res) => console.log(res.assets));
+    launchCamera(
+      {
+        mediaType: 'photo',
+        quality: 0.8,
+        saveToPhotos: false,
+      },
+      (response) => {
+        if (response.didCancel) {
+          return;
+        } else if (response.errorMessage) {
+          Alert.alert('Error', response.errorMessage);
+        } else if (response.assets && response.assets[0].uri) {
+          predictFood(response.assets[0].uri);
+        }
+      }
+    );
   };
 
   const openGallery = () => {
     closeSheet();
-    launchImageLibrary({ mediaType: 'photo' }, (res) => console.log(res.assets));
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        quality: 0.8,
+        selectionLimit: 1,
+      },
+      (response) => {
+        if (response.didCancel) {
+          return;
+        } else if (response.errorMessage) {
+          Alert.alert('Error', response.errorMessage);
+        } else if (response.assets && response.assets[0].uri) {
+          predictFood(response.assets[0].uri);
+        }
+      }
+    );
+  };
+
+  const clearResult = () => {
+    setSelectedImage(null);
+    setPrediction(null);
+  };
+
+  const formatFoodName = (name: string): string => {
+    return name
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
   };
 
   const translateY = slideAnim.interpolate({
@@ -53,23 +116,62 @@ export default function FoodsScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>🍎 Foods</Text>
-        <Text style={styles.subtitle}>Track your nutrition and meals</Text>
+        <Text style={styles.title}>🍎 Food Recognition</Text>
+        <Text style={styles.subtitle}>AI-powered food identification</Text>
 
-        <TouchableOpacity style={styles.card} onPress={openSheet}>
-          <Text style={styles.cardTitle}>Food Tracking</Text>
-          <Text style={styles.cardText}>Tap to upload a food image</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.loadingText}>Identifying food...</Text>
+          </View>
+        ) : prediction && selectedImage ? (
+          <View style={styles.resultContainer}>
+            <Image source={{ uri: selectedImage }} style={styles.foodImage} />
+            
+            <View style={styles.predictionCard}>
+              <Text style={styles.foodName}>{formatFoodName(prediction.food_data.name)}</Text>
+              <Text style={styles.confidence}>
+                Confidence: {(prediction.confidence * 100).toFixed(1)}%
+              </Text>
+              
+              <View style={styles.nutritionGrid}>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Calories</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.calories}</Text>
+                  <Text style={styles.nutritionUnit}>kcal</Text>
+                </View>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Protein</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.protein}</Text>
+                  <Text style={styles.nutritionUnit}>g</Text>
+                </View>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Carbs</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.carbohydrate}</Text>
+                  <Text style={styles.nutritionUnit}>g</Text>
+                </View>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Fat</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.fat}</Text>
+                  <Text style={styles.nutritionUnit}>g</Text>
+                </View>
+              </View>
+            </View>
 
-        <TouchableOpacity style={styles.card} onPress={openSheet}>
-          <Text style={styles.cardTitle}>AI Food Recognition</Text>
-          <Text style={styles.cardText}>Tap to scan food</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.card} onPress={openSheet}>
-          <Text style={styles.cardTitle}>Nutrition Database</Text>
-          <Text style={styles.cardText}>Tap to add food photo</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.newScanButton} onPress={clearResult}>
+              <Icon name="camera" size={20} color={COLORS.white} />
+              <Text style={styles.newScanButtonText}>Scan Another Food</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.scanCard} onPress={openSheet}>
+            <Icon name="camera" size={48} color={COLORS.primary} />
+            <Text style={styles.scanTitle}>Scan Your Food</Text>
+            <Text style={styles.scanText}>
+              Take a photo or choose from gallery to identify food and get nutrition info
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* ====== BOTTOM SHEET ====== */}
@@ -121,23 +223,110 @@ const styles = StyleSheet.create({
     color: COLORS.gray,
     marginBottom: SIZES.xl,
   },
-  card: {
+  scanCard: {
+    backgroundColor: COLORS.inputBackground,
+    padding: SIZES.xxl,
+    borderRadius: SIZES.radiusMedium,
+    marginBottom: SIZES.md,
+    borderWidth: 2,
+    borderColor: COLORS.primary,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 250,
+  },
+  scanTitle: {
+    fontSize: SIZES.h2,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    marginTop: SIZES.md,
+    marginBottom: SIZES.sm,
+  },
+  scanText: {
+    fontSize: SIZES.body,
+    color: COLORS.gray,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  loadingContainer: {
+    padding: SIZES.xxl,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 250,
+  },
+  loadingText: {
+    fontSize: SIZES.body,
+    color: COLORS.primary,
+    marginTop: SIZES.md,
+  },
+  resultContainer: {
+    marginBottom: SIZES.lg,
+  },
+  foodImage: {
+    width: '100%',
+    height: 250,
+    borderRadius: SIZES.radiusMedium,
+    marginBottom: SIZES.md,
+  },
+  predictionCard: {
     backgroundColor: COLORS.inputBackground,
     padding: SIZES.lg,
     borderRadius: SIZES.radiusMedium,
-    marginBottom: SIZES.md,
     borderWidth: 1,
     borderColor: COLORS.darkGray,
+    marginBottom: SIZES.md,
   },
-  cardTitle: {
-    fontSize: SIZES.h3,
+  foodName: {
+    fontSize: SIZES.h2,
     fontWeight: 'bold',
     color: COLORS.primary,
-    marginBottom: SIZES.sm,
+    marginBottom: SIZES.xs,
   },
-  cardText: {
+  confidence: {
     fontSize: SIZES.body,
     color: COLORS.gray,
+    marginBottom: SIZES.lg,
+  },
+  nutritionGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  nutritionItem: {
+    width: '48%',
+    backgroundColor: COLORS.background,
+    padding: SIZES.md,
+    borderRadius: SIZES.radiusSmall,
+    marginBottom: SIZES.sm,
+    alignItems: 'center',
+  },
+  nutritionLabel: {
+    fontSize: SIZES.small,
+    color: COLORS.gray,
+    marginBottom: SIZES.xs,
+  },
+  nutritionValue: {
+    fontSize: SIZES.h2,
+    fontWeight: 'bold',
+    color: COLORS.white,
+  },
+  nutritionUnit: {
+    fontSize: SIZES.small,
+    color: COLORS.gray,
+  },
+  newScanButton: {
+    flexDirection: 'row',
+    backgroundColor: COLORS.primary,
+    padding: SIZES.md,
+    borderRadius: SIZES.radiusMedium,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  newScanButtonText: {
+    fontSize: SIZES.body,
+    fontWeight: 'bold',
+    color: COLORS.white,
+    marginLeft: SIZES.sm,
   },
 
   /* ===== Bottom Sheet ===== */

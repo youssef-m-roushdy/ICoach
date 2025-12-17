@@ -393,3 +393,67 @@ export const workoutService = {
     }, token);
   },
 };
+
+// Food AI Service
+const AI_API_URL = process.env.EXPO_PUBLIC_AI_API_URL || 'http://localhost:8000';
+
+export interface FoodData {
+  id: number;
+  name: string;
+  calories: number;
+  protein: number;
+  carbohydrate: number;
+  fat: number;
+  sugar: number;
+  pic: string;
+}
+
+export interface FoodPredictionResponse {
+  success: boolean;
+  predicted_food: string;
+  confidence: number;
+  food_data: FoodData;
+  message: string;
+}
+
+export const foodService = {
+  // Predict food from image
+  async predictFood(imageUri: string): Promise<FoodPredictionResponse> {
+    try {
+      const formData = new FormData();
+      
+      const file = {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'food.jpg',
+      };
+      
+      // @ts-ignore - React Native handles file objects differently
+      formData.append('file', file);
+
+      const response = await fetch(`${AI_API_URL}/api/food/predict`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const responseText = await response.text();
+      const data = JSON.parse(responseText);
+
+      if (!response.ok) {
+        throw new Error(data.detail || `Server error: ${response.status}`);
+      }
+
+      if (!data.success) {
+        throw new Error(data.message || 'Food prediction failed');
+      }
+
+      if (!data.food_data) {
+        throw new Error('Food not found in database. Please try another image.');
+      }
+      
+      return data;
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to identify food. Please try again.');
+    }
+  },
+};

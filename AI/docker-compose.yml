@@ -7,22 +7,21 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Connect to host machine's PostgreSQL Docker container (port 5433)
-      - POSTGRES_HOST=host.docker.internal
-      - POSTGRES_PORT=5433
+      # Connect to postgres container on the server network
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
       - POSTGRES_DB=icoach_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
-    # Remove depends_on since we're not using Docker PostgreSQL
     volumes:
       - ./:/app
     restart: unless-stopped
-    # Add extra_hosts for Linux to access host PostgreSQL
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    networks:
+      - server_icoach-network
 
-# Removed db service - using host PostgreSQL instead
-# Removed volumes - not needed anymore
+networks:
+  server_icoach-network:
+    external: true
