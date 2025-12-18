@@ -54,6 +54,7 @@ export interface User {
   bio?: string;
   phone?: string;
   avatar?: string;
+  photoURL?: string;
   bmi?: number;
   role?: string;
   isActive?: boolean;
