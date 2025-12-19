@@ -1,14 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView, 
-  Image,
-  SafeAreaView, 
-  Dimensions
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    ScrollView, 
+    Image,
+    Dimensions
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useAuth } from '../context'; 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,19 +22,16 @@ const BG_GRADIENT = ['#0F0F0F', '#1A1A1A', '#000000'] as const;
 
 export default function HomeScreen() {
   const { user } = useAuth() as any; 
+  const insets = useSafeAreaInsets();
   const [showAll, setShowAll] = useState(false);
   const [isSheetVisible, setIsSheetVisible] = useState(false);
 
- 
   const userImage = useMemo(() => {
-    
     const googlePhotoUrl = user?.photoURL || user?.avatar;
-    
     
     if (googlePhotoUrl && typeof googlePhotoUrl === 'string' && googlePhotoUrl.startsWith('http')) {
       return { uri: googlePhotoUrl };
     }
-    
     
     const name = user?.firstName || user?.username || 'User';
     console.warn('⚠️ No Google photo found, using generated avatar for:', name);
@@ -116,15 +114,21 @@ export default function HomeScreen() {
         </ScrollView>
       </SafeAreaView>
 
-      
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}><MaterialCommunityIcons name="arm-flex" size={28} color={GOLD} /><Text style={styles.navTxt}>Workouts</Text></TouchableOpacity>
+      {/* Fixed Bottom Navigation - Now properly accounts for safe area */}
+      <View style={[styles.bottomNav, { bottom: insets.bottom }]}>
+        <TouchableOpacity style={styles.navItem}>
+          <MaterialCommunityIcons name="arm-flex" size={28} color={GOLD} />
+          <Text style={styles.navTxt}>Workouts</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.navItemCenter}>
             <LinearGradient colors={[GOLD, '#B8860B'] as const} style={styles.centerCircle}>
                 <MaterialCommunityIcons name="food-apple" size={30} color={BLACK} /> 
             </LinearGradient>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}><Ionicons name="settings-sharp" size={26} color="#666" /><Text style={[styles.navTxt, {color: '#666'}]}>Settings</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}>
+          <Ionicons name="settings-sharp" size={26} color="#666" />
+          <Text style={[styles.navTxt, {color: '#666'}]}>Settings</Text>
+        </TouchableOpacity>
       </View>
 
       <MediaPickerSheet isVisible={isSheetVisible} onClose={() => setIsSheetVisible(false)} onSelectMedia={() => {}} />
@@ -136,7 +140,6 @@ export default function HomeScreen() {
 const MealCard = ({ title }: { title: string }) => {
     const [open, setOpen] = useState(false);
 
-  
     const mealDetails = {
         'Breakfast': [
             { 
@@ -413,7 +416,19 @@ const styles = StyleSheet.create({
     sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 15 },
     sectionTitle: { color: '#FFF', fontSize: 20, fontWeight: '700' },
     seeAll: { color: GOLD, fontSize: 14, fontWeight: '500' },
-    bottomNav: { position: 'absolute', bottom: 25, left: 20, right: 20, height: 75, backgroundColor: 'rgba(25, 25, 25, 0.95)', borderRadius: 25, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+    bottomNav: { 
+      position: 'absolute', 
+      left: 20, 
+      right: 20, 
+      height: 75, 
+      paddingBottom: 15,
+      backgroundColor: 'transparent', 
+      borderRadius: 25, 
+      flexDirection: 'row', 
+      justifyContent: 'space-around', 
+      alignItems: 'center', 
+      borderWidth: 0 
+    },
     navItem: { alignItems: 'center' },
     navTxt: { color: GOLD, fontSize: 10, marginTop: 4, fontWeight: '600' },
     navItemCenter: { top: -20 },
@@ -435,14 +450,10 @@ const mealStyles = StyleSheet.create({
     subTitle: { color: '#666', fontSize: 12, marginTop: 2 },
     content: { marginTop: 15, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.1)', paddingTop: 15, gap: 12 },
     mealImg: { width: 110, height: 110, borderRadius: 15, marginRight: 12 },
-    
-      
     foodItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,215,0,0.05)', borderRadius: 15, padding: 12, borderWidth: 1, borderColor: 'rgba(255,215,0,0.1)' },
     foodImg: { width: 100, height: 100, borderRadius: 12, marginRight: 12, backgroundColor: '#222' },
     foodDetails: { flex: 1 },
     foodName: { color: GOLD, fontSize: 14, fontWeight: '700', marginBottom: 8 },
-    
-    
     nutritionRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 2, marginTop: 4 },
     nutritionItem: { flex: 1, backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 6, padding: 4, alignItems: 'center' },
     nutritionLabel: { color: '#888', fontSize: 8, fontWeight: '600', marginBottom: 1 },
