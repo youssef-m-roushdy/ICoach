@@ -48,12 +48,18 @@ export default function HomeScreen() {
     <View style={styles.main}>
       <LinearGradient colors={BG_GRADIENT} style={StyleSheet.absoluteFill} />
       
+      {/* Background Image */}
+      <Image 
+        source={require('../../assets/Boy.png')} 
+        style={styles.backgroundImage} 
+      />
+      
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
           
           <View style={styles.headerTop}>
              <View>
-                <Text style={styles.welcomeTxt}>Hello,</Text>
+                <Text style={styles.welcomeTxt}>Hello...</Text>
                 <Text style={styles.nameTxt}>Champion 🔥</Text>
              </View>
              <View style={styles.headerBtnsContainer}>
@@ -85,7 +91,7 @@ export default function HomeScreen() {
                 
                 {['Youssef', 'Omar', 'Amr', 'Mazen'].map((name, index) => (
                     <View key={index} style={storyStyles.container}>
-                        <View style={[storyStyles.ring, { borderColor: 'rgba(255, 255, 255, 0.1)' }]}>
+                        <View style={[storyStyles.ring, { borderColor: 'rgba(45, 14, 88, 0.1)' }]}>
                             <Image source={{ uri: `https://picsum.photos/id/${1011+index}/200/200` }} style={storyStyles.img} />
                         </View>
                         <Text style={storyStyles.txt}>{name}</Text>
@@ -115,7 +121,7 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.navItem}><MaterialCommunityIcons name="arm-flex" size={28} color={GOLD} /><Text style={styles.navTxt}>Workouts</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItemCenter}>
             <LinearGradient colors={[GOLD, '#B8860B'] as const} style={styles.centerCircle}>
-                <MaterialCommunityIcons name="food-apple" size={30} color={BLACK} />
+                <MaterialCommunityIcons name="food-apple" size={30} color={BLACK} /> 
             </LinearGradient>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="settings-sharp" size={26} color="#666" /><Text style={[styles.navTxt, {color: '#666'}]}>Settings</Text></TouchableOpacity>
@@ -387,6 +393,15 @@ const MealCard = ({ title }: { title: string }) => {
 
 const styles = StyleSheet.create({
     main: { flex: 1, backgroundColor: '#000' },
+    backgroundImage: { 
+      position: 'absolute', 
+      top: 0, 
+      right: 0, 
+      width: '100%', 
+      height: '100%', 
+      opacity: 0.1,
+      resizeMode: 'contain',
+    },
     headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 20 },
     welcomeTxt: { color: '#888', fontSize: 16 },
     nameTxt: { color: '#FFF', fontSize: 24, fontWeight: '800' },
