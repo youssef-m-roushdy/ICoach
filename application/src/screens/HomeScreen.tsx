@@ -1,15 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    ScrollView, 
-    Image,
-    Dimensions
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView, 
+  Image,
+  SafeAreaView, 
+  Dimensions
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useAuth } from '../context'; 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -18,20 +17,24 @@ import MediaPickerSheet from '../components/MediaPickerSheet';
 const GOLD = '#FFD700';
 const BLACK = '#000000';
 const WHITE = '#FFFFFF';
+const BLUE = '#007BFF'; 
 const BG_GRADIENT = ['#0F0F0F', '#1A1A1A', '#000000'] as const;
 
 export default function HomeScreen() {
   const { user } = useAuth() as any; 
-  const insets = useSafeAreaInsets();
   const [showAll, setShowAll] = useState(false);
   const [isSheetVisible, setIsSheetVisible] = useState(false);
 
+ 
   const userImage = useMemo(() => {
+    
     const googlePhotoUrl = user?.photoURL || user?.avatar;
+    
     
     if (googlePhotoUrl && typeof googlePhotoUrl === 'string' && googlePhotoUrl.startsWith('http')) {
       return { uri: googlePhotoUrl };
     }
+    
     
     const name = user?.firstName || user?.username || 'User';
     console.warn('⚠️ No Google photo found, using generated avatar for:', name);
@@ -75,7 +78,7 @@ export default function HomeScreen() {
                 
                 {/* My Story */}
                 <TouchableOpacity style={storyStyles.container} onPress={() => setIsSheetVisible(true)} activeOpacity={0.8}>
-                    <View style={[storyStyles.ring, { borderColor: GOLD }]}>
+                    <View style={[storyStyles.ring, { borderColor: 'rgba(45, 14, 88, 0.1)' }]}>
                         <Image 
                             source={userImage} 
                             style={storyStyles.img}
@@ -87,15 +90,75 @@ export default function HomeScreen() {
                 </TouchableOpacity>
 
                 
-                {['Youssef', 'Omar', 'Amr', 'Mazen'].map((name, index) => (
+                {[
+                    { name: 'Youssef', image: require('../../assets/youssef.jpeg') },
+                    { name: 'Omar', image: require('../../assets/omar.jpeg') },
+                    { name: 'Amr', image: require('../../assets/mazen.jpeg') },
+                    { name: 'Mazen', image: require('../../assets/amr.jpeg') },
+                    { name: 'Ziad', image: require('../../assets/ziad.jpeg') },
+                    { name: 'Saif', image: require('../../assets/saif.jpeg') }
+                ].map((item, index) => (
                     <View key={index} style={storyStyles.container}>
-                        <View style={[storyStyles.ring, { borderColor: 'rgba(45, 14, 88, 0.1)' }]}>
-                            <Image source={{ uri: `https://picsum.photos/id/${1011+index}/200/200` }} style={storyStyles.img} />
+                        <View style={[storyStyles.ring, { borderColor: GOLD }]}>
+                            <Image source={item.image} style={storyStyles.img} />
                         </View>
-                        <Text style={storyStyles.txt}>{name}</Text>
+                        <Text style={storyStyles.txt}>{item.name}</Text>
                     </View>
                 ))}
             </ScrollView>
+          </View>
+
+          {/* Daily Steps Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Daily Steps</Text>
+            <View style={styles.stepsCard}>
+              {/* Left: Steps Count and Icon */}
+              <View style={styles.stepsLeft}>
+                <View style={[styles.stepsCircle, { borderColor: GOLD }]}>
+                  <Text style={[styles.stepsCount, { color: GOLD }]}>0</Text>
+                  <Text style={styles.stepsSmallText}>Steps</Text>
+                </View>
+                <MaterialCommunityIcons name="foot-print" size={40} color={BLUE} />
+              </View>
+
+              {/* Right: Progress and Stats */}
+              <View style={styles.stepsRight}>
+                {/* Progress Bar */}
+                <View style={styles.progressContainer}>
+                  <View style={styles.progressBarBg}>
+                    <View style={[styles.progressBarFill, { backgroundColor: GOLD }]} />
+                  </View>
+                  <Text style={[styles.progressText, { color: GOLD }]}>0 of 10000 steps</Text>
+                </View>
+
+                {/* Stats Row */}
+                <View style={styles.statsRow}>
+                  <View style={styles.statItem}>
+                    <View style={styles.statBadge}>
+                      <Ionicons name="checkmark-circle" size={20} color="#28A745" />
+                      <Text style={[styles.statItemValue, { color: GOLD }]}>0</Text>
+                    </View>
+                    <Text style={styles.statItemLabel}>Done</Text>
+                  </View>
+
+                  <View style={styles.statItem}>
+                    <View style={styles.statBadge}>
+                      <Ionicons name="flag" size={20} color={GOLD} />
+                      <Text style={[styles.statItemValue, { color: GOLD }]}>10000</Text>
+                    </View>
+                    <Text style={styles.statItemLabel}>Goal</Text>
+                  </View>
+
+                  <View style={styles.statItem}>
+                    <View style={styles.statBadge}>
+                      <Ionicons name="arrow-forward" size={20} color={GOLD} />
+                      <Text style={[styles.statItemValue, { color: GOLD }]}>10000</Text>
+                    </View>
+                    <Text style={styles.statItemLabel}>Remaining</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
           </View>
 
           <View style={styles.section}>
@@ -111,24 +174,73 @@ export default function HomeScreen() {
             ))}
           </View>
 
+          {/* Daily Water Intake */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Daily Water Intake</Text>
+            <View style={styles.waterCard}>
+              {/* Left: Water Count */}
+              <View style={styles.waterLeft}>
+                <View style={[styles.waterCircle, { borderColor: GOLD }]}>
+                  <Text style={[styles.waterCount, { color: GOLD }]}>0</Text>
+                <MaterialCommunityIcons name="water" size={28} color={BLUE} />
+                </View>
+              </View>
+
+              {/* Right: Progress and Stats */}
+              <View style={styles.waterRight}>
+                {/* Progress Bar */}
+                <View style={styles.waterProgressContainer}>
+                  <Text style={[styles.waterProgressLabel, { color: GOLD }]}>0 cups | 8 cups total</Text>
+                  <View style={styles.waterProgressBarBg}>
+                    <View style={[styles.waterProgressBarFill, { backgroundColor: GOLD }]} />
+                  </View>
+                </View>
+
+                {/* Stats Row */}
+                <View style={styles.waterStatsRow}>
+                  <View style={styles.waterStatItem}>
+                    <Text style={[styles.waterStatValue, { color: GOLD }]}>2000</Text>
+                    <Text style={[styles.waterStatLabel, { color: GOLD }]}>Goal</Text>
+                    <Text style={styles.waterStatUnit}>ml</Text>
+                  </View>
+
+                  <View style={styles.waterStatItem}>
+                    <Text style={[styles.waterStatValue, { color: GOLD }]}>0</Text>
+                    <Text style={[styles.waterStatLabel, { color: GOLD }]}>Drank</Text>
+                    <Text style={styles.waterStatUnit}>ml</Text>
+                  </View>
+
+                  <View style={styles.waterStatItem}>
+                    <Text style={[styles.waterStatValue, { color: GOLD }]}>2000</Text>
+                    <Text style={[styles.waterStatLabel, { color: GOLD }]}>Remaining</Text>
+                    <Text style={styles.waterStatUnit}>ml</Text>
+                  </View>
+                </View>
+
+                {/* Add Glass Button */}
+                <TouchableOpacity style={[styles.addGlassBtn, { backgroundColor: GOLD }]}>
+                  <Ionicons name="add-circle" size={20} color={BLACK} />
+                  <Text style={styles.addGlassBtnText}>Add Glass</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
         </ScrollView>
       </SafeAreaView>
 
-      {/* Fixed Bottom Navigation - Now properly accounts for safe area */}
-      <View style={[styles.bottomNav, { bottom: insets.bottom }]}>
+      
+      <View style={styles.bottomNav}>
+        <TouchableOpacity style={styles.navItem}><MaterialCommunityIcons name="dumbbell" size={28} color="#666" /><Text style={styles.navTxt}>Exercises</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}><Ionicons name="people" size={28} color="#666" /><Text style={styles.navTxt}>Community</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <MaterialCommunityIcons name="arm-flex" size={28} color={GOLD} />
-          <Text style={styles.navTxt}>Workouts</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItemCenter}>
             <LinearGradient colors={[GOLD, '#B8860B'] as const} style={styles.centerCircle}>
                 <MaterialCommunityIcons name="food-apple" size={30} color={BLACK} /> 
             </LinearGradient>
+            <Text style={styles.navTxt}>Food</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="settings-sharp" size={26} color="#666" />
-          <Text style={[styles.navTxt, {color: '#666'}]}>Settings</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}><MaterialCommunityIcons name="heart" size={28} color="#666" /><Text style={styles.navTxt}>Favorites</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.navItem}><Ionicons name="settings-sharp" size={26} color="#666" /><Text style={styles.navTxt}>Settings</Text></TouchableOpacity>
       </View>
 
       <MediaPickerSheet isVisible={isSheetVisible} onClose={() => setIsSheetVisible(false)} onSelectMedia={() => {}} />
@@ -140,6 +252,7 @@ export default function HomeScreen() {
 const MealCard = ({ title }: { title: string }) => {
     const [open, setOpen] = useState(false);
 
+  
     const mealDetails = {
         'Breakfast': [
             { 
@@ -351,8 +464,12 @@ const MealCard = ({ title }: { title: string }) => {
     return (
         <TouchableOpacity style={[mealStyles.card, open && { borderColor: GOLD }]} onPress={() => setOpen(!open)} activeOpacity={0.9}>
             <View style={mealStyles.header}>
-                <View><Text style={mealStyles.title}>{title}</Text><Text style={mealStyles.subTitle}>{foodItems.length} foods</Text></View>
-                <Feather name={open ? "chevron-up" : "chevron-right"} size={20} color={open ? GOLD : '#666'} />
+                <View>
+                    <Text style={mealStyles.title}>{title}</Text>
+                    {/* تم تغيير اللون هنا إلى GOLD لعدد الوجبات */}
+                    <Text style={[mealStyles.subTitle, { color: GOLD }]}>{foodItems.length} foods</Text>
+                </View>
+                <Feather name={open ? "chevron-up" : "chevron-right"} size={20} color={GOLD} />
             </View>
             {open && (
                 <View style={mealStyles.content}>
@@ -402,37 +519,207 @@ const styles = StyleSheet.create({
       right: 0, 
       width: '100%', 
       height: '100%', 
-      opacity: 0.1,
+      opacity: 0.2,
       resizeMode: 'contain',
     },
     headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 20 },
     welcomeTxt: { color: '#888', fontSize: 16 },
     nameTxt: { color: '#FFF', fontSize: 24, fontWeight: '800' },
+    emojiIcon: { fontSize: 28, marginLeft: 8, fontWeight: '800' },
     headerBtnsContainer: { flexDirection: 'row', gap: 12, alignItems: 'center' },
     notifBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.08)', justifyContent: 'center', alignItems: 'center', borderWidth: 0.5, borderColor: 'rgba(255,255,255,0.15)' },
     chatbotBtn: { width: 40, height: 40, borderRadius: 12, backgroundColor: 'rgba(255,215,0,0.1)', justifyContent: 'center', alignItems: 'center', borderWidth: 0.5, borderColor: 'rgba(255,215,0,0.2)' },
     storiesContainer: { marginVertical: 25 },
-    section: { paddingHorizontal: 20 },
+    section: { paddingHorizontal: 20, marginBottom: 20, gap: 12 },
     sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 15 },
     sectionTitle: { color: '#FFF', fontSize: 20, fontWeight: '700' },
     seeAll: { color: GOLD, fontSize: 14, fontWeight: '500' },
-    bottomNav: { 
-      position: 'absolute', 
-      left: 20, 
-      right: 20, 
-      height: 75, 
-      paddingBottom: 15,
-      backgroundColor: 'transparent', 
-      borderRadius: 25, 
-      flexDirection: 'row', 
-      justifyContent: 'space-around', 
-      alignItems: 'center', 
-      borderWidth: 0 
-    },
-    navItem: { alignItems: 'center' },
-    navTxt: { color: GOLD, fontSize: 10, marginTop: 4, fontWeight: '600' },
+    bottomNav: { position: 'absolute', bottom: 25, left: 20, right: 20, height: 75, backgroundColor: 'rgba(25, 25, 25, 0.95)', borderRadius: 25, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
+    navItem: { alignItems: 'center', justifyContent: 'center', flex: 1 },
+    navTxt: { color: WHITE, fontSize: 10, marginTop: 4, fontWeight: '600' },
     navItemCenter: { top: -20 },
-    centerCircle: { width: 65, height: 65, borderRadius: 32.5, justifyContent: 'center', alignItems: 'center' },
+    centerCircle: { width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center' },
+    // Daily Steps Styles
+    stepsCard: {
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      borderRadius: 20,
+      padding: 20,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 20,
+    },
+    stepsLeft: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+    },
+    stepsCircle: {
+      width: 70,
+      height: 70,
+      borderRadius: 35,
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    stepsCount: {
+      fontSize: 28,
+      fontWeight: '900',
+      lineHeight: 30,
+    },
+    stepsSmallText: {
+      color: '#AAA',
+      fontSize: 10,
+      fontWeight: '600',
+    },
+    stepsRight: {
+      flex: 1,
+    },
+    progressContainer: {
+      marginBottom: 16,
+    },
+    progressBarBg: {
+      width: '100%',
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      overflow: 'hidden',
+      marginBottom: 8,
+    },
+    progressBarFill: {
+      width: '0%',
+      height: '100%',
+    },
+    progressText: {
+      fontSize: 11,
+      fontWeight: '500',
+    },
+    statsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 12,
+    },
+    statItem: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      borderRadius: 12,
+      padding: 12,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.15)',
+    },
+    statBadge: {
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    statItemValue: {
+      fontSize: 13,
+      fontWeight: '700',
+      marginTop: 4,
+    },
+    statItemLabel: {
+      color: '#888',
+      fontSize: 10,
+      fontWeight: '600',
+    },
+    // Daily Water Intake Styles
+    waterCard: {
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      borderRadius: 20,
+      padding: 20,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 20,
+    },
+    waterLeft: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    waterCircle: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 4,
+    },
+    waterCount: {
+      fontSize: 32,
+      fontWeight: '900',
+      lineHeight: 35,
+    },
+    waterRight: {
+      flex: 1,
+    },
+    waterProgressContainer: {
+      marginBottom: 14,
+    },
+    waterProgressLabel: {
+      fontSize: 11,
+      fontWeight: '500',
+      marginBottom: 8,
+    },
+    waterProgressBarBg: {
+      width: '100%',
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      overflow: 'hidden',
+    },
+    waterProgressBarFill: {
+      width: '0%',
+      height: '100%',
+    },
+    waterStatsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      gap: 8,
+      marginBottom: 12,
+    },
+    waterStatItem: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+      borderRadius: 12,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: 'rgba(255, 255, 255, 0.15)',
+    },
+    waterStatValue: {
+      fontSize: 14,
+      fontWeight: '800',
+      marginBottom: 2,
+    },
+    waterStatLabel: {
+      fontSize: 10,
+      fontWeight: '600',
+      marginBottom: 2,
+    },
+    waterStatUnit: {
+      color: '#888',
+      fontSize: 8,
+      fontWeight: '500',
+    },
+    addGlassBtn: {
+      borderRadius: 12,
+      padding: 12,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 8,
+    },
+    addGlassBtnText: {
+      color: BLACK,
+      fontSize: 13,
+      fontWeight: '700',
+    },
 });
 
 const storyStyles = StyleSheet.create({
@@ -447,13 +734,17 @@ const mealStyles = StyleSheet.create({
     card: { backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 20, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
     header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     title: { color: '#FFF', fontSize: 17, fontWeight: '700' },
-    subTitle: { color: '#666', fontSize: 12, marginTop: 2 },
+    subTitle: { fontSize: 12, marginTop: 2 },
     content: { marginTop: 15, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.1)', paddingTop: 15, gap: 12 },
     mealImg: { width: 110, height: 110, borderRadius: 15, marginRight: 12 },
+    
+      
     foodItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,215,0,0.05)', borderRadius: 15, padding: 12, borderWidth: 1, borderColor: 'rgba(255,215,0,0.1)' },
     foodImg: { width: 100, height: 100, borderRadius: 12, marginRight: 12, backgroundColor: '#222' },
     foodDetails: { flex: 1 },
     foodName: { color: GOLD, fontSize: 14, fontWeight: '700', marginBottom: 8 },
+    
+    
     nutritionRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 2, marginTop: 4 },
     nutritionItem: { flex: 1, backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 6, padding: 4, alignItems: 'center' },
     nutritionLabel: { color: '#888', fontSize: 8, fontWeight: '600', marginBottom: 1 },
