@@ -60,7 +60,7 @@ export default function HomeScreen() {
           
           <View style={styles.headerTop}>
              <View>
-                <Text style={styles.welcomeTxt}>Hello...</Text>
+                <Text style={styles.welcomeTxt}>Hello...👋</Text>
                 <Text style={styles.nameTxt}>Champion 🔥</Text>
              </View>
              <View style={styles.headerBtnsContainer}>
