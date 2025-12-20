@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import removed: import { RootStackParamList } from '../types';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignUpScreen from '../screens/SignupScreen';
@@ -23,7 +23,6 @@ import {
   TouchableOpacity, 
   Text,
   Modal,
-  Animated,
   Dimensions
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -45,7 +44,6 @@ export type RootStackParamList = {
   Workouts: undefined; 
 };
 
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -58,6 +56,7 @@ interface DrawerMenuProps {
 
 function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
   const { logout } = useAuth();
+  const insets = useSafeAreaInsets();
 
   const handleLogout = async () => {
     try {
@@ -72,7 +71,7 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
     }
   };
 
-  const handleNavigate = (screen: keyof RootStackParamList) => { // استخدام الأنواع
+  const handleNavigate = (screen: keyof RootStackParamList) => {
     onClose();
     navigation.navigate(screen);
   };
@@ -81,13 +80,13 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
     <Modal
       visible={visible}
       transparent
-      animationType="none" // Use 'none' to allow manual control of animation
+      animationType="none"
       onRequestClose={onClose}
     >
       <View style={drawerStyles.overlay}>
         {/* Place drawer first so it is fixed on the left */}
         <View style={drawerStyles.drawer}> 
-          <View style={drawerStyles.header}>
+          <View style={[drawerStyles.header, { paddingTop: insets.top + 20 }]}>
             <TouchableOpacity 
               style={drawerStyles.closeButton}
               onPress={onClose}
@@ -138,7 +137,7 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
             </TouchableOpacity>
           </View>
 
-          <View style={drawerStyles.footer}>
+          <View style={[drawerStyles.footer, { paddingBottom: insets.bottom + 20 }]}>
             <TouchableOpacity 
               style={drawerStyles.logoutButton}
               onPress={handleLogout}
@@ -315,7 +314,7 @@ const drawerStyles = StyleSheet.create({
   },
   header: {
     padding: SIZES.lg,
-    paddingTop: 60,
+    // paddingTop is now set dynamically using insets
     borderBottomWidth: 1,
     borderBottomColor: COLORS.darkGray,
   },
@@ -342,6 +341,7 @@ const drawerStyles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: COLORS.darkGray,
     padding: SIZES.lg,
+    // paddingBottom is now set dynamically using insets
   },
   logoutButton: {
     flexDirection: 'row',

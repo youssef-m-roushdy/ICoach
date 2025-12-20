@@ -54,7 +54,7 @@ export default function SignInScreen() {
       if (response.success && response.data) {
         await login(
           response.data.user,
-          response.data.token,
+          response.data.accessToken,
           response.data.refreshToken
         );
         Alert.alert('Success', 'Account created successfully!');

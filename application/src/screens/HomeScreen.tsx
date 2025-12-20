@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   ScrollView, 
   Image,
-  SafeAreaView, 
-  Dimensions
 } from 'react-native';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { useAuth } from '../context'; 
@@ -25,7 +23,6 @@ export default function HomeScreen() {
   const [showAll, setShowAll] = useState(false);
   const [isSheetVisible, setIsSheetVisible] = useState(false);
 
- 
   const userImage = useMemo(() => {
     
     const googlePhotoUrl = user?.photoURL || user?.avatar;
@@ -55,7 +52,7 @@ export default function HomeScreen() {
         style={styles.backgroundImage} 
       />
       
-      <SafeAreaView style={{ flex: 1 }}>
+
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
           
           <View style={styles.headerTop}>
@@ -227,7 +224,6 @@ export default function HomeScreen() {
           </View>
 
         </ScrollView>
-      </SafeAreaView>
 
       
       <View style={styles.bottomNav}>
@@ -465,9 +461,8 @@ const MealCard = ({ title }: { title: string }) => {
         <TouchableOpacity style={[mealStyles.card, open && { borderColor: GOLD }]} onPress={() => setOpen(!open)} activeOpacity={0.9}>
             <View style={mealStyles.header}>
                 <View>
-                    <Text style={mealStyles.title}>{title}</Text>
-                    {/* تم تغيير اللون هنا إلى GOLD لعدد الوجبات */}
-                    <Text style={[mealStyles.subTitle, { color: GOLD }]}>{foodItems.length} foods</Text>
+                  <Text style={mealStyles.title}>{title}</Text>
+                  <Text style={[mealStyles.subTitle, { color: GOLD }]}>{foodItems.length} foods</Text>
                 </View>
                 <Feather name={open ? "chevron-up" : "chevron-right"} size={20} color={GOLD} />
             </View>
@@ -475,12 +470,10 @@ const MealCard = ({ title }: { title: string }) => {
                 <View style={mealStyles.content}>
                     {foodItems.map((food, index) => (
                         <View key={index} style={mealStyles.foodItem}>
-                            {/* الصورة */}
                             <Image 
                                 source={{ uri: food.imageUrl }} 
                                 style={mealStyles.foodImg} 
                             />
-                            {/* التفاصيل */}
                             <View style={mealStyles.foodDetails}>
                                 <Text style={mealStyles.foodName}>{food.name}</Text>
                                 <Text style={mealStyles.foodDescription}>{food.description}</Text>
