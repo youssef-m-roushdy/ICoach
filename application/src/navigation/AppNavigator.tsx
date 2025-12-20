@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// ❌ تم حذف الاستيراد: import { RootStackParamList } from '../types';
+// import removed: import { RootStackParamList } from '../types';
 import { useAuth } from '../context';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignUpScreen from '../screens/SignupScreen';
@@ -29,7 +29,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { COLORS, SIZES } from '../constants';
 
-// ✅ الحل: تم وضع تعريف الأنواع هنا مؤقتاً لحل خطأ 'Messages'
+// Type definition temporarily added to fix 'Messages' error
 export type RootStackParamList = {
   Welcome: undefined;
   SignIn: undefined;
@@ -81,15 +81,11 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
     <Modal
       visible={visible}
       transparent
-      animationType="none" // تم تغيير animationType إلى 'none' للسماح بالتحكم اليدوي
+      animationType="none" // Use 'none' to allow manual control of animation
       onRequestClose={onClose}
     >
       <View style={drawerStyles.overlay}>
-        {/*
-          نضع Drawer أولاً في شجرة المكونات
-          مع استخدام position: 'absolute' و left: 0
-          لضمان ظهوره على اليسار بشكل ثابت
-        */}
+        {/* Place drawer first so it is fixed on the left */}
         <View style={drawerStyles.drawer}> 
           <View style={drawerStyles.header}>
             <TouchableOpacity 
@@ -153,10 +149,7 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
           </View>
         </View>
         
-        {/*
-          هذا المكون يغطي باقي الشاشة ويغلق القائمة عند الضغط عليه.
-          نضع الـ View هنا لضمان أنه يغطي المساحة المتبقية على اليمين.
-        */}
+        {/* This covers the rest of the screen and closes the drawer when pressed */}
         <TouchableOpacity 
           style={drawerStyles.overlayTouchable} 
           activeOpacity={1} 
@@ -223,13 +216,13 @@ export const AppNavigator: React.FC = () => {
                 component={HomeScreen} 
                 options={({ navigation }) => ({ 
                   title: 'ICoach',
-                  // 🎯 إضافة زر الرسائل على اليمين هنا
+                  // add messages button on the right
                   headerRight: () => (
                     <TouchableOpacity
                       style={{ marginRight: 15 }}
                       onPress={() => navigation.navigate('Messages' as any)}
                     >
-                      {/* استخدام MaterialIcons كرمز للرسائل */}
+                      {/* use MaterialIcons as messages icon */}
                       <MaterialIcons name="message" size={28} color={COLORS.primary} />
                     </TouchableOpacity>
                   ),
@@ -249,7 +242,7 @@ export const AppNavigator: React.FC = () => {
                 component={HomeScreen} 
                 options={({ navigation }) => ({
                   title: 'ICoach',
-                  // 🎯 إضافة زر الرسائل على اليمين هنا
+                  // add messages button on the right
                   headerRight: () => (
                     <TouchableOpacity
                       style={{ marginRight: 15 }}
@@ -294,27 +287,27 @@ const hasCompletedBodyInformation = (user: any): boolean => {
   );
 };
 
-// 🎯 الأنماط المعدلة
+// Styles
 const drawerStyles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    // 🛠️ تم التغيير: لجعل القائمة تظهر من اليسار، نستخدم ترتيب المكونات العادي
+    // Use row direction so the drawer appears from the left
     flexDirection: 'row', 
   },
   overlayTouchable: {
-    // هذا سيأخذ المساحة المتبقية على اليمين
+    // This will take the remaining space on the right
     flex: 1,
   },
   drawer: {
     width: SCREEN_WIDTH * 0.75,
     backgroundColor: COLORS.background,
-    // 🛠️ التعديل الرئيسي: لتثبيت القائمة على اليسار
+    // Fix the drawer to the left
     position: 'absolute',
     left: 0,
     top: 0,
     bottom: 0,
-    zIndex: 10, // تأكد من أنه فوق الـ overlayTouchable
+    zIndex: 10, // ensure it's above the overlayTouchable
   },
   container: {
     flex: 1,

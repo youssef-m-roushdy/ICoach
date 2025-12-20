@@ -262,7 +262,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '10g',
                 fat: '14g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/eggs_benedict.jpg',
-                description: 'بيض + عيش أبيض'
+            description: null
             },
             { 
                 name: 'French Toast',
@@ -271,7 +271,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '22g',
                 fat: '8g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/french_toast.jpg',
-                description: 'عيش + بيض + سكر'
+                description: null
             },
             { 
                 name: 'Apple & Almonds',
@@ -280,7 +280,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '16g',
                 fat: '8g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/apple.jpg',
-                description: 'تفاح + لوز'
+                description: null
             }
         ],
         'Lunch': [
@@ -291,7 +291,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '25g',
                 fat: '13g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/grilled_salmon.jpg',
-                description: 'سمك مشوي + أرز + سلطة'
+                description: null
             },
             { 
                 name: 'Kofta & Bread',
@@ -300,7 +300,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '20g',
                 fat: '18g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/kofta.jpg',
-                description: 'كفتة + عيش + طحينة'
+                description: null
             },
             { 
                 name: 'Caesar Salad',
@@ -309,7 +309,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '7g',
                 fat: '10g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/caesar_salad.jpg',
-                description: 'سلطة + دجاج + صوص'
+                description: null
             }
         ],
         'Workout Meal': [
@@ -320,7 +320,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '41g',
                 fat: '0.5g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/banana.jpg',
-                description: 'موز + عسل (قبل الرياضة)'
+                description: null
             },
             { 
                 name: 'Toast & Peanut Butter',
@@ -329,7 +329,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '20g',
                 fat: '10g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/french_toast.jpg',
-                description: 'عيش + زبدة الفول السوداني'
+                description: null
             },
             { 
                 name: 'Dates & Milk',
@@ -338,7 +338,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '32g',
                 fat: '2g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fig.jpg',
-                description: 'تمر + حليب'
+                description: null
             }
         ],
         'Dinner': [
@@ -349,7 +349,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '20g',
                 fat: '7g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/kebda.jpg',
-                description: 'كبدة + أرز + خضار'
+                description: null
             },
             { 
                 name: 'Fish & Bread',
@@ -358,7 +358,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '18g',
                 fat: '12g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fish.jpg',
-                description: 'سمك + عيش + طماطم'
+                description: null
             },
             { 
                 name: 'Chicken Wings & Rice',
@@ -367,7 +367,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '25g',
                 fat: '12g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/chicken_wings.jpg',
-                description: 'دجاج + أرز + ملوخية'
+                description: null
             }
         ],
         'Morning Snack': [
@@ -378,7 +378,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '14g',
                 fat: '6g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/apple.jpg',
-                description: 'تفاح + جبن'
+                description: null
             },
             { 
                 name: 'Yogurt & Granola',
@@ -387,7 +387,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '20g',
                 fat: '5g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/frozen_yogurt.jpg',
-                description: 'زبادي + جرانولا'
+                description: null
             },
             { 
                 name: 'Banana & Almonds',
@@ -396,7 +396,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '25g',
                 fat: '6g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/banana.jpg',
-                description: 'موز + لوز محمص'
+                description: null
             }
         ],
         'Evening Snack': [
@@ -407,7 +407,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '12g',
                 fat: '10g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/cheese_plate.jpg',
-                description: 'جبن + بسكويت مالح'
+                description: null
             },
             { 
                 name: 'Grapes & Nuts',
@@ -416,7 +416,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '20g',
                 fat: '7g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/grape.jpg',
-                description: 'عنب + جوز'
+                description: null
             },
             { 
                 name: 'Fig & Honey',
@@ -425,7 +425,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '32g',
                 fat: '0.5g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fig.jpg',
-                description: 'تين + عسل'
+                description: null
             }
         ],
         'Post-Workout Shake': [
@@ -436,7 +436,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '18g',
                 fat: '2g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/banana.jpg',
-                description: 'موز + حليب (بروتين)'
+                description: null
             },
             { 
                 name: 'Dates & Yogurt',
@@ -445,7 +445,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '28g',
                 fat: '2g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fig.jpg',
-                description: 'تمر + زبادي يوناني'
+                description: null
             },
             { 
                 name: 'Fool & Bread',
@@ -454,7 +454,7 @@ const MealCard = ({ title }: { title: string }) => {
                 carbs: '16g',
                 fat: '9g',
                 imageUrl: 'https://res.cloudinary.com/dsdkaxbl3/image/upload/v1763120284/icoach/foods/fool.jpg',
-                description: 'فول + عيش + طحينة'
+                description: null
             }
         ]
     };
