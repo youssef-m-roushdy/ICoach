@@ -39,22 +39,34 @@
 
 ### 📱 Mobile Application
 - **Modern UI/UX** - Clean, intuitive interface with smooth animations
-- **Authentication Flow** - Sign up, sign in, OAuth providers
-- **Profile Management** - Track body metrics, goals, and progress
-- **Workout Tracking** - Browse exercises, create routines, log workouts
-- **Nutrition Dashboard** - Daily calorie intake, macro tracking
+- **Authentication Flow** - Sign up, sign in, Google OAuth, password reset
+- **Automatic Token Refresh** - Seamless re-authentication when tokens expire
+- **Profile Management** - Track body metrics (height, weight, BMI), goals, and progress
+- **Body Info Editor** - Update fitness goals, activity level, body measurements
+- **Workout Library** - Browse 270+ exercises with GIF demonstrations
+- **Save Workouts** - Bookmark favorite exercises for quick access
+- **Food Recognition** - AI-powered meal analysis with camera/gallery picker
+- **Nutrition Tracking** - Daily calorie intake, macro tracking
 - **Multi-language** - i18n support with 6 languages
 - **Offline Support** - AsyncStorage for data persistence
+- **Deep Linking** - OAuth callback handling
 
 ### 🖥️ Backend Server
-- **RESTful API** - Comprehensive endpoints for all features
+- **RESTful API** - Comprehensive endpoints for all features (v1 versioned)
 - **Dual Database** - PostgreSQL for relational data, MongoDB for flexible schemas
-- **Authentication & Authorization** - JWT tokens, OAuth 2.0, session management
-- **Image Management** - Cloudinary integration for media storage
-- **Email Service** - Nodemailer for notifications and verification
+- **JWT Authentication** - Access tokens (15min) + Refresh tokens (7 days)
+- **Token Refresh Endpoint** - Automatic token renewal support
+- **OAuth 2.0** - Google Sign-In with mobile ID token verification
+- **User Management** - Registration, login, profile CRUD, body metrics
+- **Workout API** - Full CRUD with filtering by body part, equipment, level
+- **Saved Workouts** - User favorites and bookmarks management
+- **Food API** - Nutrition data with search and filtering
+- **Image Management** - Cloudinary integration for avatars and media
+- **Email Service** - Nodemailer for verification and notifications
 - **API Documentation** - Interactive Swagger/OpenAPI docs
 - **Database Migrations** - Sequelize migrations and seeders
-- **Docker Support** - Containerized deployment ready
+- **Docker Support** - Containerized deployment with docker-compose
+- **Error Handling** - Centralized error handling with custom error classes
 
 ### 🤖 AI Service
 - **Food Recognition** - EfficientNetB0 model trained on 100+ food classes
@@ -71,57 +83,288 @@
 ```
 Icoach-app/
 │
-├── 📱 application/          # React Native Mobile App
+├── 📱 application/          # React Native Mobile App (Expo)
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
-│   │   ├── screens/        # App screens (Auth, Profile, Foods, etc.)
+│   │   │   ├── common/     # Buttons, Inputs, GoogleButton, etc.
+│   │   │   └── auth/       # Auth-specific components
+│   │   ├── screens/        # App screens
+│   │   │   ├── WelcomeScreen.tsx
+│   │   │   ├── SignInScreen.tsx
+│   │   │   ├── SignupScreen.tsx
+│   │   │   ├── HomeScreen.tsx
+│   │   │   ├── ProfileScreen.tsx
+│   │   │   ├── EditProfileScreen.tsx
+│   │   │   ├── EditBodyInfoScreen.tsx
+│   │   │   ├── WorkoutsScreen.tsx
+│   │   │   ├── FoodsScreen.tsx
+│   │   │   ├── MessagesScreen.tsx
+│   │   │   ├── OnboardingScreen.tsx
+│   │   │   └── AuthCallbackScreen.tsx
 │   │   ├── navigation/     # React Navigation setup
-│   │   ├── services/       # API integration layer
-│   │   ├── context/        # Global state management
+│   │   ├── services/       # API integration (api.ts)
+│   │   ├── context/        # AuthContext with token management
 │   │   ├── hooks/          # Custom React hooks
 │   │   ├── utils/          # Helper functions & validators
 │   │   ├── constants/      # Theme, colors, sizes
 │   │   └── types/          # TypeScript definitions
-│   └── i18n/               # Internationalization
+│   ├── i18n/               # Internationalization (6 languages)
+│   └── assets/             # Fonts, images
 │
-├── 🖥️ server/              # Node.js + TypeScript Backend
+├── 🖥️ server/              # Node.js + Express + TypeScript Backend
 │   ├── src/
 │   │   ├── controllers/    # Request handlers
-│   │   ├── routes/         # API endpoints
-│   │   ├── models/         # Database models (Sequelize & Mongoose)
+│   │   │   ├── authController.ts
+│   │   │   ├── userController.ts
+│   │   │   ├── workoutController.ts
+│   │   │   ├── foodController.ts
+│   │   │   └── savedWorkoutController.ts
+│   │   ├── routes/v1/      # API endpoints (versioned)
+│   │   │   ├── authRoutes.ts
+│   │   │   ├── userRoutes.ts
+│   │   │   ├── workoutRoutes.ts
+│   │   │   ├── foodRoutes.ts
+│   │   │   └── savedWorkoutRoutes.ts
+│   │   ├── models/         # Database models
+│   │   │   ├── sql/        # Sequelize models (User, Workout, Food)
+│   │   │   └── nosql/      # Mongoose models
 │   │   ├── services/       # Business logic
+│   │   │   ├── userService.ts
+│   │   │   ├── emailService.ts
+│   │   │   └── imageService.ts
 │   │   ├── middleware/     # Auth, validation, error handling
-│   │   ├── config/         # Database & app configuration
+│   │   ├── config/         # Database & JWT configuration
 │   │   ├── migrations/     # Database migrations
 │   │   └── seeders/        # Database seeders
-│   ├── data/               # Seed data (workouts, foods)
-│   └── public/             # Static assets
+│   ├── data/               # Seed data (workouts CSV, foods JSON)
+│   └── uploads/            # Local file uploads
 │
-├── 🤖 AI/                  # Python AI Service
+├── 🤖 AI/                  # Python AI Service (FastAPI)
 │   ├── AI_API_Features/
-│   │   ├── routers/        # FastAPI routes
-│   │   ├── services/       # ML model integration
-│   │   ├── models/         # Database models
+│   │   ├── routers/        # FastAPI routes (food.py)
+│   │   ├── services/       # ML & DB services
+│   │   ├── models/         # Pydantic schemas
 │   │   └── config/         # Database & settings
 │   ├── food_predict_feature/
-│   │   ├── best_model_food100.keras  # Trained model
-│   │   └── class_names.json          # Food categories
-│   └── main.py             # FastAPI application
+│   │   ├── best_model_food100.keras  # Trained EfficientNetB0 model
+│   │   └── class_names.json          # 100+ food categories
+│   └── main.py             # FastAPI application entry
 │
-└── 🌐 frontend/            # Web Frontend (Future)
+└── 🌐 frontend/            # Web Frontend (Planned)
 ```
 
 ### 🔄 Data Flow
 
 ```mermaid
-graph LR
-    A[Mobile App] -->|REST API| B[Backend Server]
-    B -->|PostgreSQL| C[(User Data)]
-    B -->|MongoDB| D[(Activity Logs)]
-    B -->|Cloudinary| E[Images]
-    A -->|Food Image| F[AI Service]
-    F -->|Nutrition Data| A
-    F -->|PostgreSQL| G[(Food Database)]
+flowchart TB
+    subgraph Client["📱 Mobile App - React Native/Expo"]
+        direction TB
+        UI[/"User Interface"/]
+        
+        subgraph Screens["Screens"]
+            Welcome[Welcome Screen]
+            SignIn[Sign In Screen]
+            SignUp[Sign Up Screen]
+            Home[Home Screen]
+            Profile[Profile Screen]
+            EditProfile[Edit Profile Screen]
+            EditBodyInfo[Edit Body Info Screen]
+            Foods[Foods Screen]
+            Workouts[Workouts Screen]
+            Messages[Messages Screen]
+            Onboarding[Onboarding Screen]
+        end
+        
+        subgraph Context["State Management"]
+            AuthContext[Auth Context]
+            TokenStorage[(AsyncStorage)]
+        end
+        
+        subgraph AppServices["API Services"]
+            AuthService[Auth Service]
+            APIService[API Service]
+            WorkoutService[Workout Service]
+            FoodService[Food Service]
+        end
+        
+        subgraph Components["Components"]
+            GoogleButton[Google Sign-In Button]
+            MediaPicker[Media Picker]
+        end
+    end
+
+    subgraph Backend["🖥️ Backend Server - Node.js/Express/TypeScript"]
+        direction TB
+        
+        subgraph Routes["API Routes /api/v1"]
+            AuthRoutes["/auth/*"]
+            UserRoutes["/users/*"]
+            WorkoutRoutes["/workouts/*"]
+            FoodRoutes["/foods/*"]
+            SavedWorkoutRoutes["/saved-workouts/*"]
+        end
+        
+        subgraph Middleware["Middleware"]
+            AuthMiddleware[JWT Auth Middleware]
+            ValidationMiddleware[Validation Middleware]
+            ErrorHandler[Error Handler]
+        end
+        
+        subgraph Controllers["Controllers"]
+            AuthController[Auth Controller]
+            UserController[User Controller]
+            WorkoutController[Workout Controller]
+            FoodController[Food Controller]
+            SavedWorkoutController[Saved Workout Controller]
+        end
+        
+        subgraph BackendServices["Services"]
+            UserService[User Service]
+            EmailService[Email Service]
+            ImageService[Image Service]
+        end
+        
+        subgraph JWT["JWT Token Management"]
+            AccessToken[Access Token - 15 min expiry]
+            RefreshToken[Refresh Token - 7 day expiry]
+        end
+    end
+
+    subgraph AI["🤖 AI Service - FastAPI/Python"]
+        direction TB
+        AIRouter[Food Router]
+        MLService[ML Service]
+        FoodModel[Food Detection Model - EfficientNetB0]
+        DBService[DB Service]
+    end
+
+    subgraph Database["🗄️ PostgreSQL Database"]
+        direction TB
+        UsersTable[(Users Table)]
+        WorkoutsTable[(Workouts Table)]
+        FoodsTable[(Foods Table)]
+        SavedWorkoutsTable[(Saved Workouts Table)]
+    end
+
+    subgraph External["🌐 External Services"]
+        GoogleOAuth[Google OAuth 2.0]
+        EmailProvider[Email Service - SMTP]
+        Cloudinary[Cloudinary - Images]
+    end
+
+    %% User Flow - Authentication
+    UI --> Welcome
+    Welcome --> SignIn
+    Welcome --> SignUp
+    SignIn --> AuthService
+    SignUp --> AuthService
+    SignIn --> GoogleButton
+    SignUp --> GoogleButton
+    
+    GoogleButton -->|"idToken"| GoogleOAuth
+    GoogleOAuth -->|"Verified Token"| AuthRoutes
+    
+    AuthService -->|"Login/Register"| UserRoutes
+    UserRoutes --> AuthMiddleware
+    AuthMiddleware --> UserController
+    UserController --> UserService
+    
+    %% Token Flow
+    UserService -->|"Generate"| AccessToken
+    UserService -->|"Generate"| RefreshToken
+    AccessToken -->|"Store"| TokenStorage
+    RefreshToken -->|"Store"| TokenStorage
+    
+    AuthContext -->|"Read/Write"| TokenStorage
+    APIService -->|"Include Token"| AuthMiddleware
+    
+    %% Token Refresh Flow
+    TokenStorage -->|"Expired Token"| AuthContext
+    AuthContext -->|"Refresh Request"| UserRoutes
+    UserRoutes -->|"New Tokens"| AuthContext
+    
+    %% Main App Flow
+    AuthContext -->|"Authenticated"| Home
+    Home --> Workouts
+    Home --> Foods
+    Home --> Profile
+    Home --> Messages
+    Profile --> EditProfile
+    Profile --> EditBodyInfo
+    
+    %% Workout Flow
+    Workouts --> WorkoutService
+    WorkoutService --> WorkoutRoutes
+    WorkoutRoutes --> AuthMiddleware
+    AuthMiddleware --> WorkoutController
+    WorkoutController --> WorkoutsTable
+    WorkoutController --> SavedWorkoutsTable
+    
+    %% Food Detection Flow
+    Foods --> MediaPicker
+    MediaPicker -->|"Image"| FoodService
+    FoodService -->|"Upload Image"| AIRouter
+    AIRouter --> MLService
+    MLService --> FoodModel
+    FoodModel -->|"Prediction"| DBService
+    DBService --> FoodsTable
+    DBService -->|"Nutrition Data"| FoodService
+    
+    %% Profile Flow
+    EditProfile --> APIService
+    EditBodyInfo --> APIService
+    APIService --> UserRoutes
+    UserController --> UsersTable
+    UserController --> Cloudinary
+    
+    %% Email Flow
+    UserService -->|"Verification Email"| EmailService
+    EmailService --> EmailProvider
+```
+
+### 🔄 Authentication Flow (Simplified)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App as Mobile App
+    participant Auth as Auth Context
+    participant Storage as AsyncStorage
+    participant API as Backend API
+    participant Google as Google OAuth
+    
+    %% Normal Login Flow
+    User->>App: Enter credentials
+    App->>API: POST /api/v1/users/login
+    API->>API: Validate credentials
+    API-->>App: {accessToken, refreshToken, user}
+    App->>Auth: login(user, accessToken, refreshToken)
+    Auth->>Storage: Store tokens & user
+    App-->>User: Navigate to Home
+    
+    %% Google OAuth Flow
+    User->>App: Tap "Sign in with Google"
+    App->>Google: Request sign-in
+    Google-->>App: {idToken, user info}
+    App->>API: POST /api/v1/auth/google/mobile
+    API->>Google: Verify idToken
+    Google-->>API: Token valid
+    API-->>App: {accessToken, refreshToken, user}
+    App->>Auth: setAuthState(token, user, refreshToken)
+    Auth->>Storage: Store tokens & user
+    App-->>User: Navigate to Home
+    
+    %% Token Refresh Flow
+    User->>App: Make API request
+    App->>API: Request with expired token
+    API-->>App: 401 Token expired
+    App->>Auth: refreshAccessToken()
+    Auth->>Storage: Get refresh token
+    Auth->>API: POST /api/v1/users/refresh-token
+    API-->>Auth: {new accessToken, refreshToken}
+    Auth->>Storage: Update tokens
+    App->>API: Retry original request
+    API-->>App: Success response
 ```
 
 ---
@@ -299,21 +542,76 @@ Detailed documentation for each component:
 
 ---
 
-## 📊 Database Schema
+## � API Endpoints Overview
+
+### Authentication (`/api/v1/auth`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/google` | Initiate Google OAuth flow (web) |
+| GET | `/google/callback` | Google OAuth callback |
+| POST | `/google/mobile` | Google Sign-In for mobile apps |
+
+### Users (`/api/v1/users`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/register` | Register new user (returns tokens) |
+| POST | `/login` | Login user |
+| POST | `/logout` | Logout user |
+| POST | `/refresh-token` | Refresh access token |
+| GET | `/profile` | Get current user profile |
+| PUT | `/profile` | Update user profile |
+| PUT | `/body-info` | Update body metrics |
+| POST | `/forgot-password` | Request password reset |
+| POST | `/reset-password` | Reset password with token |
+
+### Workouts (`/api/v1/workouts`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Get all workouts (with filters) |
+| GET | `/:id` | Get workout by ID |
+| GET | `/filters` | Get available filter options |
+| POST | `/` | Create new workout (admin) |
+| PUT | `/:id` | Update workout (admin) |
+| DELETE | `/:id` | Delete workout (admin) |
+
+### Saved Workouts (`/api/v1/saved-workouts`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Get user's saved workouts |
+| POST | `/` | Save a workout |
+| DELETE | `/:workoutId` | Remove saved workout |
+
+### Foods (`/api/v1/foods`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Get all foods |
+| GET | `/:id` | Get food by ID |
+| GET | `/search` | Search foods |
+
+### AI Service (`http://localhost:8000`)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/food/predict` | Predict food from image |
+| GET | `/api/v1/food/classes` | Get all food classes |
+| GET | `/health` | Health check |
+
+---
+
+## �📊 Database Schema
 
 ### PostgreSQL Tables
 
 #### Users & Authentication
-- `users` - User accounts and profiles
-- `sessions` - Active user sessions
+- `users` - User accounts and profiles (with OAuth support)
+- `refresh_tokens` - JWT refresh token storage for token rotation
 
 #### Fitness Data
-- `workouts` - Exercise library (270+ exercises)
-- `user_workouts` - User workout history
-- `body_metrics` - Height, weight, BMI tracking
+- `workouts` - Exercise library (270+ exercises with GIFs)
+- `saved_workouts` - User's saved/favorite workouts
+- `user_workouts` - User workout history and logs
 
 #### Nutrition Data
-- `foods` - Food nutrition database (100+ items)
+- `foods` - Food nutrition database (100+ items with Arabic cuisine)
 - `user_meals` - Meal tracking
 - `daily_nutrition` - Daily calorie/macro logs
 
@@ -326,14 +624,24 @@ Detailed documentation for each component:
 
 ## 🔐 Authentication & Security
 
-- **JWT Tokens** - Secure, stateless authentication
-- **OAuth 2.0** - Google, Facebook, GitHub integration
-- **Password Hashing** - bcrypt encryption
-- **HTTPS Only** - Secure data transmission
-- **CORS Protection** - Configured origins
-- **Rate Limiting** - DDoS protection
-- **Input Validation** - SQL injection prevention
-- **Session Management** - Secure cookie handling
+### Token-Based Authentication
+- **Access Tokens** - Short-lived JWT (15 minutes) for API authorization
+- **Refresh Tokens** - Long-lived JWT (7 days) for obtaining new access tokens
+- **Automatic Token Refresh** - Seamless token renewal without re-login
+- **Secure Storage** - AsyncStorage for mobile, HTTP-only cookies for web
+
+### OAuth 2.0 Integration
+- **Google Sign-In** - Native Android/iOS integration with ID token verification
+- **Facebook Login** - Social authentication support
+- **GitHub OAuth** - Developer-friendly authentication option
+
+### Security Measures
+- **Password Hashing** - bcrypt encryption with salt rounds
+- **HTTPS Only** - Encrypted data transmission
+- **CORS Protection** - Configured allowed origins
+- **Rate Limiting** - DDoS and brute-force protection
+- **Input Validation** - SQL injection & XSS prevention
+- **Session Management** - Secure cookie handling with SameSite policy
 
 ---
 
@@ -423,6 +731,19 @@ docker run -p 8000:8000 icoach-ai:latest
 
 ## 📈 Features Roadmap
 
+### Completed ✅
+- [x] User authentication (email/password)
+- [x] Google OAuth integration (mobile native)
+- [x] JWT access & refresh token system
+- [x] Automatic token refresh on expiry
+- [x] User profile management
+- [x] Body metrics tracking (height, weight, BMI)
+- [x] Workout library with 270+ exercises
+- [x] Save/bookmark favorite workouts
+- [x] AI-powered food recognition
+- [x] Multi-language support (6 languages)
+- [x] Email verification system
+
 ### In Progress 🔄
 - [ ] Real-time workout tracking
 - [ ] Social features (friends, challenges)
@@ -439,6 +760,7 @@ docker run -p 8000:8000 icoach-ai:latest
 - [ ] Premium subscription tiers
 - [ ] Coach/Trainer accounts
 - [ ] Barcode scanner for foods
+- [ ] Web frontend application
 
 ---
 
