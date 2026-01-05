@@ -66,6 +66,7 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({ mode = 'signin' }) =
         console.log('📦 Full Server Response:', JSON.stringify(data, null, 2));
         console.log('👤 User Data:', data.data.user);
         console.log('🔑 Access Token:', data.data.accessToken);
+        console.log('🔄 Refresh Token:', data.data.refreshToken);
 
         // Store access token
         await AsyncStorage.setItem('token', data.data.accessToken);
@@ -78,8 +79,8 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({ mode = 'signin' }) =
         };
         await AsyncStorage.setItem('googleUser', JSON.stringify(userData));
         
-        // Update auth context with server data
-        await setAuthState(data.data.accessToken, data.data.user);
+        // Update auth context with server data (including refresh token!)
+        await setAuthState(data.data.accessToken, data.data.user, data.data.refreshToken);
 
         Alert.alert('Success', `Welcome ${data.data.user.firstName}!\n\nEmail: ${data.data.user.email}\nRole: ${data.data.user.role}`);
       }

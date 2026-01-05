@@ -15,14 +15,14 @@ const AuthCallbackScreen: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Get token and user data from URL parameters
-        const { token, user } = route.params || {};
+        // Get token, refresh token, and user data from URL parameters
+        const { token, refreshToken, user } = route.params || {};
 
         if (token && user) {
           const userData = typeof user === 'string' ? JSON.parse(user) : user;
           
-          // Update auth context with token and user data
-          await setAuthState(token, userData);
+          // Update auth context with token, user data, and refresh token
+          await setAuthState(token, userData, refreshToken);
           
           // Navigate to home screen
           navigation.reset({

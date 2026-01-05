@@ -11,12 +11,28 @@ export class UserController {
   static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userData = req.body;
-      const result = await UserService.createUser(userData);
+      const user = await UserService.createUser(userData);
+      
+      // Auto-login: Generate tokens for the new user
+      const accessToken = UserService.generateAccessToken(user.id, user.email, user.role || 'user');
+      const refreshToken = UserService.generateRefreshToken(user.id);
+      
+      // Set refresh token as HTTP-only cookie (for web clients)
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: cookieConfig.maxAge,
+      });
       
       res.status(201).json({
         success: true,
         message: 'User created successfully',
-        data: result,
+        data: {
+          user,
+          accessToken,
+          refreshToken, // Also return in body for mobile clients
+        },
       });
     } catch (error) {
       next(error);

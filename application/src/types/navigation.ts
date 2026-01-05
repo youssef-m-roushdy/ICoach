@@ -11,6 +11,7 @@ export type RootStackParamList = {
   Foods: undefined;
   AuthCallback: {
     token: string;
+    refreshToken?: string;
     user: string;
   };
 };

@@ -9,7 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (user: User, token: string, refreshToken?: string) => Promise<void>;
   logout: () => Promise<void>;
-  setAuthState: (token: string, user: User) => Promise<void>;
+  setAuthState: (token: string, user: User, refreshToken?: string) => Promise<void>;
   updateUser: (user: User) => void;
   token: string | null;
   refreshAccessToken: () => Promise<string | null>;
@@ -66,6 +66,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       if (refreshToken) {
         await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        console.log('✅ Refresh token stored successfully in login');
+      } else {
+        console.warn('⚠️ No refresh token provided to login function');
       }
     } catch (error) {
       console.error('Error saving auth data:', error);
@@ -89,7 +92,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const setAuthState = async (authToken: string, userData: User) => {
+  const setAuthState = async (authToken: string, userData: User, refreshToken?: string) => {
     try {
       setUser(userData);
       setToken(authToken);
@@ -97,6 +100,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Store in AsyncStorage
       await AsyncStorage.setItem(TOKEN_KEY, authToken);
       await AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
+      
+      // Store refresh token if provided
+      if (refreshToken) {
+        await AsyncStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        console.log('✅ Refresh token stored successfully');
+      } else {
+        console.warn('⚠️ No refresh token provided to setAuthState');
+      }
     } catch (error) {
       console.error('Error setting auth state:', error);
       throw error;
@@ -110,13 +121,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const refreshAccessToken = async (): Promise<string | null> => {
     try {
+      console.log('🔄 Attempting to refresh access token...');
       const storedRefreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
       
       if (!storedRefreshToken) {
-        console.log('No refresh token available');
+        console.error('❌ No refresh token available in storage');
+        console.log('📦 Checking all stored keys...');
+        const allKeys = await AsyncStorage.getAllKeys();
+        console.log('🔑 Stored keys:', allKeys);
         return null;
       }
 
+      console.log('✅ Refresh token found, calling API...');
       const response = await authService.refreshToken(storedRefreshToken);
       
       if (response.success && response.data) {
