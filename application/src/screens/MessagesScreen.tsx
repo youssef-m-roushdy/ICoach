@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
 export default function MessagesScreen() {
+  const { colors } = useTheme();
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>📩 Messages will appear here soon</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.text, { color: colors.text }]}>📩 Messages will appear here soon</Text>
     </View>
   );
 }

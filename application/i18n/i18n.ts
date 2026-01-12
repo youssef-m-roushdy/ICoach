@@ -5,6 +5,7 @@ import ar from './locales/ar.json';
 import fr from './locales/fr.json';
 import de from './locales/de.json';
 import es from './locales/es.json';
+import it from './locales/it.json';
 
 
 i18n.use(initReactI18next).init({
@@ -17,6 +18,7 @@ i18n.use(initReactI18next).init({
     fr: { translation: fr },
     de: { translation: de },
     es: { translation: es },
+    it: { translation: it },
    
   },
   interpolation: {

@@ -13,6 +13,7 @@ import type { RootStackParamList } from '../types';
 import { CustomInput, CustomButton, GoogleButton } from '../components/common';
 import { AuthHeader } from '../components/auth';
 import { COLORS, SIZES } from '../constants';
+import { useTheme } from '../context/ThemeContext';
 import { authService } from '../services';
 import { useAuth } from '../context';
 
@@ -20,6 +21,7 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 
 export default function SignInScreen() {
   const navigation = useNavigation<SignInScreenNavigationProp>();
+  const { colors } = useTheme();
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -77,8 +79,8 @@ export default function SignInScreen() {
         onTabPress={(tab) => tab === 'Login' && navigation.navigate('Login')}
       />
 
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Sign up</Text>
+      <View style={[styles.formContainer, { backgroundColor: colors.background + '99' }]}>
+        <Text style={[styles.title, { color: colors.text }]}>Sign up</Text>
 
         <CustomInput 
           placeholder="Enter your username" 
@@ -107,11 +109,11 @@ export default function SignInScreen() {
         />
 
         {isLoading ? (
-          <ActivityIndicator size="large" color={COLORS.primary} style={styles.loader} />
+          <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
         ) : (
           <>
             <CustomButton title="Sign up" variant="secondary" onPress={handleSignUp} />
-            <Text style={styles.orText}>OR</Text>
+            <Text style={[styles.orText, { color: colors.text }]}>OR</Text>
             <GoogleButton mode="signup" />
           </>
         )}

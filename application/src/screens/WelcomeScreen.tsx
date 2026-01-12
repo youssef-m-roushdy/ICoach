@@ -13,6 +13,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types';
 import { CustomButton, LanguageSelector } from '../components/common';
 import { COLORS, SIZES } from '../constants';
+import { useTheme } from '../context/ThemeContext';
 
 type WelcomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -21,6 +22,7 @@ type WelcomeScreenNavigationProp = NativeStackNavigationProp<
 
 export default function WelcomeScreen() {
   const navigation = useNavigation<WelcomeScreenNavigationProp>();
+  const { colors } = useTheme();
   const { t } = useTranslation();
 
   return (
@@ -30,7 +32,7 @@ export default function WelcomeScreen() {
       resizeMode="contain"
       imageStyle={styles.image}
     >
-      <View style={styles.overlay}>
+      <View style={[styles.overlay, { backgroundColor: colors.background + '33' }]}>
         {/* Header */}
         <View style={styles.header}>
           {/* Logo WITHOUT container */}
@@ -45,13 +47,13 @@ export default function WelcomeScreen() {
         {/* Main Content */}
         <View style={styles.content}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{t('welcome')}</Text>
-            <Text style={styles.title}>{t('to')}</Text>
-            <Text style={styles.mainTitle}>{t('appName')}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('welcome')}</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t('to')}</Text>
+            <Text style={[styles.mainTitle, { color: colors.primary }]}>{t('appName')}</Text>
           </View>
 
           <View style={styles.subtitleContainer}>
-            <Text style={styles.subtitle}>{t('subtitle')}</Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{t('subtitle')}</Text>
           </View>
 
           <View style={styles.buttonContainer}>

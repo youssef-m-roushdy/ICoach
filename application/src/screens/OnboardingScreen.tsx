@@ -16,6 +16,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types';
 import { CustomInput, CustomButton } from '../components/common';
 import { COLORS, SIZES } from '../constants';
+import { useTheme } from '../context/ThemeContext';
 import { userService } from '../services';
 import { useAuth } from '../context';
 
@@ -25,6 +26,7 @@ type OnboardingNavigationProp = NativeStackNavigationProp<RootStackParamList, 'O
 
 export default function OnboardingScreen() {
   const navigation = useNavigation<OnboardingNavigationProp>();
+  const { colors } = useTheme();
   const { user, token, updateUser } = useAuth();
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,7 +134,8 @@ export default function OnboardingScreen() {
           key={step}
           style={[
             styles.stepDot,
-            step <= currentStep && styles.stepDotActive,
+            step <= currentStep && [styles.stepDotActive, { backgroundColor: colors.primary }],
+            { backgroundColor: step <= currentStep ? colors.primary : colors.border },
           ]}
         />
       ))}
@@ -141,26 +144,26 @@ export default function OnboardingScreen() {
 
   const renderStep1 = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Personal Information</Text>
-      <Text style={styles.stepSubtitle}>Tell us about yourself</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>Personal Information</Text>
+      <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Tell us about yourself</Text>
 
-      <Text style={styles.label}>Gender</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Gender</Text>
       <View style={styles.optionsRow}>
         <TouchableOpacity
-          style={[styles.optionButton, gender === 'male' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: gender === 'male' ? colors.primary : 'transparent' }, gender === 'male' && styles.optionButtonActive]}
           onPress={() => setGender('male')}
         >
-          <Text style={[styles.optionText, gender === 'male' && styles.optionTextActive]}>Male</Text>
+          <Text style={[styles.optionText, { color: gender === 'male' ? colors.background : colors.text }]}>Male</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, gender === 'female' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: gender === 'female' ? colors.primary : 'transparent' }, gender === 'female' && styles.optionButtonActive]}
           onPress={() => setGender('female')}
         >
-          <Text style={[styles.optionText, gender === 'female' && styles.optionTextActive]}>Female</Text>
+          <Text style={[styles.optionText, { color: gender === 'female' ? colors.background : colors.text }]}>Female</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Date of Birth (YYYY-MM-DD)</Text>
       <CustomInput
         placeholder="1990-01-01"
         value={dateOfBirth}
@@ -171,10 +174,10 @@ export default function OnboardingScreen() {
 
   const renderStep2 = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Body Measurements</Text>
-      <Text style={styles.stepSubtitle}>Help us personalize your experience</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>Body Measurements</Text>
+      <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>Help us personalize your experience</Text>
 
-      <Text style={styles.label}>Height (cm)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Height (cm)</Text>
       <CustomInput
         placeholder="170"
         value={height}
@@ -190,7 +193,7 @@ export default function OnboardingScreen() {
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Body Fat Percentage (optional)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Body Fat Percentage (optional)</Text>
       <CustomInput
         placeholder="15"
         value={bodyFatPercentage}
@@ -202,76 +205,76 @@ export default function OnboardingScreen() {
 
   const renderStep3 = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Fitness Goals</Text>
-      <Text style={styles.stepSubtitle}>What are you aiming for?</Text>
+      <Text style={[styles.stepTitle, { color: colors.text }]}>Fitness Goals</Text>
+      <Text style={[styles.stepSubtitle, { color: colors.textSecondary }]}>What are your fitness goals?</Text>
 
-      <Text style={styles.label}>Fitness Goal</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Fitness Goal</Text>
       <View style={styles.optionsColumn}>
         <TouchableOpacity
-          style={[styles.optionButton, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: fitnessGoal === 'weight_loss' ? colors.primary : 'transparent' }, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('weight_loss')}
         >
-          <Text style={[styles.optionText, fitnessGoal === 'weight_loss' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: fitnessGoal === 'weight_loss' ? colors.background : colors.text }]}>
             Weight Loss
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: fitnessGoal === 'muscle_gain' ? colors.primary : 'transparent' }, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('muscle_gain')}
         >
-          <Text style={[styles.optionText, fitnessGoal === 'muscle_gain' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: fitnessGoal === 'muscle_gain' ? colors.background : colors.text }]}>
             Muscle Gain
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, fitnessGoal === 'maintenance' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: fitnessGoal === 'maintenance' ? colors.primary : 'transparent' }, fitnessGoal === 'maintenance' && styles.optionButtonActive]}
           onPress={() => setFitnessGoal('maintenance')}
         >
-          <Text style={[styles.optionText, fitnessGoal === 'maintenance' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: fitnessGoal === 'maintenance' ? colors.background : colors.text }]}>
             Maintenance
           </Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.label}>Activity Level</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Activity Level</Text>
       <View style={styles.optionsColumn}>
         <TouchableOpacity
-          style={[styles.optionButton, activityLevel === 'sedentary' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'sedentary' ? colors.primary : 'transparent' }, activityLevel === 'sedentary' && styles.optionButtonActive]}
           onPress={() => setActivityLevel('sedentary')}
         >
-          <Text style={[styles.optionText, activityLevel === 'sedentary' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: activityLevel === 'sedentary' ? colors.background : colors.text }]}>
             Sedentary
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, activityLevel === 'lightly_active' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'lightly_active' ? colors.primary : 'transparent' }, activityLevel === 'lightly_active' && styles.optionButtonActive]}
           onPress={() => setActivityLevel('lightly_active')}
         >
-          <Text style={[styles.optionText, activityLevel === 'lightly_active' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: activityLevel === 'lightly_active' ? colors.background : colors.text }]}>
             Lightly Active
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, activityLevel === 'moderately_active' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'moderately_active' ? colors.primary : 'transparent' }, activityLevel === 'moderately_active' && styles.optionButtonActive]}
           onPress={() => setActivityLevel('moderately_active')}
         >
-          <Text style={[styles.optionText, activityLevel === 'moderately_active' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: activityLevel === 'moderately_active' ? colors.background : colors.text }]}>
             Moderately Active
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, activityLevel === 'very_active' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'very_active' ? colors.primary : 'transparent' }, activityLevel === 'very_active' && styles.optionButtonActive]}
           onPress={() => setActivityLevel('very_active')}
         >
-          <Text style={[styles.optionText, activityLevel === 'very_active' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: activityLevel === 'very_active' ? colors.background : colors.text }]}>
             Very Active
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.optionButton, activityLevel === 'extra_active' && styles.optionButtonActive]}
+          style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'extra_active' ? colors.primary : 'transparent' }, activityLevel === 'extra_active' && styles.optionButtonActive]}
           onPress={() => setActivityLevel('extra_active')}
         >
-          <Text style={[styles.optionText, activityLevel === 'extra_active' && styles.optionTextActive]}>
+          <Text style={[styles.optionText, { color: activityLevel === 'extra_active' ? colors.background : colors.text }]}>
             Extra Active
           </Text>
         </TouchableOpacity>
@@ -280,7 +283,7 @@ export default function OnboardingScreen() {
   );
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
+    <View style={[styles.container, { backgroundColor: colors.background }]} {...panResponder.panHandlers}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {renderStepIndicator()}
 
@@ -291,17 +294,17 @@ export default function OnboardingScreen() {
         {currentStep === 3 && (
           <View style={styles.finishButtonContainer}>
             {isLoading ? (
-              <ActivityIndicator size="large" color={COLORS.primary} />
+              <ActivityIndicator size="large" color={colors.primary} />
             ) : (
-              <TouchableOpacity style={styles.finishButton} onPress={handleSubmit}>
-                <Text style={styles.finishButtonText}>Finish</Text>
+              <TouchableOpacity style={[styles.finishButton, { backgroundColor: colors.primary }]} onPress={handleSubmit}>
+                <Text style={[styles.finishButtonText, { color: colors.background }]}>Finish</Text>
               </TouchableOpacity>
             )}
           </View>
         )}
 
         <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-          <Text style={styles.skipText}>Skip for now</Text>
+          <Text style={[styles.skipText, { color: colors.primary }]}>Skip for now</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

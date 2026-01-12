@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Feather } from '@expo/vector-icons';
 import type { RootStackParamList } from '../types';
 import { COLORS, SIZES } from '../constants';
+import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { userService } from '../services';
 import { useAuth } from '../context';
 
@@ -21,6 +23,8 @@ type ProfileNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Prof
 
 export default function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigationProp>();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
   const { user: authUser, token, logout } = useAuth();
   const [userData, setUserData] = useState<any>(authUser);
   const [isLoading, setIsLoading] = useState(false);
@@ -86,16 +90,16 @@ export default function ProfileScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   if (!userData) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.errorText}>Failed to load profile</Text>
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+        <Text style={[styles.errorText, { color: colors.text }]}>Failed to load profile</Text>
         <TouchableOpacity onPress={loadProfile} style={styles.retryButton}>
           <Text style={styles.retryText}>Retry</Text>
         </TouchableOpacity>
@@ -111,19 +115,19 @@ export default function ProfileScreen() {
     : null;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.scrollContent}>
       {/* Header with Avatar */}
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
           {userData.avatar ? (
             <Image source={{ uri: userData.avatar }} style={styles.avatar} />
           ) : (
-            <View style={styles.avatarPlaceholder}>
-              <MaterialIcons name="person" size={60} color={COLORS.gray} />
+            <View style={[styles.avatarPlaceholder, { backgroundColor: colors.card }]}>
+              <MaterialIcons name="person" size={60} color={colors.primary} />
             </View>
           )}
         </View>
-        <Text style={styles.name}>
+        <Text style={[styles.name, { color: colors.text }]}>
           {userData.firstName} {userData.lastName}
         </Text>
         <Text style={styles.username}>@{userData.username}</Text>
@@ -137,54 +141,54 @@ export default function ProfileScreen() {
             onPress={() => navigation.navigate('EditProfile')}
             style={styles.editButton}
           >
-            <MaterialIcons name="edit" size={20} color={COLORS.primary} />
-            <Text style={styles.editText}>Edit</Text>
+            <MaterialIcons name="edit" size={20} color={colors.primary} />
+            <Text style={[styles.editText, { color: colors.primary }]}>Edit</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="email" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="email" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Email</Text>
-            <Text style={styles.infoValue}>{userData.email}</Text>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Email</Text>
+            <Text style={[styles.infoValue, { color: colors.text }]}>{userData.email}</Text>
           </View>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="phone" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="phone" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Phone</Text>
-            <Text style={[styles.infoValue, !userData.phone && styles.notProvided]}>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Phone</Text>
+            <Text style={[styles.infoValue, !userData.phone && styles.notProvided, { color: colors.text }]}>
               {userData.phone || 'Not provided'}
             </Text>
           </View>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="info" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="info" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Bio</Text>
-            <Text style={[styles.infoValue, !userData.bio && styles.notProvided]}>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Bio</Text>
+            <Text style={[styles.infoValue, !userData.bio && styles.notProvided, { color: colors.text }]}>
               {userData.bio || 'Not provided'}
             </Text>
           </View>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="cake" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="cake" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Date of Birth</Text>
-            <Text style={[styles.infoValue, !userData.dateOfBirth && styles.notProvided]}>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Date of Birth</Text>
+            <Text style={[styles.infoValue, !userData.dateOfBirth && styles.notProvided, { color: colors.text }]}>
               {userData.dateOfBirth || 'Not provided'}
             </Text>
           </View>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="person" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="person" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Gender</Text>
-            <Text style={[styles.infoValue, !userData.gender && styles.notProvided]}>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Gender</Text>
+            <Text style={[styles.infoValue, !userData.gender && styles.notProvided, { color: colors.text }]}>
               {userData.gender ? userData.gender.charAt(0).toUpperCase() + userData.gender.slice(1) : 'Not provided'}
             </Text>
           </View>
@@ -192,70 +196,70 @@ export default function ProfileScreen() {
       </View>
 
       {/* Body Information Section */}
-      <View style={styles.section}>
+      <View style={[styles.section, { backgroundColor: colors.card }]}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Body & Fitness</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Body & Fitness</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('EditBodyInfo')}
             style={styles.editButton}
           >
-            <MaterialIcons name="edit" size={20} color={COLORS.primary} />
-            <Text style={styles.editText}>Edit</Text>
+            <MaterialIcons name="edit" size={20} color={colors.primary} />
+            <Text style={[styles.editText, { color: colors.primary }]}>Edit</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.statsGrid}>
-          <View style={styles.statCard}>
-            <MaterialIcons name="height" size={24} color={COLORS.primary} />
-            <Text style={[styles.statValue, !userData.height && styles.notProvided]}>
+          <View style={[styles.statCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+            <MaterialIcons name="height" size={24} color={colors.primary} />
+            <Text style={[styles.statValue, !userData.height && styles.notProvided, { color: colors.text }]}>
               {userData.height ? `${userData.height} cm` : 'Not provided'}
             </Text>
-            <Text style={styles.statLabel}>Height</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Height</Text>
           </View>
 
-          <View style={styles.statCard}>
-            <MaterialIcons name="monitor-weight" size={24} color={COLORS.primary} />
-            <Text style={[styles.statValue, !userData.weight && styles.notProvided]}>
+          <View style={[styles.statCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+            <MaterialIcons name="monitor-weight" size={24} color={colors.primary} />
+            <Text style={[styles.statValue, !userData.weight && styles.notProvided, { color: colors.text }]}>
               {userData.weight ? `${userData.weight} kg` : 'Not provided'}
             </Text>
-            <Text style={styles.statLabel}>Weight</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Weight</Text>
           </View>
 
-          <View style={styles.statCard}>
-            <MaterialIcons name="analytics" size={24} color={COLORS.primary} />
-            <Text style={[styles.statValue, !userData.bmi && styles.notProvided]}>
+          <View style={[styles.statCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+            <MaterialIcons name="analytics" size={24} color={colors.primary} />
+            <Text style={[styles.statValue, !userData.bmi && styles.notProvided, { color: colors.text }]}>
               {userData.bmi || 'Not provided'}
             </Text>
-            <Text style={styles.statLabel}>BMI</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>BMI</Text>
             {bmiCategory && (
-              <Text style={styles.statSubLabel}>{bmiCategory}</Text>
+              <Text style={[styles.statSubLabel, { color: colors.primary }]}>{bmiCategory}</Text>
             )}
           </View>
 
-          <View style={styles.statCard}>
-            <MaterialIcons name="fitness-center" size={24} color={COLORS.primary} />
-            <Text style={[styles.statValue, !userData.bodyFatPercentage && styles.notProvided]}>
+          <View style={[styles.statCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+            <MaterialIcons name="fitness-center" size={24} color={colors.primary} />
+            <Text style={[styles.statValue, !userData.bodyFatPercentage && styles.notProvided, { color: colors.text }]}>
               {userData.bodyFatPercentage ? `${userData.bodyFatPercentage}%` : 'Not provided'}
             </Text>
-            <Text style={styles.statLabel}>Body Fat</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Body Fat</Text>
           </View>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="flag" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="flag" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Fitness Goal</Text>
-            <Text style={[styles.infoValue, !userData.fitnessGoal && styles.notProvided]}>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Fitness Goal</Text>
+            <Text style={[styles.infoValue, !userData.fitnessGoal && styles.notProvided, { color: colors.text }]}>
               {userData.fitnessGoal ? userData.fitnessGoal.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) : 'Not provided'}
             </Text>
           </View>
         </View>
 
-        <View style={styles.infoRow}>
-          <MaterialIcons name="directions-run" size={20} color={COLORS.gray} />
+        <View style={[styles.infoRow, { borderColor: colors.border }]}>
+          <MaterialIcons name="directions-run" size={20} color={colors.textSecondary} />
           <View style={styles.infoContent}>
-            <Text style={styles.infoLabel}>Activity Level</Text>
-            <Text style={[styles.infoValue, !userData.activityLevel && styles.notProvided]}>
+            <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>Activity Level</Text>
+            <Text style={[styles.infoValue, !userData.activityLevel && styles.notProvided, { color: colors.text }]}>
               {userData.activityLevel ? userData.activityLevel.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) : 'Not provided'}
             </Text>
           </View>
@@ -263,25 +267,25 @@ export default function ProfileScreen() {
       </View>
 
       {/* Account Settings */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Account</Text>
+      <View style={[styles.section, { borderColor: colors.border }]}>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Account</Text>
 
         <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="lock" size={20} color={COLORS.gray} />
-          <Text style={styles.menuText}>Change Password</Text>
-          <MaterialIcons name="chevron-right" size={20} color={COLORS.gray} />
+          <MaterialIcons name="lock" size={20} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Change Password</Text>
+          <MaterialIcons name="chevron-right" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="notifications" size={20} color={COLORS.gray} />
-          <Text style={styles.menuText}>Notifications</Text>
-          <MaterialIcons name="chevron-right" size={20} color={COLORS.gray} />
+          <MaterialIcons name="notifications" size={20} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Notifications</Text>
+          <MaterialIcons name="chevron-right" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="privacy-tip" size={20} color={COLORS.gray} />
-          <Text style={styles.menuText}>Privacy</Text>
-          <MaterialIcons name="chevron-right" size={20} color={COLORS.gray} />
+          <MaterialIcons name="privacy-tip" size={20} color={colors.primary} />
+          <Text style={[styles.menuText, { color: colors.text }]}>Privacy</Text>
+          <MaterialIcons name="chevron-right" size={20} color={colors.textSecondary} />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>

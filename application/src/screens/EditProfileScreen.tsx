@@ -14,6 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import type { RootStackParamList } from '../types';
 import { CustomInput, CustomButton } from '../components/common';
 import { COLORS, SIZES } from '../constants';
+import { useTheme } from '../context/ThemeContext';
 import { userService } from '../services';
 import { useAuth } from '../context';
 
@@ -21,6 +22,7 @@ type EditProfileNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 
 export default function EditProfileScreen() {
   const navigation = useNavigation<EditProfileNavigationProp>();
+  const { colors } = useTheme();
   const { user, token, updateUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -86,31 +88,31 @@ export default function EditProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+          <MaterialIcons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Edit Profile</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Edit Profile</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.label}>First Name *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>First Name *</Text>
         <CustomInput
           placeholder="John"
           value={firstName}
           onChangeText={setFirstName}
         />
 
-        <Text style={styles.label}>Last Name *</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Last Name *</Text>
         <CustomInput
           placeholder="Doe"
           value={lastName}
           onChangeText={setLastName}
         />
 
-        <Text style={styles.label}>Username</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Username</Text>
         <CustomInput
           placeholder="johndoe"
           value={username}
@@ -118,7 +120,7 @@ export default function EditProfileScreen() {
           autoCapitalize="none"
         />
 
-        <Text style={styles.label}>Email</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Email</Text>
         <CustomInput
           placeholder="john@example.com"
           value={email}
@@ -127,7 +129,7 @@ export default function EditProfileScreen() {
           autoCapitalize="none"
         />
 
-        <Text style={styles.label}>Phone</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Phone</Text>
         <CustomInput
           placeholder="+1234567890"
           value={phone}
@@ -135,7 +137,7 @@ export default function EditProfileScreen() {
           keyboardType="phone-pad"
         />
 
-        <Text style={styles.label}>Bio</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Bio</Text>
         <CustomInput
           placeholder="Tell us about yourself..."
           value={bio}
@@ -147,7 +149,7 @@ export default function EditProfileScreen() {
 
         <View style={styles.buttonContainer}>
           {isLoading ? (
-            <ActivityIndicator size="large" color={COLORS.primary} />
+            <ActivityIndicator size="large" color={colors.primary} />
           ) : (
             <>
               <CustomButton

@@ -13,6 +13,8 @@ import {
   Modal,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import { workoutService } from '../services/api';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -43,6 +45,8 @@ interface WorkoutFilters {
 
 const WorkoutsScreen = () => {
   const { token } = useAuth();
+  const { theme, colors } = useTheme();
+  const { t } = useTranslation();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -179,7 +183,7 @@ const WorkoutsScreen = () => {
     return pages.map((page, index) => {
       if (page === '...') {
         return (
-          <Text key={`dots-${index}`} style={styles.pageNumberDots}>
+          <Text key={`dots-${index}`} style={[styles.pageNumberDots, { color: colors.primary }]}>
             ...
           </Text>
         );
@@ -190,7 +194,8 @@ const WorkoutsScreen = () => {
           key={page}
           style={[
             styles.pageNumber,
-            page === currentPage && styles.pageNumberActive,
+            page === currentPage && [styles.pageNumberActive, { backgroundColor: colors.primary }],
+            page !== currentPage && { backgroundColor: colors.primary, opacity: 0.3 }
           ]}
           onPress={() => goToPage(page as number)}
         >
@@ -209,25 +214,25 @@ const WorkoutsScreen = () => {
 
   const renderWorkoutItem = ({ item }: { item: Workout }) => {
     return (
-      <View style={styles.workoutCard}>
+      <View style={[styles.workoutCard, { borderColor: colors.border, backgroundColor: colors.card }]}>
         {item.gif_link && (
           <Image source={{ uri: item.gif_link }} style={styles.workoutGif} />
         )}
         <View style={styles.workoutInfo}>
-          <Text style={styles.workoutName}>{item.name}</Text>
-          <Text style={styles.workoutDetail}>
-            <Ionicons name="body" size={14} color="#666" /> {item.body_part} - {item.target_area}
+          <Text style={[styles.workoutName, { color: colors.text }]}>{item.name}</Text>
+          <Text style={[styles.workoutDetail, { color: colors.textSecondary }]}>
+            <Ionicons name="body" size={14} color={colors.textSecondary} /> {item.body_part} - {item.target_area}
           </Text>
           {item.equipment && (
-            <Text style={styles.workoutDetail}>
-              <Ionicons name="barbell" size={14} color="#666" /> {item.equipment}
+            <Text style={[styles.workoutDetail, { color: colors.textSecondary }]}>
+              <Ionicons name="barbell" size={14} color={colors.textSecondary} /> {item.equipment}
             </Text>
           )}
-          <Text style={styles.workoutDetail}>
-            <Ionicons name="trophy" size={14} color="#666" /> {item.level}
+          <Text style={[styles.workoutDetail, { color: colors.textSecondary }]}>
+            <Ionicons name="trophy" size={14} color={colors.textSecondary} /> {item.level}
           </Text>
           {item.description && (
-            <Text style={styles.workoutDescription} numberOfLines={2}>
+            <Text style={[styles.workoutDescription, { color: colors.textSecondary }]} numberOfLines={2}>
               {item.description}
             </Text>
           )}
@@ -238,18 +243,18 @@ const WorkoutsScreen = () => {
 
   if (loading && !refreshing) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
+      <View style={[styles.centerContainer, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Filters */}
-      <View style={styles.filtersContainer}>
+      <View style={[styles.filtersContainer, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
         <View style={styles.filtersHeader}>
-          <Text style={styles.filtersTitle}>Filters</Text>
+          <Text style={[styles.filtersTitle, { color: colors.text }]}>Filters</Text>
           {(selectedBodyPart || selectedTargetArea || selectedEquipment || selectedLevel) && (
             <TouchableOpacity onPress={clearFilters}>
               <Text style={styles.clearText}>Clear All</Text>
@@ -260,55 +265,55 @@ const WorkoutsScreen = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.filterRow}>
             <TouchableOpacity
-              style={styles.filterButton}
+              style={[styles.filterButton, { backgroundColor: colors.primary }]}
               onPress={() => {
                 setCurrentFilter('bodyPart');
                 setShowFilterModal(true);
               }}
             >
-              <Text style={styles.filterButtonText}>
+              <Text style={[styles.filterButtonText, { color: theme === 'dark' ? '#000000' : '#FFFFFF' }]}>
                 {selectedBodyPart || 'Body Part'}
               </Text>
-              <Ionicons name="chevron-down" size={16} color="#666" />
+              <Ionicons name="chevron-down" size={16} color={theme === 'dark' ? '#000000' : '#FFFFFF'} />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.filterButton}
+              style={[styles.filterButton, { backgroundColor: colors.primary }]}
               onPress={() => {
                 setCurrentFilter('targetArea');
                 setShowFilterModal(true);
               }}
             >
-              <Text style={styles.filterButtonText}>
+              <Text style={[styles.filterButtonText, { color: theme === 'dark' ? '#000000' : '#FFFFFF' }]}>
                 {selectedTargetArea || 'Target Area'}
               </Text>
-              <Ionicons name="chevron-down" size={16} color="#666" />
+              <Ionicons name="chevron-down" size={16} color={theme === 'dark' ? '#000000' : '#FFFFFF'} />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.filterButton}
+              style={[styles.filterButton, { backgroundColor: colors.primary }]}
               onPress={() => {
                 setCurrentFilter('equipment');
                 setShowFilterModal(true);
               }}
             >
-              <Text style={styles.filterButtonText}>
+              <Text style={[styles.filterButtonText, { color: theme === 'dark' ? '#000000' : '#FFFFFF' }]}>
                 {selectedEquipment || 'Equipment'}
               </Text>
-              <Ionicons name="chevron-down" size={16} color="#666" />
+              <Ionicons name="chevron-down" size={16} color={theme === 'dark' ? '#000000' : '#FFFFFF'} />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.filterButton}
+              style={[styles.filterButton, { backgroundColor: colors.primary }]}
               onPress={() => {
                 setCurrentFilter('level');
                 setShowFilterModal(true);
               }}
             >
-              <Text style={styles.filterButtonText}>
+              <Text style={[styles.filterButtonText, { color: theme === 'dark' ? '#000000' : '#FFFFFF' }]}>
                 {selectedLevel || 'Level'}
               </Text>
-              <Ionicons name="chevron-down" size={16} color="#666" />
+              <Ionicons name="chevron-down" size={16} color={theme === 'dark' ? '#000000' : '#FFFFFF'} />
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -326,20 +331,20 @@ const WorkoutsScreen = () => {
           activeOpacity={1}
           onPress={() => setShowFilterModal(false)}
         >
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>
+          <View style={[styles.modalContent, { backgroundColor: colors.background }]}>
+            <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>
                 Select {currentFilter === 'bodyPart' ? 'Body Part' : 
                         currentFilter === 'targetArea' ? 'Target Area' :
                         currentFilter === 'equipment' ? 'Equipment' : 'Level'}
               </Text>
               <TouchableOpacity onPress={() => setShowFilterModal(false)}>
-                <Ionicons name="close" size={24} color="#333" />
+                <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
             <ScrollView style={styles.modalScroll}>
               <TouchableOpacity
-                style={styles.modalOption}
+                style={[styles.modalOption, { borderBottomColor: colors.border }]}
                 onPress={() => {
                   if (currentFilter === 'bodyPart') setSelectedBodyPart('');
                   else if (currentFilter === 'targetArea') setSelectedTargetArea('');
@@ -348,65 +353,65 @@ const WorkoutsScreen = () => {
                   setShowFilterModal(false);
                 }}
               >
-                <Text style={styles.modalOptionText}>All</Text>
+                <Text style={[styles.modalOptionText, { color: colors.text }]}>All</Text>
               </TouchableOpacity>
               {currentFilter === 'bodyPart' && filters.bodyParts.map((part) => (
                 <TouchableOpacity
                   key={part}
-                  style={styles.modalOption}
+                  style={[styles.modalOption, { borderBottomColor: colors.border }]}
                   onPress={() => {
                     setSelectedBodyPart(part);
                     setShowFilterModal(false);
                   }}
                 >
-                  <Text style={styles.modalOptionText}>{part}</Text>
+                  <Text style={[styles.modalOptionText, { color: colors.text }]}>{part}</Text>
                   {selectedBodyPart === part && (
-                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
               {currentFilter === 'targetArea' && filters.targetAreas.map((area) => (
                 <TouchableOpacity
                   key={area}
-                  style={styles.modalOption}
+                  style={[styles.modalOption, { borderBottomColor: colors.border }]}
                   onPress={() => {
                     setSelectedTargetArea(area);
                     setShowFilterModal(false);
                   }}
                 >
-                  <Text style={styles.modalOptionText}>{area}</Text>
+                  <Text style={[styles.modalOptionText, { color: colors.text }]}>{area}</Text>
                   {selectedTargetArea === area && (
-                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
               {currentFilter === 'equipment' && filters.equipment.map((equip) => (
                 <TouchableOpacity
                   key={equip}
-                  style={styles.modalOption}
+                  style={[styles.modalOption, { borderBottomColor: colors.border }]}
                   onPress={() => {
                     setSelectedEquipment(equip);
                     setShowFilterModal(false);
                   }}
                 >
-                  <Text style={styles.modalOptionText}>{equip}</Text>
+                  <Text style={[styles.modalOptionText, { color: colors.text }]}>{equip}</Text>
                   {selectedEquipment === equip && (
-                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
               {currentFilter === 'level' && filters.levels.map((level) => (
                 <TouchableOpacity
                   key={level}
-                  style={styles.modalOption}
+                  style={[styles.modalOption, { borderBottomColor: colors.border }]}
                   onPress={() => {
                     setSelectedLevel(level);
                     setShowFilterModal(false);
                   }}
                 >
-                  <Text style={styles.modalOptionText}>{level}</Text>
+                  <Text style={[styles.modalOptionText, { color: colors.text }]}>{level}</Text>
                   {selectedLevel === level && (
-                    <Ionicons name="checkmark" size={20} color="#007AFF" />
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -425,8 +430,8 @@ const WorkoutsScreen = () => {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="fitness-outline" size={64} color="#ccc" />
-            <Text style={styles.emptyText}>No workouts found</Text>
+            <Ionicons name="fitness-outline" size={64} color={colors.primary} />
+            <Text style={[styles.emptyText, { color: colors.text }]}>No workouts found</Text>
           </View>
         }
       />
@@ -434,13 +439,13 @@ const WorkoutsScreen = () => {
       {/* Pagination Controls */}
       {pagination && pagination.totalPages > 1 && (
         <>
-          <View style={styles.paginationContainer}>
+          <View style={[styles.paginationContainer, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
             <TouchableOpacity
               style={[styles.navButton, pagination.page === 1 && styles.navButtonDisabled]}
               onPress={goToFirstPage}
               disabled={pagination.page === 1}
             >
-              <Ionicons name="play-back" size={20} color={pagination.page === 1 ? '#ccc' : '#007AFF'} />
+              <Ionicons name="play-back" size={20} color={pagination.page === 1 ? colors.textSecondary : colors.primary} />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -448,7 +453,7 @@ const WorkoutsScreen = () => {
               onPress={goToPreviousPage}
               disabled={pagination.page === 1}
             >
-              <Ionicons name="chevron-back" size={20} color={pagination.page === 1 ? '#ccc' : '#007AFF'} />
+              <Ionicons name="chevron-back" size={20} color={pagination.page === 1 ? colors.textSecondary : colors.primary} />
             </TouchableOpacity>
 
             <View style={styles.pageNumbersContainer}>{renderPageNumbers()}</View>
@@ -464,7 +469,7 @@ const WorkoutsScreen = () => {
               <Ionicons
                 name="chevron-forward"
                 size={20}
-                color={pagination.page === pagination.totalPages ? '#ccc' : '#007AFF'}
+                color={pagination.page === pagination.totalPages ? colors.textSecondary : colors.primary}
               />
             </TouchableOpacity>
 
@@ -479,12 +484,12 @@ const WorkoutsScreen = () => {
               <Ionicons
                 name="play-forward"
                 size={20}
-                color={pagination.page === pagination.totalPages ? '#ccc' : '#007AFF'}
+                color={pagination.page === pagination.totalPages ? colors.textSecondary : colors.primary}
               />
             </TouchableOpacity>
           </View>
           
-          <Text style={styles.pageInfo}>
+          <Text style={[styles.pageInfo, { color: colors.text, backgroundColor: colors.background }]}>
             Page {pagination.page} of {pagination.totalPages} ({pagination.total} workouts)
           </Text>
         </>
@@ -496,54 +501,58 @@ const WorkoutsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#000000',
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#000000',
   },
   listContent: {
     padding: 16,
   },
   workoutCard: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: '#000000',
+    borderRadius: 16,
+    padding: 20,
     marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginHorizontal: 12,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   workoutGif: {
     width: '100%',
     height: 200,
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+    marginBottom: 16,
+    backgroundColor: '#1a1a1a',
   },
   workoutInfo: {
     marginBottom: 8,
   },
   workoutName: {
     fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#333',
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
   },
   workoutDetail: {
     fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
+    color: '#E0E0E0',
+    marginBottom: 6,
   },
   workoutDescription: {
     fontSize: 13,
-    color: '#888',
-    marginTop: 8,
-    lineHeight: 18,
+    color: '#B0B0B0',
+    marginTop: 12,
+    lineHeight: 20,
   },
   emptyContainer: {
     alignItems: 'center',
@@ -553,7 +562,7 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#999',
+    color: '#FFFFFF',
     marginTop: 16,
   },
   paginationContainer: {
@@ -561,9 +570,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#000000',
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: '#FFD700',
   },
   pageNumbersContainer: {
     flexDirection: 'row',
@@ -582,35 +591,35 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginHorizontal: 2,
     borderRadius: 6,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#FFD700',
   },
   pageNumberActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FFD700',
   },
   pageNumberText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#333',
+    color: '#000000',
   },
   pageNumberTextActive: {
-    color: '#fff',
+    color: '#000000',
   },
   pageNumberDots: {
     paddingHorizontal: 8,
-    color: '#999',
+    color: '#FFD700',
   },
   pageInfo: {
     textAlign: 'center',
     fontSize: 12,
-    color: '#666',
+    color: '#FFFFFF',
     paddingBottom: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#000000',
   },
   filtersContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000000',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#FFD700',
   },
   filtersHeader: {
     flexDirection: 'row',
@@ -621,7 +630,7 @@ const styles = StyleSheet.create({
   filtersTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: '#FFFFFF',
   },
   clearText: {
     fontSize: 14,
@@ -636,7 +645,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FFD700',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 8,
@@ -646,7 +655,7 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     fontSize: 14,
-    color: '#333',
+    color: '#000000',
     marginRight: 6,
     flexShrink: 1,
   },
@@ -656,7 +665,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#fff',
+    backgroundColor: '#000000',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     maxHeight: '70%',
@@ -667,12 +676,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#FFD700',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#FFFFFF',
   },
   modalScroll: {
     maxHeight: 400,
@@ -683,11 +692,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#FFD700',
   },
   modalOptionText: {
     fontSize: 16,
-    color: '#333',
+    color: '#FFFFFF',
   },
 });
 

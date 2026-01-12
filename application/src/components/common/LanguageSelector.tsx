@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -7,6 +7,8 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../../../i18n/i18n';
 import { COLORS, SIZES } from '../../constants';
 
@@ -25,13 +27,48 @@ const languages: Language[] = [
 ];
 
 export const LanguageSelector: React.FC = () => {
+  const { i18n: i18nInstance } = useTranslation();
   const [language, setLanguage] = useState('English');
   const [modalVisible, setModalVisible] = useState(false);
 
-  const selectLanguage = (lang: Language) => {
-    i18n.changeLanguage(lang.code);
-    setLanguage(lang.label);
-    setModalVisible(false);
+  useEffect(() => {
+    // Load saved language on component mount
+    loadSavedLanguage();
+  }, []);
+
+  useEffect(() => {
+    // Update language display when language changes
+    const currentLangCode = i18nInstance.language;
+    const langItem = languages.find(l => l.code === currentLangCode);
+    if (langItem) {
+      setLanguage(langItem.label);
+    }
+  }, [i18nInstance.language]);
+
+  const loadSavedLanguage = async () => {
+    try {
+      const savedLang = await AsyncStorage.getItem('appLanguage');
+      if (savedLang) {
+        const langItem = languages.find(l => l.code === savedLang);
+        if (langItem) {
+          setLanguage(langItem.label);
+          await i18n.changeLanguage(savedLang);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load language:', error);
+    }
+  };
+
+  const selectLanguage = async (lang: Language) => {
+    try {
+      await i18n.changeLanguage(lang.code);
+      await AsyncStorage.setItem('appLanguage', lang.code);
+      setLanguage(lang.label);
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Failed to save language:', error);
+    }
   };
 
   return (

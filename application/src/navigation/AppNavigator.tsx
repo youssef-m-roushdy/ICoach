@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context';
+import { useTheme } from '../context/ThemeContext';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import SignUpScreen from '../screens/SignupScreen';
 import SignInScreen from '../screens/SignInScreen';
@@ -56,6 +57,7 @@ interface DrawerMenuProps {
 
 function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
   const { logout } = useAuth();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   const handleLogout = async () => {
@@ -85,13 +87,13 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
     >
       <View style={drawerStyles.overlay}>
         {/* Place drawer first so it is fixed on the left */}
-        <View style={drawerStyles.drawer}> 
-          <View style={[drawerStyles.header, { paddingTop: insets.top + 20 }]}>
+        <View style={[drawerStyles.drawer, { backgroundColor: colors.background }]}> 
+          <View style={[drawerStyles.header, { paddingTop: insets.top + 20, borderBottomColor: colors.border }]}>
             <TouchableOpacity 
               style={drawerStyles.closeButton}
               onPress={onClose}
             >
-              <MaterialIcons name="close" size={28} color={COLORS.white} />
+              <MaterialIcons name="close" size={28} color={colors.text} />
             </TouchableOpacity>
           </View>
 
@@ -100,44 +102,44 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
               style={drawerStyles.menuItem}
               onPress={() => handleNavigate('Home')}
             >
-              <MaterialIcons name="home" size={24} color={COLORS.primary} />
-              <Text style={drawerStyles.menuText}>Home</Text>
+              <MaterialIcons name="home" size={24} color={colors.primary} />
+              <Text style={[drawerStyles.menuText, { color: colors.text }]}>Home</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={drawerStyles.menuItem}
               onPress={() => handleNavigate('Profile')}
             >
-              <MaterialIcons name="person" size={24} color={COLORS.primary} />
-              <Text style={drawerStyles.menuText}>Profile</Text>
+              <MaterialIcons name="person" size={24} color={colors.primary} />
+              <Text style={[drawerStyles.menuText, { color: colors.text }]}>Profile</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={drawerStyles.menuItem}
               onPress={() => handleNavigate('Foods')}
             >
-              <MaterialIcons name="restaurant" size={24} color={COLORS.primary} />
-              <Text style={drawerStyles.menuText}>Foods</Text>
+              <MaterialIcons name="restaurant" size={24} color={colors.primary} />
+              <Text style={[drawerStyles.menuText, { color: colors.text }]}>Foods</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
               style={drawerStyles.menuItem}
               onPress={() => handleNavigate('Workouts')}
             >
-              <MaterialIcons name="fitness-center" size={24} color={COLORS.primary} />
-              <Text style={drawerStyles.menuText}>Workouts</Text>
+              <MaterialIcons name="fitness-center" size={24} color={colors.primary} />
+              <Text style={[drawerStyles.menuText, { color: colors.text }]}>Workouts</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
               style={drawerStyles.menuItem}
               onPress={() => handleNavigate('Messages')}
             >
-              <MaterialIcons name="message" size={24} color={COLORS.primary} />
-              <Text style={drawerStyles.menuText}>Messages</Text>
+              <MaterialIcons name="message" size={24} color={colors.primary} />
+              <Text style={[drawerStyles.menuText, { color: colors.text }]}>Messages</Text>
             </TouchableOpacity>
           </View>
 
-          <View style={[drawerStyles.footer, { paddingBottom: insets.bottom + 20 }]}>
+          <View style={[drawerStyles.footer, { paddingBottom: insets.bottom + 20, borderTopColor: colors.border }]}>
             <TouchableOpacity 
               style={drawerStyles.logoutButton}
               onPress={handleLogout}
@@ -161,6 +163,7 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
 
 export const AppNavigator: React.FC = () => {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const { colors } = useTheme();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [navigationRef, setNavigationRef] = useState<any>(null);
 
@@ -184,9 +187,9 @@ export const AppNavigator: React.FC = () => {
           screenOptions={({ navigation, route }) => ({
             headerShown: isAuthenticated,
             headerStyle: {
-              backgroundColor: COLORS.background,
+              backgroundColor: colors.background,
             },
-            headerTintColor: COLORS.white,
+            headerTintColor: colors.text,
             headerTitleStyle: {
               fontWeight: 'bold',
             },
@@ -195,7 +198,7 @@ export const AppNavigator: React.FC = () => {
                 style={{ marginLeft: 15 }}
                 onPress={() => setDrawerVisible(true)}
               >
-                <MaterialIcons name="menu" size={28} color={COLORS.primary} />
+                <MaterialIcons name="menu" size={28} color={colors.primary} />
               </TouchableOpacity>
             ) : undefined,
           })}

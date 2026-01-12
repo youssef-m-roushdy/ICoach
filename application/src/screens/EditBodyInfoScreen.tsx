@@ -14,6 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import type { RootStackParamList } from '../types';
 import { CustomInput, CustomButton } from '../components/common';
 import { COLORS, SIZES } from '../constants';
+import { useTheme } from '../context/ThemeContext';
 import { userService } from '../services';
 import { useAuth } from '../context';
 
@@ -21,6 +22,7 @@ type EditBodyInfoNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 
 export default function EditBodyInfoScreen() {
   const navigation = useNavigation<EditBodyInfoNavigationProp>();
+  const { colors } = useTheme();
   const { user, token, updateUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -92,44 +94,44 @@ export default function EditBodyInfoScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <MaterialIcons name="arrow-back" size={24} color={COLORS.white} />
+          <MaterialIcons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Edit Body Info</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Edit Body Info</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.sectionTitle}>Personal Details</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Personal Details</Text>
 
-        <Text style={styles.label}>Gender</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Gender</Text>
         <View style={styles.optionsRow}>
           <TouchableOpacity
-            style={[styles.optionButton, gender === 'male' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: gender === 'male' ? colors.primary : 'transparent' }, gender === 'male' && styles.optionButtonActive]}
             onPress={() => setGender('male')}
           >
-            <Text style={[styles.optionText, gender === 'male' && styles.optionTextActive]}>Male</Text>
+            <Text style={[styles.optionText, { color: gender === 'male' ? colors.background : colors.text }]}>Male</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, gender === 'female' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: gender === 'female' ? colors.primary : 'transparent' }, gender === 'female' && styles.optionButtonActive]}
             onPress={() => setGender('female')}
           >
-            <Text style={[styles.optionText, gender === 'female' && styles.optionTextActive]}>Female</Text>
+            <Text style={[styles.optionText, { color: gender === 'female' ? colors.background : colors.text }]}>Female</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Date of Birth (YYYY-MM-DD)</Text>
         <CustomInput
           placeholder="1990-01-01"
           value={dateOfBirth}
           onChangeText={setDateOfBirth}
         />
 
-        <Text style={styles.sectionTitle}>Body Measurements</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Body Measurements</Text>
 
-        <Text style={styles.label}>Height (cm)</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Height (cm)</Text>
         <CustomInput
           placeholder="170"
           value={height}
@@ -137,7 +139,7 @@ export default function EditBodyInfoScreen() {
           keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Weight (kg)</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Weight (kg)</Text>
         <CustomInput
           placeholder="70"
           value={weight}
@@ -145,7 +147,7 @@ export default function EditBodyInfoScreen() {
           keyboardType="numeric"
         />
 
-        <Text style={styles.label}>Body Fat Percentage</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Body Fat Percentage</Text>
         <CustomInput
           placeholder="15"
           value={bodyFatPercentage}
@@ -153,75 +155,75 @@ export default function EditBodyInfoScreen() {
           keyboardType="numeric"
         />
 
-        <Text style={styles.sectionTitle}>Fitness Profile</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Fitness Profile</Text>
 
-        <Text style={styles.label}>Fitness Goal</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Fitness Goal</Text>
         <View style={styles.optionsColumn}>
           <TouchableOpacity
-            style={[styles.optionButton, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: fitnessGoal === 'weight_loss' ? colors.primary : 'transparent' }, fitnessGoal === 'weight_loss' && styles.optionButtonActive]}
             onPress={() => setFitnessGoal('weight_loss')}
           >
-            <Text style={[styles.optionText, fitnessGoal === 'weight_loss' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: fitnessGoal === 'weight_loss' ? colors.background : colors.text }]}>
               Weight Loss
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: fitnessGoal === 'muscle_gain' ? colors.primary : 'transparent' }, fitnessGoal === 'muscle_gain' && styles.optionButtonActive]}
             onPress={() => setFitnessGoal('muscle_gain')}
           >
-            <Text style={[styles.optionText, fitnessGoal === 'muscle_gain' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: fitnessGoal === 'muscle_gain' ? colors.background : colors.text }]}>
               Muscle Gain
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, fitnessGoal === 'maintenance' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: fitnessGoal === 'maintenance' ? colors.primary : 'transparent' }, fitnessGoal === 'maintenance' && styles.optionButtonActive]}
             onPress={() => setFitnessGoal('maintenance')}
           >
-            <Text style={[styles.optionText, fitnessGoal === 'maintenance' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: fitnessGoal === 'maintenance' ? colors.background : colors.text }]}>
               Maintenance
             </Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.label}>Activity Level</Text>
+        <Text style={[styles.label, { color: colors.text }]}>Activity Level</Text>
         <View style={styles.optionsColumn}>
           <TouchableOpacity
-            style={[styles.optionButton, activityLevel === 'sedentary' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'sedentary' ? colors.primary : 'transparent' }, activityLevel === 'sedentary' && styles.optionButtonActive]}
             onPress={() => setActivityLevel('sedentary')}
           >
-            <Text style={[styles.optionText, activityLevel === 'sedentary' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: activityLevel === 'sedentary' ? colors.background : colors.text }]}>
               Sedentary
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, activityLevel === 'lightly_active' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'lightly_active' ? colors.primary : 'transparent' }, activityLevel === 'lightly_active' && styles.optionButtonActive]}
             onPress={() => setActivityLevel('lightly_active')}
           >
-            <Text style={[styles.optionText, activityLevel === 'lightly_active' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: activityLevel === 'lightly_active' ? colors.background : colors.text }]}>
               Lightly Active
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, activityLevel === 'moderately_active' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'moderately_active' ? colors.primary : 'transparent' }, activityLevel === 'moderately_active' && styles.optionButtonActive]}
             onPress={() => setActivityLevel('moderately_active')}
           >
-            <Text style={[styles.optionText, activityLevel === 'moderately_active' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: activityLevel === 'moderately_active' ? colors.background : colors.text }]}>
               Moderately Active
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, activityLevel === 'very_active' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'very_active' ? colors.primary : 'transparent' }, activityLevel === 'very_active' && styles.optionButtonActive]}
             onPress={() => setActivityLevel('very_active')}
           >
-            <Text style={[styles.optionText, activityLevel === 'very_active' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: activityLevel === 'very_active' ? colors.background : colors.text }]}>
               Very Active
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.optionButton, activityLevel === 'extra_active' && styles.optionButtonActive]}
+            style={[styles.optionButton, { borderColor: colors.border, backgroundColor: activityLevel === 'extra_active' ? colors.primary : 'transparent' }, activityLevel === 'extra_active' && styles.optionButtonActive]}
             onPress={() => setActivityLevel('extra_active')}
           >
-            <Text style={[styles.optionText, activityLevel === 'extra_active' && styles.optionTextActive]}>
+            <Text style={[styles.optionText, { color: activityLevel === 'extra_active' ? colors.background : colors.text }]}>
               Extra Active
             </Text>
           </TouchableOpacity>
@@ -229,7 +231,7 @@ export default function EditBodyInfoScreen() {
 
         <View style={styles.buttonContainer}>
           {isLoading ? (
-            <ActivityIndicator size="large" color={COLORS.primary} />
+            <ActivityIndicator size="large" color={colors.primary} />
           ) : (
             <>
               <CustomButton
