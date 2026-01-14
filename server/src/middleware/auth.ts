@@ -10,6 +10,12 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
+interface DecodedToken {
+  id: number;
+  email: string;
+  role: string;
+}
+
 /**
  * Middleware to authenticate JWT tokens
  */
@@ -36,7 +42,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
       throw new Error('JWT configuration error');
     }
 
-    const decoded = jwt.verify(token, secret) as any;
+    const decoded = jwt.verify(token, secret) as DecodedToken;
     
     (req as AuthenticatedRequest).user = {
       id: decoded.id,
@@ -134,7 +140,7 @@ export const optionalAuthenticate = (req: Request, res: Response, next: NextFunc
       return next();
     }
 
-    const decoded = jwt.verify(token, secret) as any;
+    const decoded = jwt.verify(token, secret) as DecodedToken;
     
     (req as AuthenticatedRequest).user = {
       id: decoded.id,
