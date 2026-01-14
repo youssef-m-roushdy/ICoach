@@ -129,3 +129,4 @@ export * from './types';
 export * from './utils';
 export * from './exercises';
 export * from './feedbackMapping';
+export * from './voiceFeedback';

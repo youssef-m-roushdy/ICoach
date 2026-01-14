@@ -32,6 +32,7 @@ import {
   ExerciseLogic,
   ExerciseResult,
   Landmark,
+  voiceFeedback,
 } from '../services/aiFitnessEngine';
 import { useTheme } from '../context/ThemeContext';
 
@@ -52,17 +53,23 @@ const LiveWorkoutScreen = () => {
   const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [result, setResult] = useState<ExerciseResult | null>(null);
-  const [feedback, setFeedback] = useState({ message: 'Select an exercise', audioFile: '' });
+  const [feedback, setFeedback] = useState({ message: 'Select an exercise' });
 
   // Exercise logic ref
   const trainerRef = useRef<ExerciseLogic | null>(null);
   const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastFeedbackRef = useRef<string>(''); // Track last feedback to avoid repeating
+
+  // Initialize voice feedback on mount
+  useEffect(() => {
+    voiceFeedback.initialize();
+  }, []);
 
   // Initialize trainer when exercise changes
   useEffect(() => {
     trainerRef.current = AIFitnessEngine.getTrainer(selectedExercise);
     setResult(null);
-    setFeedback({ message: `Ready for ${selectedExercise.replace('_', ' ')}`, audioFile: '' });
+    setFeedback({ message: `Ready for ${selectedExercise.replace('_', ' ')}` });
   }, [selectedExercise]);
 
   // Request camera permission
@@ -157,11 +164,13 @@ const LiveWorkoutScreen = () => {
         simulationIntervalRef.current = null;
       }
       setIsActive(false);
-      setFeedback({ message: 'Workout paused', audioFile: '' });
+      voiceFeedback.stop();
+      setFeedback({ message: 'Workout paused' });
     } else {
       // Start
       setIsActive(true);
       trainerRef.current?.reset?.();
+      lastFeedbackRef.current = '';
 
       let phase: 'up' | 'down' = 'up';
       let frameCount = 0;
@@ -182,6 +191,12 @@ const LiveWorkoutScreen = () => {
         setResult(analysisResult);
         const fb = getFeedbackForCode(analysisResult.feedback_code, analysisResult.exercise);
         setFeedback(fb);
+
+        // Speak feedback only if it changed (to avoid repeating same message)
+        if (fb.message !== lastFeedbackRef.current) {
+          lastFeedbackRef.current = fb.message;
+          voiceFeedback.speak(fb.message, { gender: 'female' });
+        }
       }, 100);
     }
   }, [isActive, selectedExercise]);
@@ -195,9 +210,11 @@ const LiveWorkoutScreen = () => {
       simulationIntervalRef.current = null;
     }
     setIsActive(false);
+    voiceFeedback.stop();
     trainerRef.current?.reset?.();
+    lastFeedbackRef.current = '';
     setResult(null);
-    setFeedback({ message: `Ready for ${selectedExercise.replace('_', ' ')}`, audioFile: '' });
+    setFeedback({ message: `Ready for ${selectedExercise.replace('_', ' ')}` });
   }, [selectedExercise]);
 
   // Get display values
@@ -335,8 +352,8 @@ const LiveWorkoutScreen = () => {
           !isCorrect && styles.feedbackError
         ]}>
           <Text style={styles.feedbackText}>{feedback.message}</Text>
-          {feedback.audioFile && (
-            <Text style={styles.audioHint}>🔊 {feedback.audioFile}</Text>
+          {isActive && (
+            <Text style={styles.audioHint}>🔊 Voice feedback enabled</Text>
           )}
         </View>
 
