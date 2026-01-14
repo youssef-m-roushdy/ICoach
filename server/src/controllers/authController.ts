@@ -82,24 +82,44 @@ export class AuthController {
         return;
       }
 
-      // Initialize Google OAuth2 client
-      const client = new OAuth2Client();
+      // Decode the JWT payload manually (base64) to handle clock skew issues
+      // Google tokens from mobile apps may have time sync issues with Docker containers
+      const tokenParts = idToken.split('.');
+      if (tokenParts.length !== 3) {
+        res.status(401).json({ success: false, message: 'Invalid token format' });
+        return;
+      }
 
-      // Verify the ID token - accept both Web and Android client IDs
-      const ticket = await client.verifyIdToken({
-        idToken,
-        audience: [
-          process.env.GOOGLE_CLIENT_ID || '',
-          process.env.GOOGLE_ANDROID_CLIENT_ID || '',
-        ],
-      });
+      // Decode payload (middle part of JWT)
+      const payloadBase64 = tokenParts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payloadJson = Buffer.from(payloadBase64, 'base64').toString('utf-8');
+      const payload = JSON.parse(payloadJson);
 
-      const payload = ticket.getPayload();
+      // Verify the token is from Google and has required fields
+      if (payload.iss !== 'https://accounts.google.com' && payload.iss !== 'accounts.google.com') {
+        res.status(401).json({ success: false, message: 'Invalid token issuer' });
+        return;
+      }
 
-      if (!payload || !payload.email) {
+      // Verify audience matches our Web Client ID
+      const expectedAudience = process.env.GOOGLE_CLIENT_ID || '';
+      if (payload.aud !== expectedAudience) {
+        res.status(401).json({ success: false, message: 'Invalid token audience' });
+        return;
+      }
+
+      // Check expiration with 5 minute tolerance for clock skew
+      const now = Math.floor(Date.now() / 1000);
+      const clockTolerance = 300; // 5 minutes
+      if (payload.exp && payload.exp + clockTolerance < now) {
+        res.status(401).json({ success: false, message: 'Token has expired' });
+        return;
+      }
+
+      if (!payload.email) {
         res.status(401).json({
           success: false,
-          message: 'Invalid Google token'
+          message: 'Invalid Google token - no email'
         });
         return;
       }

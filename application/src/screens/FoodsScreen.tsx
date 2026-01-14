@@ -11,19 +11,17 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import Ion from 'react-native-vector-icons/Ionicons';
 import { COLORS, SIZES } from '../constants';
-import { useTheme } from '../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
 import { foodService } from '../services/api';
 import type { FoodPredictionResponse } from '../services/api';
 
 export default function FoodsScreen() {
-  const { colors } = useTheme();
-  const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -60,20 +58,53 @@ export default function FoodsScreen() {
     }
   };
 
-  const openCamera = () => {
+  const requestCameraPermission = async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'This app needs access to your camera to take photos of food.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          }
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+    return true; // iOS handles permissions automatically
+  };
+
+  const openCamera = async () => {
     closeSheet();
+    
+    const hasPermission = await requestCameraPermission();
+    if (!hasPermission) {
+      Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
+      return;
+    }
+
     launchCamera(
       {
         mediaType: 'photo',
-        quality: 0.8,
+        quality: 0.6,
+        maxWidth: 800,
+        maxHeight: 800,
         saveToPhotos: false,
+        cameraType: 'back',
       },
       (response) => {
         if (response.didCancel) {
           return;
-        } else if (response.errorMessage) {
-          Alert.alert('Error', response.errorMessage);
-        } else if (response.assets && response.assets[0].uri) {
+        } else if (response.errorCode) {
+          console.log('Camera Error Code:', response.errorCode);
+          Alert.alert('Error', response.errorMessage || 'Camera error occurred');
+        } else if (response.assets && response.assets[0]?.uri) {
           predictFood(response.assets[0].uri);
         }
       }
@@ -85,7 +116,9 @@ export default function FoodsScreen() {
     launchImageLibrary(
       {
         mediaType: 'photo',
-        quality: 0.8,
+        quality: 0.6,
+        maxWidth: 800,
+        maxHeight: 800,
         selectionLimit: 1,
       },
       (response) => {
@@ -118,61 +151,60 @@ export default function FoodsScreen() {
   });
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+    <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>🍎 {t('foods')}</Text>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>AI-powered food identification</Text>
+        <Text style={styles.title}>🍎 Food Recognition</Text>
+        <Text style={styles.subtitle}>AI-powered food identification</Text>
 
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            <Text style={[styles.loadingText, { color: colors.text }]}>Identifying food...</Text>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <Text style={styles.loadingText}>Identifying food...</Text>
           </View>
         ) : prediction && selectedImage ? (
-          <View style={[styles.resultContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <View style={styles.resultContainer}>
             <Image source={{ uri: selectedImage }} style={styles.foodImage} />
             
-            <View style={[styles.predictionCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.foodName, { color: colors.text }]}>{formatFoodName(prediction.food_data.name)}</Text>
-              <Text style={[styles.confidence, { color: colors.primary }]}>
+            <View style={styles.predictionCard}>
+              <Text style={styles.foodName}>{formatFoodName(prediction.food_data.name)}</Text>
+              <Text style={styles.confidence}>
                 Confidence: {(prediction.confidence * 100).toFixed(1)}%
               </Text>
               
               <View style={styles.nutritionGrid}>
-                <View style={[styles.nutritionItem, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[styles.nutritionLabel, { color: colors.textSecondary }]}>Calories</Text>
-                  <Text style={[styles.nutritionValue, { color: colors.primary }]}>{prediction.food_data.calories}</Text>
-                  <Text style={[styles.nutritionUnit, { color: colors.textSecondary }]}>kcal</Text>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Calories</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.calories}</Text>
+                  <Text style={styles.nutritionUnit}>kcal</Text>
                 </View>
-                <View style={[styles.nutritionItem, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[styles.nutritionLabel, { color: colors.textSecondary }]}>Protein</Text>
-                  <Text style={[styles.nutritionValue, { color: colors.primary }]}>{prediction.food_data.protein}</Text>
-                  <Text style={[styles.nutritionUnit, { color: colors.textSecondary }]}>g</Text>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Protein</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.protein}</Text>
+                  <Text style={styles.nutritionUnit}>g</Text>
                 </View>
-                <View style={[styles.nutritionItem, { backgroundColor: colors.background, borderColor: colors.border }]}>
-
-                  <Text style={[styles.nutritionLabel, { color: colors.textSecondary }]}>Carbs</Text>
-                  <Text style={[styles.nutritionValue, { color: colors.primary }]}>{prediction.food_data.carbohydrate}</Text>
-                  <Text style={[styles.nutritionUnit, { color: colors.textSecondary }]}>g</Text>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Carbs</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.carbohydrate}</Text>
+                  <Text style={styles.nutritionUnit}>g</Text>
                 </View>
-                <View style={[styles.nutritionItem, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                  <Text style={[styles.nutritionLabel, { color: colors.textSecondary }]}>Fat</Text>
-                  <Text style={[styles.nutritionValue, { color: colors.primary }]}>{prediction.food_data.fat}</Text>
-                  <Text style={[styles.nutritionUnit, { color: colors.textSecondary }]}>g</Text>
+                <View style={styles.nutritionItem}>
+                  <Text style={styles.nutritionLabel}>Fat</Text>
+                  <Text style={styles.nutritionValue}>{prediction.food_data.fat}</Text>
+                  <Text style={styles.nutritionUnit}>g</Text>
                 </View>
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.newScanButton, { backgroundColor: colors.primary }]} onPress={clearResult}>
-              <Icon name="camera" size={20} color={colors.text === '#FFFFFF' ? '#000000' : '#FFFFFF'} />
-              <Text style={[styles.newScanButtonText, { color: colors.text === '#FFFFFF' ? '#000000' : '#FFFFFF' }]}>Scan Another Food</Text>
+            <TouchableOpacity style={styles.newScanButton} onPress={clearResult}>
+              <Icon name="camera" size={20} color={COLORS.white} />
+              <Text style={styles.newScanButtonText}>Scan Another Food</Text>
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity style={[styles.scanCard, { borderColor: colors.primary }]} onPress={openSheet}>
-            <Icon name="camera" size={48} color={colors.primary} />
-            <Text style={[styles.scanTitle, { color: colors.text }]}>Scan Your Food</Text>
-            <Text style={[styles.scanText, { color: colors.textSecondary }]}>
+          <TouchableOpacity style={styles.scanCard} onPress={openSheet}>
+            <Icon name="camera" size={48} color={COLORS.primary} />
+            <Text style={styles.scanTitle}>Scan Your Food</Text>
+            <Text style={styles.scanText}>
               Take a photo or choose from gallery to identify food and get nutrition info
             </Text>
           </TouchableOpacity>
@@ -188,19 +220,19 @@ export default function FoodsScreen() {
         <Animated.View
           style={[
             styles.bottomSheet,
-            { transform: [{ translateY }], backgroundColor: colors.background },
+            { transform: [{ translateY }] },
           ]}
         >
           <View style={styles.handleBar} />
 
           <TouchableOpacity style={styles.option} onPress={openCamera}>
-            <Icon name="camera" size={28} color={colors.primary} />
-            <Text style={[styles.optionText, { color: colors.text }]}>Take Photo</Text>
+            <Icon name="camera" size={28} color="#FFD700" />
+            <Text style={styles.optionText}>Take Photo</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.option} onPress={openGallery}>
-            <Ion name="images-outline" size={30} color={colors.primary} />
-            <Text style={[styles.optionText, { color: colors.text }]}>Choose from Gallery</Text>
+            <Ion name="images-outline" size={30} color="#FFD700" />
+            <Text style={styles.optionText}>Choose from Gallery</Text>
           </TouchableOpacity>
         </Animated.View>
       </Modal>
