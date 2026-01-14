@@ -246,7 +246,7 @@ export class UserController {
    */
   static async verifyEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { token } = req.params;
+      const token = Array.isArray(req.params.token) ? req.params.token[0] : req.params.token;
       if (!token) {
         throw new AppError('Token is required', 400);
       }
@@ -297,7 +297,7 @@ export class UserController {
    */
   static async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       if (!id) {
         throw new AppError('User ID is required', 400);
       }
@@ -344,7 +344,7 @@ export class UserController {
    */
   static async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       if (!id) {
         throw new AppError('User ID is required', 400);
       }
@@ -367,7 +367,7 @@ export class UserController {
    */
   static async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       if (!id) {
         throw new AppError('User ID is required', 400);
       }

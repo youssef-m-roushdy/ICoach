@@ -84,7 +84,7 @@ export const getWorkoutById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
     const workout = await Workout.findByPk(id);
 
@@ -172,7 +172,7 @@ export const updateWorkout = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const {
       body_part,
       target_area,
@@ -242,7 +242,7 @@ export const deleteWorkout = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
     const workout = await Workout.findByPk(id);
 

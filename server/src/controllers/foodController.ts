@@ -74,7 +74,7 @@ export class FoodController {
    */
   static async getFoodById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       
       if (!id || isNaN(parseInt(id))) {
         throw new AppError('Valid food ID is required', 400);
@@ -147,7 +147,7 @@ export class FoodController {
    */
   static async updateFood(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       
       if (!id || isNaN(parseInt(id))) {
         throw new AppError('Valid food ID is required', 400);
@@ -186,7 +186,7 @@ export class FoodController {
         try {
           const uploadResult = await ImageService.uploadFoodImage(
             req.file.buffer, 
-            parseInt(id)
+            id
           );
           imageUrl = uploadResult.secureUrl;
         } catch (error) {
@@ -221,7 +221,7 @@ export class FoodController {
    */
   static async deleteFood(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
       
       if (!id || isNaN(parseInt(id))) {
         throw new AppError('Valid food ID is required', 400);

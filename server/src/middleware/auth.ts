@@ -101,7 +101,8 @@ export const authorizeOwnerOrAdmin = (req: Request, res: Response, next: NextFun
       throw new ForbiddenError('Resource identifier is required.');
     }
 
-    const resourceUserId = parseInt(id);
+    const idString = (Array.isArray(id) ? id[0] : id) as string;
+    const resourceUserId = parseInt(idString);
     if (isNaN(resourceUserId)) {
       throw new ForbiddenError('Invalid resource identifier.');
     }
