@@ -16,6 +16,7 @@ import EditBodyInfoScreen from '../screens/EditBodyInfoScreen';
 import FoodsScreen from '../screens/FoodsScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import WorkoutsScreen from '../screens/WorkoutsScreen';
+import LiveWorkoutScreen from '../screens/LiveWorkoutScreen';
 
 import { 
   ActivityIndicator, 
@@ -42,7 +43,8 @@ export type RootStackParamList = {
   EditBodyInfo: undefined;
   Foods: undefined;
   Messages: undefined;
-  Workouts: undefined; 
+  Workouts: undefined;
+  LiveWorkout: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -128,6 +130,14 @@ function DrawerMenu({ visible, onClose, navigation }: DrawerMenuProps) {
             >
               <MaterialIcons name="fitness-center" size={24} color={colors.primary} />
               <Text style={[drawerStyles.menuText, { color: colors.text }]}>Workouts</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={drawerStyles.menuItem}
+              onPress={() => handleNavigate('LiveWorkout')}
+            >
+              <MaterialIcons name="videocam" size={24} color={colors.primary} />
+              <Text style={[drawerStyles.menuText, { color: colors.text }]}>AI Workout</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
@@ -233,6 +243,7 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
               <Stack.Screen name="Workouts" component={WorkoutsScreen} options={{ title: 'Workouts' }} />
+              <Stack.Screen name="LiveWorkout" component={LiveWorkoutScreen} options={{ headerShown: false }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
@@ -258,6 +269,7 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
               <Stack.Screen name="Foods" component={FoodsScreen} options={{ title: 'Foods' }} />
               <Stack.Screen name="Workouts" component={WorkoutsScreen} options={{ title: 'Workouts' }} />
+              <Stack.Screen name="LiveWorkout" component={LiveWorkoutScreen} options={{ headerShown: false }} />
               <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />

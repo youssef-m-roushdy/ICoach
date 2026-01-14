@@ -8,4 +8,5 @@ export { default as ProfileScreen } from './ProfileScreen';
 export { default as EditProfileScreen } from './EditProfileScreen';
 export { default as EditBodyInfoScreen } from './EditBodyInfoScreen';
 export { default as FoodsScreen } from './FoodsScreen';
-export { default as MessagesScreen } from './MessagesScreen'; // ✅ هذا السطر صحيح
+export { default as MessagesScreen } from './MessagesScreen';
+export { default as LiveWorkoutScreen } from './LiveWorkoutScreen';
