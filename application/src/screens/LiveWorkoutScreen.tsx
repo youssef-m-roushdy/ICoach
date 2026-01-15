@@ -1,14 +1,14 @@
 /**
- * LiveWorkoutScreen - AI Fitness Engine Test Screen
+ * LiveWorkoutScreen - AI Fitness Engine with Real Pose Detection
  * 
- * This screen demonstrates the AI Fitness Engine with:
- * 1. Camera preview
+ * This screen uses MediaPipe Pose Detection via react-native-mediapipe
+ * for real-time exercise tracking and rep counting.
+ * 
+ * Features:
+ * 1. Real camera pose detection (MediaPipe)
  * 2. Exercise selection
- * 3. Simulated pose landmarks for testing
- * 4. Real-time feedback display
- * 
- * Note: For production, integrate with a real pose detection library
- * like MediaPipe or TensorFlow.js
+ * 3. Real-time feedback display
+ * 4. Voice feedback
  */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -17,13 +17,25 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   Dimensions,
   SafeAreaView,
   Modal,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
-import { Camera, useCameraDevices, useCameraPermission } from 'react-native-vision-camera';
+import { 
+  Camera, 
+  useCameraDevices, 
+  useCameraPermission,
+} from 'react-native-vision-camera';
+import { 
+  usePoseDetection,
+  Delegate,
+  RunningMode,
+  type PoseDetectionResultBundle,
+  type ViewCoordinator,
+  type DetectionError,
+} from 'react-native-mediapipe';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -41,35 +53,154 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 // Supported exercises
 const EXERCISES = AIFitnessEngine.getSupportedExercises();
 
+/**
+ * Convert MediaPipe landmarks to our Landmark format
+ */
+const convertLandmarks = (mediapipeLandmarks: any[]): Landmark[] => {
+  return mediapipeLandmarks.map((lm) => ({
+    x: lm.x ?? 0.5,
+    y: lm.y ?? 0.5,
+    z: lm.z ?? 0,
+    visibility: lm.visibility ?? 0.9,
+  }));
+};
+
+/**
+ * Check if key landmarks are visible
+ */
+const areLandmarksValid = (landmarks: Landmark[]): boolean => {
+  const keyIndices = [11, 12, 23, 24, 25, 26, 27, 28];
+  return keyIndices.every((idx) => {
+    const lm = landmarks[idx];
+    return lm && (lm.visibility ?? 0) >= 0.5;
+  });
+};
+
 const LiveWorkoutScreen = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const { hasPermission, requestPermission } = useCameraPermission();
   const devices = useCameraDevices();
   const device = devices.find((d) => d.position === 'front') || devices[0];
+  const cameraRef = useRef<Camera>(null);
 
   // State
-  const [selectedExercise, setSelectedExercise] = useState<string>('squat');
+  const [selectedExercise, setSelectedExercise] = useState<string>('jumping_jacks');
   const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [result, setResult] = useState<ExerciseResult | null>(null);
   const [feedback, setFeedback] = useState({ message: 'Select an exercise' });
+  const [debugInfo, setDebugInfo] = useState<string>('Waiting for pose...');
+  const [poseStatus, setPoseStatus] = useState<string>('Loading model...');
 
-  // Exercise logic ref
+  // Refs
   const trainerRef = useRef<ExerciseLogic | null>(null);
-  const simulationIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const lastFeedbackRef = useRef<string>(''); // Track last feedback to avoid repeating
+  const lastFeedbackRef = useRef<string>('');
+  const frameCountRef = useRef(0);
+  const isActiveRef = useRef(false);
+  const poseDetectedRef = useRef(false);
 
-  // Initialize voice feedback on mount
+  // Keep isActiveRef in sync
+  useEffect(() => {
+    isActiveRef.current = isActive;
+  }, [isActive]);
+
+  // Handle pose detection results
+  const handlePoseResults = useCallback((result: PoseDetectionResultBundle, vc: ViewCoordinator) => {
+    frameCountRef.current++;
+    
+    // Always update to show we're receiving frames
+    if (!poseDetectedRef.current) {
+      poseDetectedRef.current = true;
+      setPoseStatus('Pose model active');
+    }
+
+    // Only process if workout is active
+    if (!isActiveRef.current || !trainerRef.current) {
+      setDebugInfo(`Frames: ${frameCountRef.current} - Press START`);
+      return;
+    }
+    
+    // Process every 2nd frame for performance
+    if (frameCountRef.current % 2 !== 0) return;
+
+    try {
+      console.log('Pose result:', JSON.stringify(result?.results?.length ?? 0));
+      
+      if (result?.results && result.results.length > 0 && result.results[0].landmarks?.length > 0) {
+        const landmarks = convertLandmarks(result.results[0].landmarks[0]);
+        
+        console.log('Landmarks count:', landmarks.length);
+        console.log('Sample landmark 11 (L shoulder):', JSON.stringify(landmarks[11]));
+        console.log('Sample landmark 27 (L ankle):', JSON.stringify(landmarks[27]));
+        
+        if (areLandmarksValid(landmarks)) {
+          const analysisResult = trainerRef.current.analyze(landmarks);
+          
+          console.log('Analysis result:', JSON.stringify(analysisResult));
+          
+          setResult(analysisResult);
+          const fb = getFeedbackForCode(analysisResult.feedback_code, analysisResult.exercise);
+          setFeedback(fb);
+          setDebugInfo(`Active - Frame: ${frameCountRef.current}`);
+
+          // Voice feedback on change
+          if (fb.message !== lastFeedbackRef.current) {
+            lastFeedbackRef.current = fb.message;
+            voiceFeedback.speak(fb.message, { gender: 'female' });
+          }
+        } else {
+          setDebugInfo(`Low visibility - show full body (F:${frameCountRef.current})`);
+        }
+      } else {
+        setDebugInfo(`No pose in frame ${frameCountRef.current}`);
+      }
+    } catch (error) {
+      console.error('Analysis error:', error);
+      setDebugInfo(`Error: ${String(error)}`);
+    }
+  }, []);
+
+  // Handle pose detection errors
+  const handlePoseError = useCallback((error: DetectionError) => {
+    console.error('Pose detection error:', error);
+    setPoseStatus(`Error: ${error.message || 'Unknown error'}`);
+    setDebugInfo(`Pose Error: ${error.message}`);
+  }, []);
+
+  // Initialize MediaPipe Pose Detection
+  const poseDetection = usePoseDetection(
+    {
+      onResults: handlePoseResults,
+      onError: handlePoseError,
+    },
+    RunningMode.LIVE_STREAM,
+    'pose_landmarker_lite.task', // Model name with .task extension
+    {
+      delegate: Delegate.GPU,
+      numPoses: 1,
+      minPoseDetectionConfidence: 0.5,
+      minPosePresenceConfidence: 0.5,
+      minTrackingConfidence: 0.5,
+    }
+  );
+
+  // Initialize voice feedback
   useEffect(() => {
     voiceFeedback.initialize();
+    return () => {
+      voiceFeedback.stop();
+    };
   }, []);
 
   // Initialize trainer when exercise changes
   useEffect(() => {
     trainerRef.current = AIFitnessEngine.getTrainer(selectedExercise);
+    trainerRef.current?.reset?.();
     setResult(null);
     setFeedback({ message: `Ready for ${selectedExercise.replace('_', ' ')}` });
+    lastFeedbackRef.current = '';
+    frameCountRef.current = 0;
   }, [selectedExercise]);
 
   // Request camera permission
@@ -79,158 +210,47 @@ const LiveWorkoutScreen = () => {
     }
   }, [hasPermission, requestPermission]);
 
-  // Cleanup on unmount
+  // Notify pose detection when camera device changes
   useEffect(() => {
-    return () => {
-      if (simulationIntervalRef.current) {
-        clearInterval(simulationIntervalRef.current);
-      }
-    };
-  }, []);
-
-  /**
-   * Generate simulated landmarks for testing
-   * In production, these come from pose detection (MediaPipe/TensorFlow)
-   */
-  const generateSimulatedLandmarks = (phase: 'up' | 'down' | 'middle'): Landmark[] => {
-    // Create 33 landmarks (MediaPipe Pose has 33 points)
-    const landmarks: Landmark[] = Array(33).fill(null).map(() => ({
-      x: 0.5,
-      y: 0.5,
-      z: 0,
-      visibility: 0.9,
-    }));
-
-    // Simulate different exercise phases
-    if (selectedExercise === 'squat') {
-      // Key points for squat: hip (23), knee (25), ankle (27)
-      if (phase === 'up') {
-        // Standing position
-        landmarks[23] = { x: 0.5, y: 0.4, visibility: 0.9 }; // Hip high
-        landmarks[25] = { x: 0.5, y: 0.6, visibility: 0.9 }; // Knee
-        landmarks[27] = { x: 0.5, y: 0.85, visibility: 0.9 }; // Ankle
-        landmarks[0] = { x: 0.5, y: 0.1, visibility: 0.9 }; // Nose (visible)
-      } else if (phase === 'down') {
-        // Squat down position
-        landmarks[23] = { x: 0.5, y: 0.6, visibility: 0.9 }; // Hip low
-        landmarks[25] = { x: 0.5, y: 0.6, visibility: 0.9 }; // Knee at hip level
-        landmarks[27] = { x: 0.5, y: 0.85, visibility: 0.9 }; // Ankle
-        landmarks[0] = { x: 0.5, y: 0.2, visibility: 0.9 }; // Nose
-      }
-    } else if (selectedExercise === 'jumping_jacks') {
-      // Key points: shoulders, elbows, hips, knees, ankles
-      // Logic: ankleDist > shDist * 1.5 && angLSh > 150 for UP
-      // Logic: ankleDist < shDist * 1.0 for DOWN (count rep)
-      if (phase === 'up') {
-        // Arms up (wide angle), legs apart (wide stance)
-        landmarks[11] = { x: 0.35, y: 0.3, visibility: 0.9 }; // Left shoulder
-        landmarks[12] = { x: 0.65, y: 0.3, visibility: 0.9 }; // Right shoulder (shDist = 0.3)
-        landmarks[13] = { x: 0.15, y: 0.15, visibility: 0.9 }; // Left elbow (up and out for angle > 150)
-        landmarks[14] = { x: 0.85, y: 0.15, visibility: 0.9 }; // Right elbow (up and out)
-        landmarks[23] = { x: 0.4, y: 0.5, visibility: 0.9 }; // Left hip
-        landmarks[24] = { x: 0.6, y: 0.5, visibility: 0.9 }; // Right hip
-        landmarks[25] = { x: 0.35, y: 0.7, visibility: 0.9 }; // Left knee
-        landmarks[26] = { x: 0.65, y: 0.7, visibility: 0.9 }; // Right knee
-        landmarks[27] = { x: 0.1, y: 0.9, visibility: 0.9 }; // Left ankle (apart) 
-        landmarks[28] = { x: 0.9, y: 0.9, visibility: 0.9 }; // Right ankle (ankleDist = 0.8 > 0.3*1.5=0.45 ✓)
-      } else if (phase === 'down') {
-        // Arms down, legs together
-        landmarks[11] = { x: 0.4, y: 0.3, visibility: 0.9 }; // Left shoulder
-        landmarks[12] = { x: 0.6, y: 0.3, visibility: 0.9 }; // Right shoulder (shDist = 0.2)
-        landmarks[13] = { x: 0.38, y: 0.5, visibility: 0.9 }; // Left elbow (down)
-        landmarks[14] = { x: 0.62, y: 0.5, visibility: 0.9 }; // Right elbow (down)
-        landmarks[23] = { x: 0.45, y: 0.5, visibility: 0.9 }; // Left hip
-        landmarks[24] = { x: 0.55, y: 0.5, visibility: 0.9 }; // Right hip
-        landmarks[25] = { x: 0.47, y: 0.7, visibility: 0.9 }; // Left knee
-        landmarks[26] = { x: 0.53, y: 0.7, visibility: 0.9 }; // Right knee
-        landmarks[27] = { x: 0.48, y: 0.9, visibility: 0.9 }; // Left ankle (together)
-        landmarks[28] = { x: 0.52, y: 0.9, visibility: 0.9 }; // Right ankle (ankleDist = 0.04 < 0.2*1.0=0.2 ✓)
-      }
-    } else if (selectedExercise === 'high_plank' || selectedExercise === 'elbow_plank') {
-      // Horizontal position
-      landmarks[11] = { x: 0.2, y: 0.4, visibility: 0.9 }; // Shoulder
-      landmarks[13] = { x: 0.15, y: 0.5, visibility: 0.9 }; // Elbow
-      landmarks[15] = { x: 0.1, y: 0.55, visibility: 0.9 }; // Wrist
-      landmarks[23] = { x: 0.5, y: 0.45, visibility: 0.9 }; // Hip
-      landmarks[25] = { x: 0.7, y: 0.5, visibility: 0.9 }; // Knee
-      landmarks[27] = { x: 0.9, y: 0.55, visibility: 0.9 }; // Ankle
+    if (device) {
+      poseDetection.cameraDeviceChangeHandler(device);
     }
+  }, [device, poseDetection]);
 
-    return landmarks;
-  };
-
-  /**
-   * Start/Stop the workout simulation
-   */
+  // Toggle workout
   const toggleWorkout = useCallback(() => {
     if (isActive) {
-      // Stop
-      if (simulationIntervalRef.current) {
-        clearInterval(simulationIntervalRef.current);
-        simulationIntervalRef.current = null;
-      }
       setIsActive(false);
       voiceFeedback.stop();
       setFeedback({ message: 'Workout paused' });
     } else {
-      // Start
       setIsActive(true);
       trainerRef.current?.reset?.();
       lastFeedbackRef.current = '';
-
-      let phase: 'up' | 'down' = 'up';
-      let frameCount = 0;
-
-      // Simulate pose detection at ~10fps
-      simulationIntervalRef.current = setInterval(() => {
-        if (!trainerRef.current) return;
-
-        // Alternate phases every 15 frames (~1.5 seconds)
-        frameCount++;
-        if (frameCount % 15 === 0) {
-          phase = phase === 'up' ? 'down' : 'up';
-        }
-
-        const landmarks = generateSimulatedLandmarks(phase);
-        const analysisResult = trainerRef.current.analyze(landmarks);
-        
-        setResult(analysisResult);
-        const fb = getFeedbackForCode(analysisResult.feedback_code, analysisResult.exercise);
-        setFeedback(fb);
-
-        // Speak feedback only if it changed (to avoid repeating same message)
-        if (fb.message !== lastFeedbackRef.current) {
-          lastFeedbackRef.current = fb.message;
-          voiceFeedback.speak(fb.message, { gender: 'female' });
-        }
-      }, 100);
+      frameCountRef.current = 0;
+      setFeedback({ message: 'Get in position!' });
     }
-  }, [isActive, selectedExercise]);
+  }, [isActive]);
 
-  /**
-   * Reset the workout
-   */
+  // Reset workout
   const resetWorkout = useCallback(() => {
-    if (simulationIntervalRef.current) {
-      clearInterval(simulationIntervalRef.current);
-      simulationIntervalRef.current = null;
-    }
     setIsActive(false);
     voiceFeedback.stop();
     trainerRef.current?.reset?.();
     lastFeedbackRef.current = '';
+    frameCountRef.current = 0;
     setResult(null);
     setFeedback({ message: `Ready for ${selectedExercise.replace('_', ' ')}` });
   }, [selectedExercise]);
 
-  // Get display values
+  // Display values
   const reps = (result as any)?.reps ?? 0;
   const timer = (result as any)?.timer ?? 0;
   const isTimerExercise = selectedExercise.includes('plank');
   const stage = (result as any)?.stage ?? '-';
   const isCorrect = (result as any)?.is_correct ?? true;
 
-  // Render exercise selector modal
+  // Exercise modal
   const renderExerciseModal = () => (
     <Modal
       visible={showExerciseModal}
@@ -275,41 +295,51 @@ const LiveWorkoutScreen = () => {
     </Modal>
   );
 
-  // Permission not granted
+  // Permission check
   if (!hasPermission) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.permissionText, { color: colors.text }]}>
-          Camera permission required
-        </Text>
-        <TouchableOpacity
-          style={[styles.permissionButton, { backgroundColor: colors.primary }]}
-          onPress={requestPermission}
-        >
-          <Text style={styles.permissionButtonText}>Grant Permission</Text>
-        </TouchableOpacity>
+        <View style={styles.centerContent}>
+          <Ionicons name="camera-outline" size={64} color={colors.text} />
+          <Text style={[styles.permissionText, { color: colors.text }]}>
+            Camera permission required
+          </Text>
+          <TouchableOpacity
+            style={[styles.permissionButton, { backgroundColor: colors.primary }]}
+            onPress={requestPermission}
+          >
+            <Text style={styles.permissionButtonText}>Grant Permission</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     );
   }
 
-  // No camera device
+  // No camera
   if (!device) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.permissionText, { color: colors.text }]}>
-          No camera device found
-        </Text>
+        <View style={styles.centerContent}>
+          <Ionicons name="warning-outline" size={64} color={colors.text} />
+          <Text style={[styles.permissionText, { color: colors.text }]}>
+            No camera device found
+          </Text>
+        </View>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Camera Preview */}
+      {/* Camera with Pose Detection */}
       <Camera
+        ref={cameraRef}
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={true}
+        pixelFormat="rgb"
+        frameProcessor={poseDetection.frameProcessor}
+        onLayout={poseDetection.cameraViewLayoutChangeHandler}
       />
 
       {/* Overlay UI */}
@@ -347,7 +377,7 @@ const LiveWorkoutScreen = () => {
             </Text>
           </View>
           <View style={[styles.statBox, !isCorrect && styles.statBoxError]}>
-            <Text style={styles.statValue}>{stage.toUpperCase()}</Text>
+            <Text style={styles.statValue}>{String(stage).toUpperCase()}</Text>
             <Text style={styles.statLabel}>STAGE</Text>
           </View>
         </View>
@@ -382,18 +412,22 @@ const LiveWorkoutScreen = () => {
         </TouchableOpacity>
 
         {/* Debug Info */}
-        {result && (
-          <View style={styles.debugContainer}>
-            <Text style={styles.debugText}>
-              Debug: {(result as any).debug_class || result.feedback_code}
-            </Text>
-          </View>
-        )}
+        <View style={styles.debugContainer}>
+          <Text style={styles.debugText}>
+            {(result as any)?.debug_class || result?.feedback_code || '-'}
+          </Text>
+          <Text style={styles.debugText}>{debugInfo}</Text>
+          <Text style={[styles.debugText, { color: poseDetectedRef.current ? '#4CAF50' : '#FF9800' }]}>
+            {poseStatus}
+          </Text>
+        </View>
 
-        {/* Simulation Notice */}
-        <View style={styles.noticeContainer}>
+        {/* Status Notice */}
+        <View style={[styles.noticeContainer, isActive && styles.noticeActive]}>
           <Text style={styles.noticeText}>
-            ⚠️ SIMULATION MODE - Landmarks are simulated for testing
+            {isActive 
+              ? '🎯 POSE DETECTION ACTIVE - Full body in frame'
+              : '📸 Position yourself so camera sees full body'}
           </Text>
         </View>
       </View>
@@ -407,6 +441,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  centerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
   overlay: {
     flex: 1,
@@ -523,8 +563,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
+  noticeActive: {
+    backgroundColor: 'rgba(0,150,0,0.8)',
+  },
   noticeText: {
-    color: '#000',
+    color: '#fff',
     fontSize: 12,
     textAlign: 'center',
     fontWeight: 'bold',
@@ -532,7 +575,7 @@ const styles = StyleSheet.create({
   permissionText: {
     fontSize: 18,
     textAlign: 'center',
-    marginBottom: 20,
+    marginVertical: 20,
   },
   permissionButton: {
     paddingHorizontal: 30,
