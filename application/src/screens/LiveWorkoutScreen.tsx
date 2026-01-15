@@ -118,27 +118,33 @@ const LiveWorkoutScreen = () => {
         landmarks[0] = { x: 0.5, y: 0.2, visibility: 0.9 }; // Nose
       }
     } else if (selectedExercise === 'jumping_jacks') {
-      // Key points: shoulders, elbows, hips, ankles
+      // Key points: shoulders, elbows, hips, knees, ankles
+      // Logic: ankleDist > shDist * 1.5 && angLSh > 150 for UP
+      // Logic: ankleDist < shDist * 1.0 for DOWN (count rep)
       if (phase === 'up') {
-        // Arms up, legs apart
-        landmarks[11] = { x: 0.3, y: 0.3, visibility: 0.9 }; // Left shoulder
-        landmarks[12] = { x: 0.7, y: 0.3, visibility: 0.9 }; // Right shoulder
-        landmarks[13] = { x: 0.2, y: 0.2, visibility: 0.9 }; // Left elbow (up)
-        landmarks[14] = { x: 0.8, y: 0.2, visibility: 0.9 }; // Right elbow (up)
+        // Arms up (wide angle), legs apart (wide stance)
+        landmarks[11] = { x: 0.35, y: 0.3, visibility: 0.9 }; // Left shoulder
+        landmarks[12] = { x: 0.65, y: 0.3, visibility: 0.9 }; // Right shoulder (shDist = 0.3)
+        landmarks[13] = { x: 0.15, y: 0.15, visibility: 0.9 }; // Left elbow (up and out for angle > 150)
+        landmarks[14] = { x: 0.85, y: 0.15, visibility: 0.9 }; // Right elbow (up and out)
         landmarks[23] = { x: 0.4, y: 0.5, visibility: 0.9 }; // Left hip
         landmarks[24] = { x: 0.6, y: 0.5, visibility: 0.9 }; // Right hip
-        landmarks[27] = { x: 0.2, y: 0.9, visibility: 0.9 }; // Left ankle (apart)
-        landmarks[28] = { x: 0.8, y: 0.9, visibility: 0.9 }; // Right ankle (apart)
+        landmarks[25] = { x: 0.35, y: 0.7, visibility: 0.9 }; // Left knee
+        landmarks[26] = { x: 0.65, y: 0.7, visibility: 0.9 }; // Right knee
+        landmarks[27] = { x: 0.1, y: 0.9, visibility: 0.9 }; // Left ankle (apart) 
+        landmarks[28] = { x: 0.9, y: 0.9, visibility: 0.9 }; // Right ankle (ankleDist = 0.8 > 0.3*1.5=0.45 ✓)
       } else if (phase === 'down') {
         // Arms down, legs together
         landmarks[11] = { x: 0.4, y: 0.3, visibility: 0.9 }; // Left shoulder
-        landmarks[12] = { x: 0.6, y: 0.3, visibility: 0.9 }; // Right shoulder
-        landmarks[13] = { x: 0.4, y: 0.5, visibility: 0.9 }; // Left elbow (down)
-        landmarks[14] = { x: 0.6, y: 0.5, visibility: 0.9 }; // Right elbow (down)
+        landmarks[12] = { x: 0.6, y: 0.3, visibility: 0.9 }; // Right shoulder (shDist = 0.2)
+        landmarks[13] = { x: 0.38, y: 0.5, visibility: 0.9 }; // Left elbow (down)
+        landmarks[14] = { x: 0.62, y: 0.5, visibility: 0.9 }; // Right elbow (down)
         landmarks[23] = { x: 0.45, y: 0.5, visibility: 0.9 }; // Left hip
         landmarks[24] = { x: 0.55, y: 0.5, visibility: 0.9 }; // Right hip
-        landmarks[27] = { x: 0.45, y: 0.9, visibility: 0.9 }; // Left ankle (together)
-        landmarks[28] = { x: 0.55, y: 0.9, visibility: 0.9 }; // Right ankle (together)
+        landmarks[25] = { x: 0.47, y: 0.7, visibility: 0.9 }; // Left knee
+        landmarks[26] = { x: 0.53, y: 0.7, visibility: 0.9 }; // Right knee
+        landmarks[27] = { x: 0.48, y: 0.9, visibility: 0.9 }; // Left ankle (together)
+        landmarks[28] = { x: 0.52, y: 0.9, visibility: 0.9 }; // Right ankle (ankleDist = 0.04 < 0.2*1.0=0.2 ✓)
       }
     } else if (selectedExercise === 'high_plank' || selectedExercise === 'elbow_plank') {
       // Horizontal position
