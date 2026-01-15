@@ -270,16 +270,22 @@ export class JumpingJacksLogic implements ExerciseLogic {
       }
     }
     // Fallback when model is not loaded - use pure geometry (matches Python: elif self.model is None)
+    // This uses simple threshold checks just like Python
     else if (!useModelPredictions) {
+      // Python: if ankle_dist > (sh_dist * 1.5) and ang_l_sh > 150:
       if (ankleDist > shDist * 1.5 && angLSh > 150) {
         this.stage = 'up';
-        this.feedbackCode = 'CMD_JUMP_CLOSE'; // Match Python: provide feedback in up stage
-      } else if (ankleDist < shDist * 1.0 && this.stage === 'up') {
+        this.feedbackCode = 'CMD_JUMP_CLOSE'; // "GREAT! NOW CLOSE"
+      }
+      // Python: elif ankle_dist < (sh_dist * 1.0) and self.stage == "up":
+      else if (ankleDist < shDist * 1.0 && this.stage === 'up') {
         this.counter += 1;
         this.stage = 'down';
         this.feedbackCode = 'REP_SUCCESS';
-      } else if (this.stage === 'down') {
-        this.feedbackCode = 'SYSTEM_READY_GO'; // Ready to jump
+      }
+      // Added: feedback when standing ready
+      else if (this.stage === 'down') {
+        this.feedbackCode = 'SYSTEM_READY_GO'; // "JUMP!"
       }
     }
 
