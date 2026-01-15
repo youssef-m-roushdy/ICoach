@@ -209,8 +209,8 @@ export class JumpingJacksLogic implements ExerciseLogic {
       [armClass, prob] = this.detectArmPositionGeometry(smoothedArmAngle);
     }
 
-    // Smooth probability
-    const probSmooth = this.emaProb.update(prob);
+    // Smooth probability - only update if prob > 0 to match Python behavior
+    const probSmooth = prob > 0 ? this.emaProb.update(prob) : 0.0;
 
     // 4. Geometry calculations (leg position)
     const ankleDistRaw = Math.abs(lAnk[0] - rAnk[0]);
@@ -231,8 +231,11 @@ export class JumpingJacksLogic implements ExerciseLogic {
     // 5. Guidance Logic (using model classes: 'in', 'lazy', 'out')
     this.feedbackCode = 'FIX_POSTURE';
 
-    // High confidence threshold
-    if (armClass && probSmooth > this.PROB_THRESHOLD) {
+    // Check if we should use ONNX model predictions or geometry fallback
+    const useModelPredictions = this.modelLoaded && this.model !== null;
+
+    // High confidence threshold - only use model predictions when confident AND model is loaded
+    if (useModelPredictions && armClass && probSmooth > this.PROB_THRESHOLD) {
       // --- Success case (rep counted) ---
       // Arms IN or LAZY + Legs CLOSED + Was in "up" stage
       if ((armClass === 'in' || armClass === 'lazy') && legStatus === 'closed') {
@@ -266,14 +269,17 @@ export class JumpingJacksLogic implements ExerciseLogic {
         }
       }
     }
-    // Low confidence fallback (pure geometry)
-    else {
+    // Fallback when model is not loaded - use pure geometry (matches Python: elif self.model is None)
+    else if (!useModelPredictions) {
       if (ankleDist > shDist * 1.5 && angLSh > 150) {
         this.stage = 'up';
+        this.feedbackCode = 'CMD_JUMP_CLOSE'; // Match Python: provide feedback in up stage
       } else if (ankleDist < shDist * 1.0 && this.stage === 'up') {
         this.counter += 1;
         this.stage = 'down';
         this.feedbackCode = 'REP_SUCCESS';
+      } else if (this.stage === 'down') {
+        this.feedbackCode = 'SYSTEM_READY_GO'; // Ready to jump
       }
     }
 
