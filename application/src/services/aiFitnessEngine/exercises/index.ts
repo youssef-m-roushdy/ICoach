@@ -9,3 +9,6 @@ export { CrunchLogic } from './crunchLogic';
 export { LegRaisesLogic } from './legRaisesLogic';
 export { SupermanLogic } from './supermanLogic';
 export { JumpingJacksLogic } from './jumpingJacksLogic';
+export { LateralRaisesLogic } from './LateralRaisesLogic';
+export { FrontRaisesLogic } from './FrontRaisesLogic';
+export { OverheadPressLogic } from './OverheadPressLogic';

@@ -121,7 +121,7 @@ async def predict_food(
         food_service = get_food_service()
         food = food_service.get_food_by_name(db, predicted_food)
 
-        if confidence < (80 / 100):
+        if confidence < (10 / 100):
             logger.warning(f"Low confidence ({confidence:.2%}) for prediction '{predicted_food}'")
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

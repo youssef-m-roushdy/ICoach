@@ -1,7 +1,11 @@
+
 /**
- * AI Fitness Engine - Voice Feedback Service
- * Text-to-Speech service using expo-speech for voice feedback
- * Supports male/female voice selection
+ * AI Fitness Engine - Voice Feedback Service (Calm, No-Overlap, Count Priority)
+ * - NO overlap: uses queue + onDone callbacks
+ * - Small gap between utterances
+ * - Counts (COUNT_ / REP_NUMBER_) interrupt anything and speak immediately
+ * - Counts ALWAYS in ENGLISH
+ * - Throttling for corrections to avoid being annoying
  */
 
 import * as Speech from 'expo-speech';
@@ -10,269 +14,311 @@ import { getFeedbackForCode } from './feedbackMapping';
 
 export type VoiceGender = 'male' | 'female';
 
-export interface VoiceInfo {
-  identifier: string;
-  name: string;
-  quality: string;
-  language: string;
-}
-
 export interface VoiceFeedbackOptions {
   gender?: VoiceGender;
-  rate?: number; // 0.1 - 2.0, default 1.0
-  pitch?: number; // 0.5 - 2.0, default 1.0
-  language?: string; // e.g., 'en-US', 'ar-SA'
+  rate?: number;
+  pitch?: number;
+  language?: string; // ex: 'en-US'
+  force?: boolean;  // bypass throttling + may interrupt
 }
+
+type QueueItem = {
+  message: string;
+  options: VoiceFeedbackOptions;
+  resolve: () => void;
+  reject: (e: any) => void;
+};
 
 class VoiceFeedbackService {
   private maleVoiceId: string | null = null;
   private femaleVoiceId: string | null = null;
   private availableVoices: Speech.Voice[] = [];
   private isInitialized = false;
+
+  // ✅ Calm defaults
   private defaultGender: VoiceGender = 'female';
-  private defaultRate = 0.9;
+  private defaultRate = 0.92;
   private defaultPitch = 1.0;
+
+  // ✅ IMPORTANT: make default language ENGLISH
   private defaultLanguage = 'en-US';
 
-  /**
-   * Initialize the voice feedback service
-   * Must be called before using speak methods
-   */
+  // ✅ Queue / pacing
+  private queue: QueueItem[] = [];
+  private isSpeaking = false;
+  private lastUtteranceEndMs = 0;
+
+  // مسافة صغيرة بين أي جملتين (للـ instructions فقط)
+  private GAP_BETWEEN_UTTERANCES_MS = 650;
+
+  // ✅ Smart throttling (anti-spam)
+  private lastMessage: string = '';
+  private lastMessageTime: number = 0;
+  private lastCorrectionTime: number = 0;
+
+  private MIN_DELAY_BETWEEN_SAME_MSG = 7000;
+  private MIN_DELAY_BETWEEN_CORRECTIONS = 2500;
+
+  // ✅ Numbers ENGLISH only
+  private numberWordsEn: string[] = [
+    'zero','one','two','three','four','five','six','seven','eight','nine','ten',
+    'eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'
+  ];
+
   async initialize(): Promise<void> {
     try {
       this.availableVoices = await Speech.getAvailableVoicesAsync();
-
-      // Find appropriate male and female voices
-      this.findVoicesByGender();
-
+      this.findBestVoices();
       this.isInitialized = true;
-      console.log('[VoiceFeedback] Initialized successfully');
-      console.log(`[VoiceFeedback] Male voice: ${this.maleVoiceId || 'default'}`);
-      console.log(`[VoiceFeedback] Female voice: ${this.femaleVoiceId || 'default'}`);
     } catch (error) {
-      console.error('[VoiceFeedback] Failed to initialize:', error);
-      this.isInitialized = true; // Still allow usage with default system voice
+      console.error('[VoiceFeedback] Init Failed:', error);
+      this.isInitialized = true;
     }
   }
 
   /**
-   * Find male and female voices based on platform
+   * ✅ Always pick EN voices (since counts must be English)
+   * If no EN voices exist, fallback to any available voice.
    */
-  private findVoicesByGender(): void {
+  private findBestVoices(): void {
+    const enVoices = this.availableVoices.filter(v => v.language?.startsWith('en'));
+    const pool = enVoices.length ? enVoices : this.availableVoices;
+
     if (Platform.OS === 'ios') {
-      // iOS common voices
-      const femaleNames = ['Samantha', 'Karen', 'Moira', 'Tessa', 'Fiona'];
-      const maleNames = ['Daniel', 'Alex', 'Fred', 'Tom', 'Oliver'];
-
       this.femaleVoiceId =
-        this.availableVoices.find((v) =>
-          femaleNames.some((name) => v.identifier.includes(name) || v.name?.includes(name))
-        )?.identifier || null;
+        pool.find(v => (v.name || '').toLowerCase().includes('samantha'))?.identifier ||
+        pool[0]?.identifier ||
+        null;
 
       this.maleVoiceId =
-        this.availableVoices.find((v) =>
-          maleNames.some((name) => v.identifier.includes(name) || v.name?.includes(name))
-        )?.identifier || null;
+        pool.find(v => (v.name || '').toLowerCase().includes('daniel'))?.identifier ||
+        null;
     } else {
-      // Android - voices vary by device, try common patterns
-      const englishVoices = this.availableVoices.filter(
-        (v) => v.language?.startsWith('en') || v.identifier?.includes('en')
-      );
-
-      // Try to find female voice
       this.femaleVoiceId =
-        englishVoices.find(
-          (v) =>
-            v.name?.toLowerCase().includes('female') ||
-            v.identifier?.toLowerCase().includes('female') ||
-            v.name?.toLowerCase().includes('woman')
-        )?.identifier || null;
+        pool.find(v => (v.name || '').toLowerCase().includes('female'))?.identifier ||
+        pool[0]?.identifier ||
+        null;
 
-      // Try to find male voice
       this.maleVoiceId =
-        englishVoices.find(
-          (v) =>
-            (v.name?.toLowerCase().includes('male') &&
-              !v.name?.toLowerCase().includes('female')) ||
-            (v.identifier?.toLowerCase().includes('male') &&
-              !v.identifier?.toLowerCase().includes('female')) ||
-            v.name?.toLowerCase().includes('man')
-        )?.identifier || null;
-
-      // If not found by name, use first two English voices
-      if (!this.femaleVoiceId && englishVoices.length > 0) {
-        this.femaleVoiceId = englishVoices[0].identifier;
-      }
-      if (!this.maleVoiceId && englishVoices.length > 1) {
-        this.maleVoiceId = englishVoices[1].identifier;
-      }
+        pool.find(v => (v.name || '').toLowerCase().includes('male'))?.identifier ||
+        null;
     }
   }
 
-  /**
-   * Get the appropriate voice ID for a gender
-   */
-  private getVoiceId(gender: VoiceGender): string | undefined {
-    return gender === 'male' ? this.maleVoiceId || undefined : this.femaleVoiceId || undefined;
+  // ✅ number to words in ENGLISH only
+  private numberToWords(n: number): string {
+    if (n <= 20) return this.numberWordsEn[n] || String(n);
+
+    if (n < 100) {
+      const tens = Math.floor(n / 10);
+      const ones = n % 10;
+      const tensWords = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+      return tensWords[tens] + (ones ? ' ' + this.numberWordsEn[ones] : '');
+    }
+
+    return String(n);
+  }
+
+  // -----------------------------
+  // Queue engine (no overlap)
+  // -----------------------------
+  private async speakNow(message: string, options: VoiceFeedbackOptions): Promise<void> {
+    if (!message) return;
+    if (!this.isInitialized) await this.initialize();
+
+    const {
+      gender = this.defaultGender,
+      rate = this.defaultRate,
+      pitch = this.defaultPitch,
+      language = this.defaultLanguage,
+    } = options;
+
+    const voiceId = gender === 'male' ? this.maleVoiceId : this.femaleVoiceId;
+
+    // ensure small gap between utterances (for normal advice)
+    const now = Date.now();
+    const waitMs = Math.max(0, this.GAP_BETWEEN_UTTERANCES_MS - (now - this.lastUtteranceEndMs));
+    if (waitMs > 0) {
+      await new Promise(res => setTimeout(res, waitMs));
+    }
+
+    return new Promise<void>((resolve, reject) => {
+      try {
+        this.isSpeaking = true;
+
+        Speech.speak(message, {
+          voice: voiceId || undefined,
+          rate,
+          pitch,
+          language,
+          onDone: () => {
+            this.isSpeaking = false;
+            this.lastUtteranceEndMs = Date.now();
+            resolve();
+          },
+          onStopped: () => {
+            this.isSpeaking = false;
+            this.lastUtteranceEndMs = Date.now();
+            resolve();
+          },
+          onError: (e) => {
+            this.isSpeaking = false;
+            this.lastUtteranceEndMs = Date.now();
+            reject(e);
+          },
+        });
+      } catch (e) {
+        this.isSpeaking = false;
+        reject(e);
+      }
+    });
+  }
+
+  private async processQueue(): Promise<void> {
+    if (this.isSpeaking) return;
+    const item = this.queue.shift();
+    if (!item) return;
+
+    try {
+      await this.speakNow(item.message, item.options);
+      item.resolve();
+    } catch (e) {
+      item.reject(e);
+    } finally {
+      this.processQueue();
+    }
+  }
+
+  private enqueue(message: string, options: VoiceFeedbackOptions): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.queue.push({ message, options, resolve, reject });
+      this.processQueue();
+    });
+  }
+
+  private clearQueue() {
+    this.queue = [];
+  }
+
+  // -----------------------------
+  // Public methods
+  // -----------------------------
+  async stop(): Promise<void> {
+    this.clearQueue();
+    await Speech.stop();
+    this.isSpeaking = false;
   }
 
   /**
-   * Speak a message with the specified options
-   *
-   * @param message - The text to speak
-   * @param options - Voice options (gender, rate, pitch, language)
-   *
-   * @example
-   * ```typescript
-   * await voiceFeedback.speak('Lower your hips more', { gender: 'female' });
-   * ```
+   * Normal speak -> queued + throttled
    */
   async speak(message: string, options: VoiceFeedbackOptions = {}): Promise<void> {
-    if (!this.isInitialized) {
-      await this.initialize();
+    if (!message) return;
+    if (!this.isInitialized) await this.initialize();
+
+    const now = Date.now();
+    const force = !!options.force;
+
+    // Throttle duplicates (unless forced)
+    if (!force) {
+      if (message === this.lastMessage && now - this.lastMessageTime < this.MIN_DELAY_BETWEEN_SAME_MSG) {
+        return;
+      }
+      if (now - this.lastCorrectionTime < this.MIN_DELAY_BETWEEN_CORRECTIONS) {
+        return;
+      }
+      this.lastCorrectionTime = now;
     }
 
-    const { gender = this.defaultGender, rate = this.defaultRate, pitch = this.defaultPitch, language = this.defaultLanguage } =
-      options;
+    this.lastMessage = message;
+    this.lastMessageTime = now;
 
-    const voiceId = this.getVoiceId(gender);
-
-    // Stop any currently speaking voice
-    await this.stop();
-
-    return new Promise((resolve, reject) => {
-      Speech.speak(message, {
-        voice: voiceId,
-        rate,
-        pitch,
-        language,
-        onDone: () => resolve(),
-        onError: (error) => {
-          console.error('[VoiceFeedback] Speech error:', error);
-          reject(error);
-        },
-        onStopped: () => resolve(),
-      });
+    return this.enqueue(message, {
+      ...options,
+      language: options.language || this.defaultLanguage,
     });
   }
 
   /**
-   * Speak feedback for a specific feedback code
-   * Uses the feedbackMapping to get the message
-   *
-   * @param feedbackCode - The feedback code from exercise logic
-   * @param exerciseName - The exercise name for specific overrides
-   * @param options - Voice options (gender, rate, pitch)
-   *
-   * @example
-   * ```typescript
-   * const result = trainer.analyze(landmarks);
-   * await voiceFeedback.speakFeedback(result.feedback_code, result.exercise, { gender: 'male' });
-   * ```
+   * Speak feedback code:
+   * ✅ Counts interrupt immediately, speak ENGLISH, ALWAYS.
    */
   async speakFeedback(
     feedbackCode: string,
     exerciseName?: string,
     options: VoiceFeedbackOptions = {}
   ): Promise<void> {
-    const feedback = getFeedbackForCode(feedbackCode, exerciseName);
-    await this.speak(feedback.message, options);
-  }
+    if (!feedbackCode) return;
+    if (!this.isInitialized) await this.initialize();
 
-  /**
-   * Stop any currently speaking voice
-   */
-  async stop(): Promise<void> {
-    return Speech.stop();
-  }
+    // -----------------------------------
+    // 1) Highest priority: REP COUNT (ALWAYS interrupt + EN)
+    // -----------------------------------
+    const isCount =
+      feedbackCode.startsWith('COUNT_') ||
+      feedbackCode.startsWith('REP_NUMBER_');
 
-  /**
-   * Check if currently speaking
-   */
-  async isSpeaking(): Promise<boolean> {
-    return Speech.isSpeakingAsync();
-  }
+    if (isCount) {
+      const parts = feedbackCode.split('_');
+      const countNumber = parseInt(parts[parts.length - 1], 10);
+      const msg = this.numberToWords(isNaN(countNumber) ? 0 : countNumber);
 
-  /**
-   * Set the default voice gender for all speak calls
-   */
-  setDefaultGender(gender: VoiceGender): void {
-    this.defaultGender = gender;
-  }
+      // ✅ interrupt anything + clear queue + speak NOW (no gap)
+      this.clearQueue();
+      await Speech.stop();
+      this.isSpeaking = false;
 
-  /**
-   * Set the default speech rate (0.1 - 2.0)
-   */
-  setDefaultRate(rate: number): void {
-    this.defaultRate = Math.max(0.1, Math.min(2.0, rate));
-  }
+      // reset throttling so counts never blocked
+      this.lastMessage = '';
+      this.lastMessageTime = 0;
 
-  /**
-   * Set the default pitch (0.5 - 2.0)
-   */
-  setDefaultPitch(pitch: number): void {
-    this.defaultPitch = Math.max(0.5, Math.min(2.0, pitch));
-  }
-
-  /**
-   * Set the default language (e.g., 'en-US', 'ar-SA')
-   */
-  setDefaultLanguage(language: string): void {
-    this.defaultLanguage = language;
-  }
-
-  /**
-   * Get all available voices
-   */
-  getAvailableVoices(): Speech.Voice[] {
-    return this.availableVoices;
-  }
-
-  /**
-   * Get voices filtered by language
-   */
-  getVoicesByLanguage(languageCode: string): Speech.Voice[] {
-    return this.availableVoices.filter(
-      (v) => v.language?.startsWith(languageCode) || v.identifier?.includes(languageCode)
-    );
-  }
-
-  /**
-   * Set a specific voice by identifier
-   * Useful when user wants to choose a specific voice from the list
-   */
-  setVoice(voiceId: string, gender: VoiceGender): void {
-    if (gender === 'male') {
-      this.maleVoiceId = voiceId;
-    } else {
-      this.femaleVoiceId = voiceId;
+      // counts must be immediate
+      const oldGap = this.GAP_BETWEEN_UTTERANCES_MS;
+      this.GAP_BETWEEN_UTTERANCES_MS = 0;
+      try {
+        await this.speakNow(msg, {
+          ...options,
+          force: true,
+          language: 'en-US', // ✅ FORCE English for counts
+        });
+      } finally {
+        this.GAP_BETWEEN_UTTERANCES_MS = oldGap;
+      }
+      return;
     }
-  }
 
-  /**
-   * Get current voice configuration
-   */
-  getVoiceConfig(): {
-    maleVoiceId: string | null;
-    femaleVoiceId: string | null;
-    defaultGender: VoiceGender;
-    defaultRate: number;
-    defaultPitch: number;
-    defaultLanguage: string;
-  } {
-    return {
-      maleVoiceId: this.maleVoiceId,
-      femaleVoiceId: this.femaleVoiceId,
-      defaultGender: this.defaultGender,
-      defaultRate: this.defaultRate,
-      defaultPitch: this.defaultPitch,
-      defaultLanguage: this.defaultLanguage,
-    };
+    // -----------------------------------
+    // 2) Other feedback: calm, queued, throttled
+    // -----------------------------------
+    const feedback = getFeedbackForCode(feedbackCode, exerciseName);
+    const message = feedback.voice || feedback.message || '';
+    if (!message) return;
+
+    const isCritical =
+      feedbackCode.includes('SYSTEM_READY') ||
+      feedbackCode.includes('SYSTEM_GO') ||
+      feedbackCode === 'ERR_BODY_NOT_VISIBLE';
+
+    if (isCritical) {
+      // critical can interrupt
+      this.clearQueue();
+      await Speech.stop();
+      this.isSpeaking = false;
+
+      await this.speakNow(message, {
+        ...options,
+        force: true,
+        language: options.language || this.defaultLanguage,
+      });
+      return;
+    }
+
+    await this.speak(message, {
+      ...options,
+      force: false,
+      language: options.language || this.defaultLanguage,
+    });
   }
 }
 
-// Export singleton instance
 export const voiceFeedback = new VoiceFeedbackService();
-
-// Also export the class for testing or multiple instances
-export { VoiceFeedbackService };
