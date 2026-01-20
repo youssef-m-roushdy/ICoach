@@ -788,7 +788,11 @@ Contributions are welcome! Please follow these steps:
 
 ## 📝 License
 
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
+⚠️ **PROPRIETARY SOFTWARE - ALL RIGHTS RESERVED**
+
+This project is **NOT open source**. Unauthorized copying, modification, distribution, forking, or deployment of this software is **strictly prohibited** and will result in legal action.
+
+See the [LICENSE](LICENSE) file for full details.
 
 ---
 
