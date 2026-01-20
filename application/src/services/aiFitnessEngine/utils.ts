@@ -7,17 +7,12 @@ import { Landmark } from './types';
 
 /**
  * Calculate the angle between three points (in degrees)
- * This is the core function used in all exercise logic
- *
- * @param a - First point (e.g., hip)
- * @param b - Middle point / vertex (e.g., knee)
- * @param c - Third point (e.g., ankle)
- * @returns Angle in degrees (0-180)
+ * Uses 2D projection (X, Y) which is standard for most exercises
  */
 export function calculateAngle(
-  a: [number, number],
-  b: [number, number],
-  c: [number, number]
+  a: number[], // Changed from [number, number] to number[] to accept 3D points
+  b: number[],
+  c: number[]
 ): number {
   const radians =
     Math.atan2(c[1] - b[1], c[0] - b[0]) - Math.atan2(a[1] - b[1], a[0] - b[0]);
@@ -32,15 +27,11 @@ export function calculateAngle(
 }
 
 /**
- * Calculate Euclidean distance between two points
- *
- * @param a - First point
- * @param b - Second point
- * @returns Distance between points
+ * Calculate Euclidean distance between two points (2D)
  */
 export function calculateDistance(
-  a: [number, number],
-  b: [number, number]
+  a: number[],
+  b: number[]
 ): number {
   const dx = a[0] - b[0];
   const dy = a[1] - b[1];
@@ -48,13 +39,12 @@ export function calculateDistance(
 }
 
 /**
- * Extract [x, y] coordinates from a Landmark object
- *
- * @param landmark - MediaPipe Landmark
- * @returns [x, y] tuple
+ * Extract [x, y, z] coordinates from a Landmark object
+ * 🔥 Updated to include Z (useful for Front Raises depth check)
  */
-export function toPoint(landmark: Landmark): [number, number] {
-  return [landmark.x, landmark.y];
+export function toPoint(landmark: Landmark): number[] {
+  // بنرجع Z كمان عشان لو حبينا نستخدمه في اللوجيك، ولو مش موجود بنحط 0
+  return [landmark.x, landmark.y, landmark.z || 0];
 }
 
 /**
@@ -65,19 +55,10 @@ export class EMA {
   private alpha: number;
   private value: number | null = null;
 
-  /**
-   * @param alpha - Smoothing factor (0-1). Higher = more responsive, lower = smoother
-   */
   constructor(alpha: number = 0.3) {
     this.alpha = alpha;
   }
 
-  /**
-   * Update the EMA with a new value
-   *
-   * @param x - New value
-   * @returns Smoothed value
-   */
   update(x: number): number {
     if (this.value === null) {
       this.value = x;
@@ -87,23 +68,17 @@ export class EMA {
     return this.value;
   }
 
-  /**
-   * Get current smoothed value
-   */
   getValue(): number | null {
     return this.value;
   }
 
-  /**
-   * Reset the EMA
-   */
   reset(): void {
     this.value = null;
   }
 }
 
 /**
- * MediaPipe Pose Landmark indices for quick reference
+ * MediaPipe Pose Landmark indices
  */
 export const PoseLandmarks = {
   NOSE: 0,
@@ -142,7 +117,7 @@ export const PoseLandmarks = {
 } as const;
 
 /**
- * Get current timestamp in seconds (for timer-based logic)
+ * Get current timestamp in seconds
  */
 export function getCurrentTime(): number {
   return Date.now() / 1000;

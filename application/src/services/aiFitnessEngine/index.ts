@@ -4,27 +4,6 @@
  *
  * This is the TypeScript port of the Python AI Fitness Engine.
  * All processing happens on-device (no server required).
- *
- * Benefits:
- * ✅ Zero Latency - Real-time analysis
- * ✅ Works Offline - No internet needed
- * ✅ Zero Cost - No server bills
- * ✅ Privacy - User data stays on device
- *
- * Usage:
- * ```typescript
- * import { AIFitnessEngine } from '@/services/aiFitnessEngine';
- *
- * // Get a trainer for a specific exercise
- * const squatTrainer = AIFitnessEngine.getTrainer('squat');
- *
- * // In your pose detection callback:
- * const result = squatTrainer.analyze(landmarks);
- * console.log(`Reps: ${result.reps}, Feedback: ${result.feedback_code}`);
- *
- * // Reset for new session
- * squatTrainer.reset?.();
- * ```
  */
 
 import {
@@ -35,6 +14,10 @@ import {
   LegRaisesLogic,
   SupermanLogic,
   JumpingJacksLogic,
+  // New Exercises
+  LateralRaisesLogic,
+  FrontRaisesLogic,
+  OverheadPressLogic, 
 } from './exercises';
 
 import { ExerciseLogic, ExerciseName } from './types';
@@ -50,18 +33,13 @@ export class AIFitnessEngine {
    * @param exerciseName - The ID/Name of the exercise (e.g., 'squat', 'crunch')
    * @returns The logic class instance for that exercise
    * @throws Error if the exercise name is not supported
-   *
-   * @example
-   * ```typescript
-   * const trainer = AIFitnessEngine.getTrainer('squat');
-   * const result = trainer.analyze(landmarks);
-   * ```
    */
   static getTrainer(exerciseName: string): ExerciseLogic {
     // Normalize the input (lowercase and trim)
     const key = exerciseName.toLowerCase().trim() as ExerciseName;
 
     switch (key) {
+      // --- ORIGINAL EXERCISES ---
       case 'squat':
         return new SquatLogic();
 
@@ -83,14 +61,20 @@ export class AIFitnessEngine {
       case 'jumping_jacks':
         return new JumpingJacksLogic();
 
-      // --- Space for future exercises (21 more planned) ---
-      // case 'pushup':
-      //   return new PushupLogic();
+      // --- NEW EXERCISES ---
+      case 'lateral_raises':
+        return new LateralRaisesLogic();
+
+      case 'front_raises':
+        return new FrontRaisesLogic();
+
+      case 'standing_overhead_press':
+        return new OverheadPressLogic();
 
       default:
         throw new Error(
           `⚠️ Exercise '${exerciseName}' is not supported yet. ` +
-            `Available exercises: squat, superman, leg_raises, high_plank, elbow_plank, crunch, jumping_jacks`
+            `Available: squat, superman, leg_raises, high_plank, elbow_plank, crunch, jumping_jacks, lateral_raises, front_raises, standing_overhead_press`
         );
     }
   }
@@ -109,6 +93,10 @@ export class AIFitnessEngine {
       'elbow_plank',
       'crunch',
       'jumping_jacks',
+      // New additions
+      'lateral_raises',
+      'front_raises',
+      'standing_overhead_press',
     ];
   }
 
@@ -124,7 +112,7 @@ export class AIFitnessEngine {
   }
 }
 
-// Re-export types for convenience
+// Re-export types and utils for convenience
 export * from './types';
 export * from './utils';
 export * from './exercises';

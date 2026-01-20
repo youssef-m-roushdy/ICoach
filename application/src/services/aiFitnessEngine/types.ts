@@ -30,44 +30,52 @@ export interface TimerExerciseResult extends BaseExerciseResult {
   is_correct: boolean;
 }
 
-// Result for squat (includes system active state)
+// --- Specific Exercise Results ---
+
 export interface SquatResult extends RepExerciseResult {
   exercise: 'squat';
   is_system_active: boolean;
 }
 
-// Result for superman (includes hold timer)
 export interface SupermanResult extends RepExerciseResult {
   exercise: 'superman';
   hold_timer: number;
 }
 
-// Result for jumping jacks (includes debug info)
 export interface JumpingJacksResult extends RepExerciseResult {
   exercise: 'jumping_jacks';
   debug_class?: string;
 }
 
-// Result for high plank
 export interface HighPlankResult extends TimerExerciseResult {
   exercise: 'high_plank';
 }
 
-// Result for elbow plank
 export interface ElbowPlankResult extends TimerExerciseResult {
   exercise: 'elbow_plank';
 }
 
-// Result for crunch
 export interface CrunchResult extends RepExerciseResult {
   exercise: 'crunch';
   is_correct: boolean;
 }
 
-// Result for leg raises
 export interface LegRaisesResult extends RepExerciseResult {
   exercise: 'leg_raises';
   is_correct: boolean;
+}
+
+// 🔥 New Exercises Results 🔥
+export interface LateralRaisesResult extends RepExerciseResult {
+  exercise: 'lateral_raises';
+}
+
+export interface FrontRaisesResult extends RepExerciseResult {
+  exercise: 'front_raises';
+}
+
+export interface OverheadPressResult extends RepExerciseResult {
+  exercise: 'standing_overhead_press';
 }
 
 // Union type for all possible results
@@ -78,7 +86,11 @@ export type ExerciseResult =
   | HighPlankResult
   | ElbowPlankResult
   | CrunchResult
-  | LegRaisesResult;
+  | LegRaisesResult
+  // New Additions
+  | LateralRaisesResult
+  | FrontRaisesResult
+  | OverheadPressResult;
 
 // Exercise logic interface
 export interface ExerciseLogic {
@@ -94,7 +106,10 @@ export type ExerciseName =
   | 'high_plank'
   | 'elbow_plank'
   | 'crunch'
-  | 'jumping_jacks';
+  | 'jumping_jacks'
+  | 'lateral_raises'
+  | 'front_raises'
+  | 'standing_overhead_press';
 
 // Feedback codes (for UI mapping)
 export const FeedbackCodes = {
@@ -102,11 +117,12 @@ export const FeedbackCodes = {
   STEP_BACK: 'STEP_BACK',
   SETUP_POSITION: 'SETUP_POSITION',
   SETUP_STAND_STRAIGHT: 'SETUP_STAND_STRAIGHT',
-  SETUP_HOLD: 'SETUP_HOLD', // followed by number, e.g., SETUP_HOLD_5
+  SETUP_HOLD: 'SETUP_HOLD',
   SYSTEM_READY_GO: 'SYSTEM_READY_GO',
   START_POSITION: 'START_POSITION',
+  ERR_CAMERA_VIEW: 'ERR_CAMERA_VIEW',
 
-  // Commands
+  // Commands - General & Legs
   CMD_GO_DOWN: 'CMD_GO_DOWN',
   CMD_GO_UP: 'CMD_GO_UP',
   CMD_RAISE_LEGS: 'CMD_RAISE_LEGS',
@@ -114,20 +130,36 @@ export const FeedbackCodes = {
   CMD_JUMP_OPEN: 'CMD_JUMP_OPEN',
   CMD_JUMP_CLOSE: 'CMD_JUMP_CLOSE',
 
+  // Commands - Arms (New)
+  CMD_RAISE_ARMS: 'CMD_RAISE_ARMS',   // Lateral Raises
+  CMD_RAISE_FRONT: 'CMD_RAISE_FRONT', // Front Raises
+  PUSH_UP: 'PUSH_UP',                 // Overhead Press
+  LOWER_SLOWLY: 'LOWER_SLOWLY',       // Overhead Press
+
   // Success
   REP_SUCCESS: 'REP_SUCCESS',
   HOLD_FIXED: 'HOLD_FIXED',
   HOLD_STABILIZE: 'HOLD_STABILIZE',
+  PERFECT: 'PERFECT',       // Lateral Raises
+  GOOD_REP: 'GOOD_REP',     // Front Raises / Overhead Press
 
   // Errors - Body Visibility
   ERR_BODY_NOT_VISIBLE: 'ERR_BODY_NOT_VISIBLE',
 
-  // Errors - Form
+  // Errors - Form General
   ERR_BENT_KNEES: 'ERR_BENT_KNEES',
   ERR_BENT_ELBOWS: 'ERR_BENT_ELBOWS',
   ERR_ARMS_TOO_STRAIGHT: 'ERR_ARMS_TOO_STRAIGHT',
   ERR_ARMS_LAZY: 'ERR_ARMS_LAZY',
   ERR_HANDS_POSITION: 'ERR_HANDS_POSITION',
+
+  // Errors - Arm Exercises (New)
+  STRAIGHTEN_ARMS: 'STRAIGHTEN_ARMS', // Lateral Raises
+  ERR_TOO_HIGH: 'ERR_TOO_HIGH',       // Lateral Raises
+  ERR_SWINGING: 'ERR_SWINGING',       // Front Raises
+  RAISE_YOUR_ARM: 'RAISE_YOUR_ARM',   // Front Raises
+  ERR_ARCHED_BACK: 'ERR_ARCHED_BACK', // Overhead Press
+  ERR_LOW_ARMS: 'ERR_LOW_ARMS',       // Overhead Press
 
   // Errors - Position
   ERR_HIPS_TOO_LOW: 'ERR_HIPS_TOO_LOW',
