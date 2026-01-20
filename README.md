@@ -2,6 +2,9 @@
 
 # 🏋️ ICoach
 
+> **ICoach** is a comprehensive AI-powered fitness and nutrition platform designed to help users achieve their health goals through intelligent workout tracking, food recognition, and personalized guidance.
+
+
 ### Your AI-Powered Personal Fitness & Nutrition Assistant
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -227,7 +230,7 @@ flowchart TB
         subgraph JWT["JWT Token Management"]
             AccessToken[Access Token - 15 min expiry]
             RefreshToken[Refresh Token - 7 day expiry]
-        end
+        endA
     end
 
     subgraph AI["🤖 AI Service - FastAPI/Python"]
