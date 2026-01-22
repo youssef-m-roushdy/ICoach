@@ -304,6 +304,48 @@ export const userService = {
       return result;
     }, token);
   },
+
+  async updateProfilePicture(avatarUri: string, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const formData = new FormData();
+      const file = {
+        uri: avatarUri,
+        type: 'image/jpeg',
+        name: 'avatar.jpg',
+      };
+      // @ts-ignore - React Native handles file objects differently
+      formData.append('avatar', file);
+      const response = await fetch(`${API_BASE_URL}/v1/users/profile/avatar`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to update profile picture');
+      }
+      return result;
+    }, token);
+  },
+
+  async deleteProfilePicture(token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/users/profile/avatar`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to delete profile picture');
+      }
+      return result;
+    }, token);
+  },
 };
 
 // Workout Service
