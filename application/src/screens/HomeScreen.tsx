@@ -53,10 +53,12 @@ export default function HomeScreen() {
       <LinearGradient colors={colors.bgGradient as any} style={StyleSheet.absoluteFill} />
       
       {/* Background Image */}
+      {!(theme === 'light') && (
       <Image 
         source={require('../../assets/Boy.png')} 
         style={styles.backgroundImage} 
       />
+      )}
       
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
@@ -233,9 +235,9 @@ export default function HomeScreen() {
 
       
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Workouts')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('SavedWorkouts')}>
           <MaterialCommunityIcons name="dumbbell" size={28} color="#666" />
-          <Text style={styles.navTxt}>Workouts</Text>
+          <Text style={styles.navTxt}>My Workouts</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}><Ionicons name="people" size={28} color="#666" /><Text style={styles.navTxt}>Community</Text></TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Foods')}>

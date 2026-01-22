@@ -457,3 +457,152 @@ export const foodService = {
     }
   },
 };
+
+// Saved Workouts Service
+export const savedWorkoutService = {
+  // Get saved workouts with filters and pagination
+  async getSavedWorkouts(
+    token: string,
+    params?: {
+      page?: number;
+      limit?: number;
+      bodyPart?: string;
+      level?: string;
+    }
+  ): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const queryParams = new URLSearchParams();
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams.append(key, value.toString());
+          }
+        });
+      }
+
+      const url = `${API_BASE_URL}/v1/saved-workouts${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get saved workouts');
+      }
+
+      return result;
+    }, token);
+  },
+
+  // Get saved workout by ID
+  async getSavedWorkoutById(savedWorkoutId: number, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/saved-workouts/${savedWorkoutId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get saved workout');
+      }
+
+      return result;
+    }, token);
+  },
+
+  // Get saved workout filters
+  async getSavedWorkoutFilters(token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/saved-workouts/filters`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get saved workout filters');
+      }
+
+      return result;
+    }, token);
+  },
+
+  // Add workout to saved list
+  async AddWorkoutToSaveList(workoutId: number, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/saved-workouts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ workoutId: workoutId }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to save workout to saved list');
+      }
+
+      return result;
+    }, token);
+  },
+
+  // delete saved workout
+  async removeWorkoutFromSaveList(savedWorkoutId: number, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/saved-workouts/${savedWorkoutId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to remove workout from saved list');
+      }
+
+      return result;
+    }, token);
+  },
+
+  // Check if workout is in saved list
+  async CheckWorkoutIsInSavedList(savedWorkoutId: number, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/saved-workouts/check/${savedWorkoutId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to check workout in saved list');
+      }
+
+      return result;
+    }, token);
+  },
+};
