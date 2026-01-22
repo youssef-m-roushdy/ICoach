@@ -159,170 +159,126 @@ Icoach-app/
 ### 🔄 Data Flow
 
 ```mermaid
-flowchart TB
-    subgraph Client["📱 Mobile App - React Native/Expo"]
-        direction TB
-        UI[/"User Interface"/]
-        
-        subgraph Screens["Screens"]
-            Welcome[Welcome Screen]
-            SignIn[Sign In Screen]
-            SignUp[Sign Up Screen]
-            Home[Home Screen]
-            Profile[Profile Screen]
-            EditProfile[Edit Profile Screen]
-            EditBodyInfo[Edit Body Info Screen]
-            Foods[Foods Screen]
-            Workouts[Workouts Screen]
-            Messages[Messages Screen]
-            Onboarding[Onboarding Screen]
-        end
-        
-        subgraph Context["State Management"]
-            AuthContext[Auth Context]
-            TokenStorage[(AsyncStorage)]
-        end
-        
-        subgraph AppServices["API Services"]
-            AuthService[Auth Service]
-            APIService[API Service]
-            WorkoutService[Workout Service]
-            FoodService[Food Service]
-        end
-        
-        subgraph Components["Components"]
-            GoogleButton[Google Sign-In Button]
-            MediaPicker[Media Picker]
-        end
+graph TB
+    %% User Layer
+    User([👤 User])
+    
+    %% Mobile App Modules
+    subgraph "📱 Mobile App (React Native)"
+        UI[User Interface]
+        AuthModule[Authentication<br/>- Login/Signup<br/>- OAuth<br/>- Token Refresh]
+        WorkoutModule[Workout Tracking<br/>- Exercise Library<br/>- Progress Tracking]
+        NutritionModule[Nutrition<br/>- Food Logging<br/>- Camera/Gallery]
+        ProfileModule[Profile Management<br/>- Body Metrics<br/>- Goals]
+        Storage[Local Storage<br/>- AsyncStorage<br/>- Offline Data]
     end
-
-    subgraph Backend["🖥️ Backend Server - Node.js/Express/TypeScript"]
-        direction TB
+    
+    %% Backend Services
+    subgraph "🖥️ Backend (Node.js/Express)"
+        API[API Gateway<br/>RESTful Endpoints]
         
-        subgraph Routes["API Routes /api/v1"]
-            AuthRoutes["/auth/*"]
-            UserRoutes["/users/*"]
-            WorkoutRoutes["/workouts/*"]
-            FoodRoutes["/foods/*"]
-            SavedWorkoutRoutes["/saved-workouts/*"]
+        subgraph "🔐 Authentication Service"
+            AuthDB[(PostgreSQL<br/>Users & Tokens)]
+            JWT[JWT Manager]
+            OAuth[OAuth Handler<br/>Google/Facebook/GitHub]
         end
         
-        subgraph Middleware["Middleware"]
-            AuthMiddleware[JWT Auth Middleware]
-            ValidationMiddleware[Validation Middleware]
-            ErrorHandler[Error Handler]
+        subgraph "💪 Workout Service"
+            WorkoutDB[(PostgreSQL<br/>Exercises & Workouts)]
+            WorkoutLogic[Workout Logic]
         end
         
-        subgraph Controllers["Controllers"]
-            AuthController[Auth Controller]
-            UserController[User Controller]
-            WorkoutController[Workout Controller]
-            FoodController[Food Controller]
-            SavedWorkoutController[Saved Workout Controller]
+        subgraph "🥗 Nutrition Service"
+            NutritionDB[(MongoDB<br/>Food & Nutrition)]
+            NutritionLogic[Nutrition Logic]
         end
         
-        subgraph BackendServices["Services"]
-            UserService[User Service]
-            EmailService[Email Service]
-            ImageService[Image Service]
+        subgraph "📊 User Service"
+            UserDB[(PostgreSQL<br/>Profiles & Metrics)]
+            UserLogic[User Logic]
         end
         
-        subgraph JWT["JWT Token Management"]
-            AccessToken[Access Token - 15 min expiry]
-            RefreshToken[Refresh Token - 7 day expiry]
-        endA
+        ImageService[Image Service<br/>Cloudinary]
+        EmailService[Email Service<br/>Nodemailer]
     end
-
-    subgraph AI["🤖 AI Service - FastAPI/Python"]
-        direction TB
-        AIRouter[Food Router]
-        MLService[ML Service]
-        FoodModel[Food Detection Model - EfficientNetB0]
-        DBService[DB Service]
+    
+    %% AI Service
+    subgraph "🤖 AI Service (Python/FastAPI)"
+        AI_API[AI API]
+        FoodRecognition[Food Recognition Model<br/>EfficientNetB0]
+        NutritionAnalysis[Nutrition Analysis]
     end
-
-    subgraph Database["🗄️ PostgreSQL Database"]
-        direction TB
-        UsersTable[(Users Table)]
-        WorkoutsTable[(Workouts Table)]
-        FoodsTable[(Foods Table)]
-        SavedWorkoutsTable[(Saved Workouts Table)]
-    end
-
-    subgraph External["🌐 External Services"]
-        GoogleOAuth[Google OAuth 2.0]
-        EmailProvider[Email Service - SMTP]
-        Cloudinary[Cloudinary - Images]
-    end
-
-    %% User Flow - Authentication
-    UI --> Welcome
-    Welcome --> SignIn
-    Welcome --> SignUp
-    SignIn --> AuthService
-    SignUp --> AuthService
-    SignIn --> GoogleButton
-    SignUp --> GoogleButton
     
-    GoogleButton -->|"idToken"| GoogleOAuth
-    GoogleOAuth -->|"Verified Token"| AuthRoutes
+    %% External Services
+    Cloudinary[Cloudinary<br/>Image Storage]
+    OAuthProviders[OAuth Providers<br/>Google/Facebook/GitHub]
     
-    AuthService -->|"Login/Register"| UserRoutes
-    UserRoutes --> AuthMiddleware
-    AuthMiddleware --> UserController
-    UserController --> UserService
+    %% Data Flow Connections
     
-    %% Token Flow
-    UserService -->|"Generate"| AccessToken
-    UserService -->|"Generate"| RefreshToken
-    AccessToken -->|"Store"| TokenStorage
-    RefreshToken -->|"Store"| TokenStorage
+    %% User to Mobile App
+    User --> UI
     
-    AuthContext -->|"Read/Write"| TokenStorage
-    APIService -->|"Include Token"| AuthMiddleware
+    %% Mobile App Internal Flow
+    UI --> AuthModule
+    UI --> WorkoutModule
+    UI --> NutritionModule
+    UI --> ProfileModule
+    AuthModule --> Storage
+    WorkoutModule --> Storage
+    NutritionModule --> Storage
+    ProfileModule --> Storage
     
-    %% Token Refresh Flow
-    TokenStorage -->|"Expired Token"| AuthContext
-    AuthContext -->|"Refresh Request"| UserRoutes
-    UserRoutes -->|"New Tokens"| AuthContext
+    %% Mobile App to Backend
+    AuthModule --> API
+    WorkoutModule --> API
+    NutritionModule --> API
+    ProfileModule --> API
     
-    %% Main App Flow
-    AuthContext -->|"Authenticated"| Home
-    Home --> Workouts
-    Home --> Foods
-    Home --> Profile
-    Home --> Messages
-    Profile --> EditProfile
-    Profile --> EditBodyInfo
+    %% Backend Internal Flow
+    API --> AuthService
+    API --> WorkoutService
+    API --> NutritionService
+    API --> UserService
+    API --> ImageService
+    API --> EmailService
     
-    %% Workout Flow
-    Workouts --> WorkoutService
-    WorkoutService --> WorkoutRoutes
-    WorkoutRoutes --> AuthMiddleware
-    AuthMiddleware --> WorkoutController
-    WorkoutController --> WorkoutsTable
-    WorkoutController --> SavedWorkoutsTable
+    AuthService --> JWT
+    AuthService --> OAuth
+    JWT --> AuthDB
+    OAuth --> OAuthProviders
     
-    %% Food Detection Flow
-    Foods --> MediaPicker
-    MediaPicker -->|"Image"| FoodService
-    FoodService -->|"Upload Image"| AIRouter
-    AIRouter --> MLService
-    MLService --> FoodModel
-    FoodModel -->|"Prediction"| DBService
-    DBService --> FoodsTable
-    DBService -->|"Nutrition Data"| FoodService
+    WorkoutService --> WorkoutLogic
+    WorkoutLogic --> WorkoutDB
     
-    %% Profile Flow
-    EditProfile --> APIService
-    EditBodyInfo --> APIService
-    APIService --> UserRoutes
-    UserController --> UsersTable
-    UserController --> Cloudinary
+    NutritionService --> NutritionLogic
+    NutritionLogic --> NutritionDB
     
-    %% Email Flow
-    UserService -->|"Verification Email"| EmailService
-    EmailService --> EmailProvider
+    UserService --> UserLogic
+    UserLogic --> UserDB
+    
+    ImageService --> Cloudinary
+    
+    %% Backend to AI Service
+    NutritionService --> AI_API
+    
+    %% AI Service Internal
+    AI_API --> FoodRecognition
+    FoodRecognition --> NutritionAnalysis
+    
+    %% Styling
+    classDef mobile fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef ai fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef user fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef db fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    
+    class UI,AuthModule,WorkoutModule,NutritionModule,ProfileModule,Storage mobile
+    class API,AuthService,WorkoutService,NutritionService,UserService,ImageService,EmailService,JWT,OAuth,WorkoutLogic,NutritionLogic,UserLogic backend
+    class AI_API,FoodRecognition,NutritionAnalysis ai
+    class Cloudinary,OAuthProviders external
+    class User user
+    class AuthDB,WorkoutDB,NutritionDB,UserDB db
 ```
 
 ### 🔄 Authentication Flow (Simplified)
