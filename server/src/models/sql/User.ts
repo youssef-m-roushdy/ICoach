@@ -17,7 +17,7 @@ interface UserAttributes {
   firstName: string;
   lastName: string;
   password: string;
-  avatar?: string;
+  avatar?: string | null;
   bio?: string;
   dateOfBirth?: Date;
   phone?: string;

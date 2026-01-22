@@ -477,13 +477,12 @@ export class UserController {
     }
   }
 
-  /**
-   * Delete user profile picture
-   */
   static async deleteAvatar(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const authUser = (req as any).user;
       const userId = authUser?.id;
+      
+      console.log('Deleting avatar for user ID:', userId);
       
       if (!userId) {
         throw new AppError('User not authenticated', 401);
@@ -495,20 +494,27 @@ export class UserController {
         throw new AppError('User not found', 404);
       }
 
+      console.log('Current user avatar:', user.avatar);
+      
       // Delete from Cloudinary if exists
       if (user.avatar) {
         try {
+          console.log('Deleting from Cloudinary:', user.avatar);
           await ImageService.deleteImageByUrl(user.avatar);
+          console.log('Cloudinary deletion successful');
         } catch (error) {
           console.warn('Failed to delete image from Cloudinary:', error);
         }
       }
 
       // Remove avatar URL from database
+      console.log('Updating user with avatar set to null');
       const updatedUser = await UserService.updateUser(userId, {
-        avatar: '',
+        avatar: null, // Or undefined
       });
 
+      console.log('User updated successfully:', updatedUser.id);
+      
       res.status(200).json({
         success: true,
         message: 'Profile picture deleted successfully',
@@ -517,6 +523,7 @@ export class UserController {
         },
       });
     } catch (error) {
+      console.error('Error in deleteAvatar:', error);
       next(error);
     }
   }
