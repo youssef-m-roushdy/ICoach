@@ -16,12 +16,12 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialIcons, Feather } from '@expo/vector-icons';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
-import type { RootStackParamList } from '../types';
 import { COLORS, SIZES } from '../constants';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { userService } from '../services';
 import { useAuth } from '../context';
+import type { RootStackParamList } from '../navigation/AppNavigator';
 
 type ProfileNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
@@ -280,6 +280,27 @@ export default function ProfileScreen() {
           </Text>
           <Text style={styles.username}>@{userData.username}</Text>
         </View>
+
+        {userData && !userData.isEmailVerified && (
+  <View style={styles.verificationBanner}>
+    <View style={styles.verificationContent}>
+      <MaterialIcons name="warning" size={24} color="#ef4444" />
+      <View style={styles.verificationTextContainer}>
+        <Text style={styles.verificationTitle}>Account Not Activated</Text>
+        <Text style={styles.verificationMessage}>
+          Your email address is not verified. Please verify your email to access all features.
+        </Text>
+      </View>
+    </View>
+    <TouchableOpacity
+      style={styles.verifyButton}
+      onPress={() => navigation.navigate('EmailVerification')}
+    >
+      <Text style={styles.verifyButtonText}>Activate Account</Text>
+      <MaterialIcons name="arrow-forward" size={18} color={COLORS.secondary} />
+    </TouchableOpacity>
+  </View>
+)}
 
         {/* Personal Information Section */}
         <View style={styles.section}>
@@ -709,5 +730,50 @@ const styles = StyleSheet.create({
     fontSize: SIZES.body,
     color: COLORS.gray,
     fontWeight: '500',
+  },
+  verificationBanner: {
+    backgroundColor: COLORS.errorBackground,
+    borderLeftWidth: SIZES.borderThick,
+    borderLeftColor: COLORS.error,
+    paddingHorizontal: SIZES.lg,
+    paddingVertical: SIZES.lg,
+    marginHorizontal: SIZES.lg,
+    marginTop: SIZES.lg,
+    borderRadius: SIZES.radiusSmall,
+  },
+  verificationContent: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: SIZES.sm,
+    marginBottom: SIZES.md,
+  },
+  verificationTextContainer: {
+    flex: 1,
+  },
+  verificationTitle: {
+    fontSize: SIZES.body,
+    fontWeight: 'bold',
+    color: COLORS.error,
+    marginBottom: SIZES.xs,
+  },
+  verificationMessage: {
+    fontSize: SIZES.small,
+    color: COLORS.errorLight,
+    lineHeight: 20,
+  },
+  verifyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SIZES.xs,
+    backgroundColor: COLORS.error,
+    paddingVertical: SIZES.sm,
+    paddingHorizontal: SIZES.md,
+    borderRadius: SIZES.radiusSmall,
+  },
+  verifyButtonText: {
+    fontSize: SIZES.body,
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
 });

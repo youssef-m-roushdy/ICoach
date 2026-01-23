@@ -76,6 +76,7 @@ export const authService = {
       const result = await response.json();
       
       if (!response.ok) {
+        console.log('Registration failed:', result);
         throw new Error(result.message || 'Registration failed');
       }
       
@@ -342,6 +343,43 @@ export const userService = {
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message || 'Failed to delete profile picture');
+      }
+      return result;
+    }, token);
+  },
+
+  async verifyEmail(verifyToken: string, token: string): Promise<any> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/users/verify-email/${encodeURIComponent(verifyToken)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to verify email');
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  async resendEmailVerification(email: string, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/users/resend-verification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to resend verification email');
       }
       return result;
     }, token);

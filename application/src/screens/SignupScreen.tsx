@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Alert,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -23,6 +24,8 @@ export default function SignInScreen() {
   const navigation = useNavigation<SignInScreenNavigationProp>();
   const { colors } = useTheme();
   const { login } = useAuth();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,7 +33,7 @@ export default function SignInScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async () => {
-    if (!username || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
@@ -48,6 +51,8 @@ export default function SignInScreen() {
     setIsLoading(true);
     try {
       const response = await authService.register({
+        firstName,
+        lastName,
         username,
         email,
         password,
@@ -74,50 +79,71 @@ export default function SignInScreen() {
       style={styles.background}
       resizeMode="contain"
     >
-      <AuthHeader
-        activeTab="SignIn"
-        onTabPress={(tab) => tab === 'Login' && navigation.navigate('Login')}
-      />
-
-      <View style={[styles.formContainer, { backgroundColor: colors.background + '99' }]}>
-        <Text style={[styles.title, { color: colors.text }]}>Sign up</Text>
-
-        <CustomInput 
-          placeholder="Enter your username" 
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-        <CustomInput 
-          placeholder="Enter your email" 
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <CustomInput 
-          placeholder="Create your password" 
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry 
-        />
-        <CustomInput 
-          placeholder="Confirm your password" 
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry 
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <AuthHeader
+          activeTab="SignIn"
+          onTabPress={(tab) => tab === 'Login' && navigation.navigate('Login')}
         />
 
-        {isLoading ? (
-          <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
-        ) : (
-          <>
-            <CustomButton title="Sign up" variant="secondary" onPress={handleSignUp} />
-            <Text style={[styles.orText, { color: colors.text }]}>OR</Text>
-            <GoogleButton mode="signup" />
-          </>
-        )}
-      </View>
+        <View style={[styles.formContainer, { backgroundColor: colors.background + '99' }]}>
+          <Text style={[styles.title, { color: colors.text }]}>Sign up</Text>
+
+          <View style={styles.nameContainer}>
+            <View style={styles.nameInput}>
+              <CustomInput 
+                placeholder="First name" 
+                value={firstName}
+                onChangeText={setFirstName}
+                autoCapitalize="words"
+              />
+            </View>
+            <View style={styles.nameInput}>
+              <CustomInput 
+                placeholder="Last name" 
+                value={lastName}
+                onChangeText={setLastName}
+                autoCapitalize="words"
+              />
+            </View>
+          </View>
+
+          <CustomInput 
+            placeholder="Choose a username" 
+            value={username}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+          />
+          <CustomInput 
+            placeholder="Enter your email" 
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <CustomInput 
+            placeholder="Create your password" 
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry 
+          />
+          <CustomInput 
+            placeholder="Confirm your password" 
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry 
+          />
+
+          {isLoading ? (
+            <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+          ) : (
+            <>
+              <CustomButton title="Sign up" variant="secondary" onPress={handleSignUp} />
+              <Text style={[styles.orText, { color: colors.text }]}>OR</Text>
+              <GoogleButton mode="signup" />
+            </>
+          )}
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -126,6 +152,9 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
   },
   formContainer: {
@@ -141,6 +170,15 @@ const styles = StyleSheet.create({
     fontSize: SIZES.h3,
     fontWeight: 'bold',
     marginBottom: 25,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 10,
+    marginBottom: 15,
+  },
+  nameInput: {
+    flex: 1,
   },
   orText: {
     color: COLORS.gray,
