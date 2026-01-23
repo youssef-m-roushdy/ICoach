@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import {
   View,
   Text,
@@ -438,8 +438,10 @@ export default function ProfileScreen() {
         {/* Account Settings */}
         <View style={[styles.section, { borderColor: colors.border }]}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Account</Text>
-
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('ChangePassword')}
+          >
             <MaterialIcons name="lock" size={20} color={colors.primary} />
             <Text style={[styles.menuText, { color: colors.text }]}>Change Password</Text>
             <MaterialIcons name="chevron-right" size={20} color={colors.textSecondary} />

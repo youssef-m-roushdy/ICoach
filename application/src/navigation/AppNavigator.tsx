@@ -19,6 +19,7 @@ import WorkoutsScreen from '../screens/WorkoutsScreen';
 import LiveWorkoutScreen from '../screens/LiveWorkoutScreen';
 import SavedWorkoutsScreen from '../screens/SavedWorkoutsScreen';
 import EmailVerificationScreen from '../screens/EmailVerificationScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 
 import { 
   ActivityIndicator, 
@@ -49,6 +50,7 @@ export type RootStackParamList = {
   LiveWorkout: undefined;
   SavedWorkouts: undefined;
   EmailVerification: undefined;
+  ChangePassword: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -261,6 +263,7 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
               <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} options={{ title: 'Verify Email' }} />
+              <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />
             </>
           ) : (
             <>
@@ -289,6 +292,7 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="EditBodyInfo" component={EditBodyInfoScreen} options={{ title: 'Edit Body Info' }} />
               <Stack.Screen name="Messages" component={MessagesScreen} options={{ title: 'Messages' }} />
               <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} options={{ title: 'Verify Email' }} />
+              <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />
             </>
           )}
         </Stack.Navigator>

@@ -384,6 +384,25 @@ export const userService = {
       return result;
     }, token);
   },
+
+  async changePassword(currentPassword: string, newPassword: string, token: string): Promise<any> {
+    return apiCallWithRefresh(async (accessToken) => {
+      const response = await fetch(`${API_BASE_URL}/v1/users/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to change password');
+      }
+      return result;
+    }, token);
+  }
 };
 
 // Workout Service
