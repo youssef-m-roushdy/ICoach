@@ -15,7 +15,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialIcons } from '@expo/vector-icons';
-import type { RootStackParamList } from '../types';
+import type { RootStackParamList } from '../navigation/AppNavigator';
 import { CustomButton, GoogleButton } from '../components/common';
 import { AuthHeader } from '../components/auth';
 import { COLORS, SIZES } from '../constants';
@@ -23,7 +23,9 @@ import { useTheme } from '../context/ThemeContext';
 import { authService } from '../services';
 import { useAuth } from '../context';
 
-type SignInScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignIn'>;
+// FIX: Change 'SignIn' to 'Login' - because in your navigation stack,
+// this screen is registered as 'Login', not 'SignIn'
+type SignInScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 export default function SignInScreen() {
   const navigation = useNavigation<SignInScreenNavigationProp>();
@@ -99,7 +101,11 @@ export default function SignInScreen() {
         >
           <AuthHeader
             activeTab="Login"
-            onTabPress={(tab) => tab === 'SignIn' && navigation.navigate('SignIn')}
+            onTabPress={(tab) => {
+              if (tab === 'SignIn') {
+                navigation.navigate('SignIn'); // This navigates to SignUpScreen
+              }
+            }}
           />
 
           <View style={[styles.formContainer, { backgroundColor: colors.background + 'CC' }]}>
@@ -130,14 +136,14 @@ export default function SignInScreen() {
             <View style={styles.inputGroup}>
               <View style={styles.passwordHeader}>
                 <Text style={[styles.inputLabel, { color: colors.text }]}>Password</Text>
-                {/* <TouchableOpacity 
+                <TouchableOpacity 
                   style={styles.forgotPasswordButton}
                   onPress={() => navigation.navigate('ForgotPassword')}
                 >
                   <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>
                     Forgot Password?
                   </Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
               </View>
               <View style={[styles.inputWrapper, { backgroundColor: COLORS.inputBackground, borderColor: COLORS.darkGray }]}>
                 <MaterialIcons name="lock" size={20} color={colors.textSecondary} />

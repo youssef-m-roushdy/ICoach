@@ -152,7 +152,8 @@ export const authService = {
   },
 
   // Forgot password
-  async forgotPassword(email: string): Promise<void> {
+  // In your authService.ts
+  async forgotPassword(email: string): Promise<{ success: boolean; message?: string; data?: string }> {
     try {
       const response = await fetch(`${API_BASE_URL}/v1/users/forgot-password`, {
         method: 'POST',
@@ -162,10 +163,13 @@ export const authService = {
         body: JSON.stringify({ email }),
       });
       
+      const result = await response.json();
+      
       if (!response.ok) {
-        const result = await response.json();
         throw new Error(result.message || 'Request failed');
       }
+      
+      return result; // Return the full response
     } catch (error) {
       console.error('Forgot password error:', error);
       throw error;
@@ -173,7 +177,7 @@ export const authService = {
   },
 
   // Reset password
-  async resetPassword(token: string, newPassword: string): Promise<void> {
+  async resetPassword(token: string, newPassword: string): Promise<{ success: boolean; message?: string; data?: any }> {
     try {
       const response = await fetch(`${API_BASE_URL}/v1/users/reset-password`, {
         method: 'POST',
@@ -183,10 +187,13 @@ export const authService = {
         body: JSON.stringify({ token, newPassword }),
       });
       
+      const result = await response.json();
+      
       if (!response.ok) {
-        const result = await response.json();
         throw new Error(result.message || 'Password reset failed');
       }
+      
+      return result; // Return the full response
     } catch (error) {
       console.error('Reset password error:', error);
       throw error;

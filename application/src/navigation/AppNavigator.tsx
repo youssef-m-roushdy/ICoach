@@ -20,6 +20,8 @@ import LiveWorkoutScreen from '../screens/LiveWorkoutScreen';
 import SavedWorkoutsScreen from '../screens/SavedWorkoutsScreen';
 import EmailVerificationScreen from '../screens/EmailVerificationScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 
 import { 
   ActivityIndicator, 
@@ -51,6 +53,8 @@ export type RootStackParamList = {
   SavedWorkouts: undefined;
   EmailVerification: undefined;
   ChangePassword: undefined;
+  ForgotPassword: undefined; // Add this line
+  ResetPassword: { email?: string; resetToken?: string }; // Add this line
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -232,6 +236,9 @@ export const AppNavigator: React.FC = () => {
               <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
               <Stack.Screen name="SignIn" component={SignUpScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Login" component={SignInScreen} options={{ headerShown: false }} />
+              {/* Add Forgot Password screens here - they're for non-authenticated users */}
+              <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
               <Stack.Screen name="AuthCallback" component={AuthCallbackScreen} options={{ headerShown: false }} />
             </>
           ) : needsOnboarding ? (
@@ -242,13 +249,11 @@ export const AppNavigator: React.FC = () => {
                 component={HomeScreen} 
                 options={({ navigation }) => ({ 
                   title: 'ICoach',
-                  // add messages button on the right
                   headerRight: () => (
                     <TouchableOpacity
                       style={{ marginRight: 15 }}
                       onPress={() => navigation.navigate('Messages' as any)}
                     >
-                      {/* use MaterialIcons as messages icon */}
                       <MaterialIcons name="message" size={28} color={COLORS.primary} />
                     </TouchableOpacity>
                   ),
@@ -272,7 +277,6 @@ export const AppNavigator: React.FC = () => {
                 component={HomeScreen} 
                 options={({ navigation }) => ({
                   title: 'ICoach',
-                  // add messages button on the right
                   headerRight: () => (
                     <TouchableOpacity
                       style={{ marginRight: 15 }}
