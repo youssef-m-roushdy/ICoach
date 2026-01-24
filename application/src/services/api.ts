@@ -197,27 +197,6 @@ export const authService = {
   getGoogleOAuthUrl(): string {
     return `${API_BASE_URL}/v1/auth/google`;
   },
-
-  // Resend verification email
-  async resendVerification(email: string): Promise<void> {
-    try {
-      const response = await fetch(`${API_BASE_URL}/v1/users/resend-verification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.message || 'Failed to resend verification');
-      }
-    } catch (error) {
-      console.error('Resend verification error:', error);
-      throw error;
-    }
-  },
 };
 
 interface BodyInformationData {
