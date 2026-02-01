@@ -29,7 +29,7 @@ export default function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigationProp>();
   const { colors } = useTheme();
   const { t } = useTranslation();
-  const { user: authUser, token, logout } = useAuth();
+  const { user: authUser, token, logout, updateUser } = useAuth();
   const [userData, setUserData] = useState<any>(authUser);
   const [isLoading, setIsLoading] = useState(false);
   const [showImageOptions, setShowImageOptions] = useState(false);
@@ -144,10 +144,13 @@ export default function ProfileScreen() {
       
       // Update local state with new avatar
       if (response.data?.avatar) {
-        setUserData((prev: any) => ({
-          ...prev,
+        const updatedUserData = {
+          ...userData,
           avatar: response.data.avatar,
-        }));
+        };
+        setUserData(updatedUserData);
+        // Update global auth state so avatar persists across screens
+        updateUser(updatedUserData);
       }
       
       Alert.alert('Success', 'Profile picture updated successfully');
@@ -184,10 +187,13 @@ export default function ProfileScreen() {
               console.log('✅ Profile picture deleted');
               
               // Update local state to remove avatar
-              setUserData((prev: any) => ({
-                ...prev,
+              const updatedUserData = {
+                ...userData,
                 avatar: null,
-              }));
+              };
+              setUserData(updatedUserData);
+              // Update global auth state so avatar removal persists across screens
+              updateUser(updatedUserData);
               
               Alert.alert('Success', 'Profile picture deleted successfully');
               // Reload profile to get the latest data
