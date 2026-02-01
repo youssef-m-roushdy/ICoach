@@ -57,6 +57,8 @@ export default function ProfileScreen() {
       // Use API response data, which has all the body info
       if (response.data) {
         setUserData(response.data);
+        // Update global auth state so changes persist across screens
+        updateUser(response.data);
       }
     } catch (error: any) {
       console.error('❌ Profile Error:', error);
