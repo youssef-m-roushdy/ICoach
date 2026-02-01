@@ -29,13 +29,32 @@ const PORT = process.env.PORT || 5000;
 // Trust proxy (for rate limiting and IP detection)
 app.set('trust proxy', 1);
 
-// Security middleware
+// ============= EJS CONFIGURATION =============
+// Configure EJS template engine for web pages
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views')); // Points to src/views
+
+// ============= STATIC FILES CONFIGURATION =============
+// Serve static files for web pages (CSS, JS, images)
+app.use('/assets', express.static(path.join(__dirname, 'public')));
+// Serve static files for API (workout GIFs, etc.)
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+
+// ============= SECURITY MIDDLEWARE =============
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles for EJS
+      scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts for EJS
+      imgSrc: ["'self'", "data:", "https:"],
+    }
+  }
 }));
 
-// CORS configuration
-app.use(cors({
+// CORS configuration (only for API routes)
+const corsOptions = {
   origin: process.env.CORS_ORIGIN?.split(',') || [
     'http://localhost:3000',
     'http://localhost:5173',
@@ -48,9 +67,12 @@ app.use(cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-}));
+};
 
-// Rate limiting
+// Apply CORS to API routes only (not to web views)
+app.use('/api', cors(corsOptions));
+
+// Rate limiting for all routes
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
@@ -58,17 +80,17 @@ const limiter = rateLimit({
     success: false,
     message: 'Too many requests from this IP, please try again later.',
   },
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use(limiter);
 
-// Logging middleware
+// ============= LOGGING MIDDLEWARE =============
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('combined'));
 }
 
-// Body parsing middleware
+// ============= BODY PARSING MIDDLEWARE =============
 app.use(express.json({ 
   limit: process.env.MAX_FILE_SIZE || '10mb',
 }));
@@ -80,13 +102,14 @@ app.use(express.urlencoded({
 // Cookie parser middleware
 app.use(cookieParser());
 
-// Serve static files (workout GIFs)
-app.use('/public', express.static(path.join(__dirname, '..', 'public')));
-
-// Setup Swagger documentation
+// ============= SWAGGER DOCUMENTATION =============
 setupSwagger(app);
 
-// Health check endpoint (before API routes)
+// ============= WEB VIEWS ROUTES =============
+// Import web routes (for password reset, email verification, etc.)
+import webRoutes from './routes/web/publicRoutes.js';
+
+// Health check endpoint (accessible via web and API)
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     success: true,
@@ -97,16 +120,22 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API routes
+// ============= WEB ROUTES =============
+// These handle web pages (password reset, email verification, etc.)
+app.use('/', webRoutes);
+
+// ============= API ROUTES =============
+// These handle mobile app API requests
 app.use('/api', apiRoutes);
 
+// ============= ERROR HANDLING =============
 // 404 handler for unmatched routes (must be after all other routes)
 app.use(notFoundHandler);
 
 // Global error handling middleware (must be last)
 app.use(errorHandler);
 
-// Start server
+// ============= SERVER STARTUP =============
 const startServer = async () => {
   try {
     // Initialize databases
@@ -115,7 +144,8 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`🌐 API documentation: http://localhost:${PORT}/api-docs`);
+      console.log(`🌐 Web views available at: http://localhost:${PORT}`);
+      console.log(`📖 API documentation: http://localhost:${PORT}/api-docs`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);

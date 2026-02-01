@@ -387,7 +387,33 @@ export class UserService {
   }
 
   /**
+   * Validate password reset token (for rendering the form)
+   * UPDATED: Now uses hashed token comparison
+   */
+  static async validatePasswordResetToken(token: string): Promise<boolean> {
+    try {
+      // Hash the token to compare with stored hash
+      const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+      
+      const user = await User.findOne({
+        where: {
+          passwordResetToken: hashedToken,
+          passwordResetExpires: {
+            [Op.gt]: new Date(), // Token must not be expired
+          },
+        },
+      });
+
+      return !!user; // Return true if user found, false otherwise
+    } catch (error) {
+      console.error('Token validation error:', error);
+      return false;
+    }
+  }
+
+  /**
    * Request password reset
+   * UPDATED: Now hashes token before storing in DB
    */
   static async requestPasswordReset(email: string): Promise<string> {
     const user = await User.findByEmail(email);
@@ -395,20 +421,27 @@ export class UserService {
       throw new NotFoundError('User not found');
     }
 
+    // Generate random token (plain text - this will be sent in email)
     const resetToken = crypto.randomBytes(32).toString('hex');
+    
+    // Hash token before storing in database
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    
+    // Set expiration time (1 hour from now)
     const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
+    // Save hashed token and expiration to database
     await user.update({
-      passwordResetToken: resetToken,
+      passwordResetToken: hashedToken,
       passwordResetExpires: resetExpires,
     });
 
-    // Send password reset email
+    // Send password reset email with plain token
     try {
       await EmailService.sendPasswordResetEmail(
         user.email,
         user.firstName,
-        resetToken
+        resetToken // Send plain token (not hashed)
       );
       console.log(`📧 Password reset email sent to ${user.email}`);
     } catch (emailError) {
@@ -416,18 +449,23 @@ export class UserService {
       throw new Error('Failed to send password reset email. Please try again later.');
     }
 
+    // Return plain token (for development testing only)
     return resetToken;
   }
 
   /**
    * Reset password
+   * UPDATED: Now hashes token before comparison
    */
   static async resetPassword(token: string, newPassword: string): Promise<UserAttributes> {
+    // Hash the token to compare with stored hash
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    
     const user = await User.findOne({
       where: {
-        passwordResetToken: token,
+        passwordResetToken: hashedToken,
         passwordResetExpires: {
-          [Op.gt]: new Date(),
+          [Op.gt]: new Date(), // Token must not be expired
         },
       },
     });
@@ -436,6 +474,7 @@ export class UserService {
       throw new ValidationError('Invalid or expired reset token');
     }
 
+    // Update password and clear reset token fields
     await user.update({
       password: newPassword,
       passwordResetToken: null,
