@@ -31,8 +31,10 @@
 
 - **🤖 AI-Powered Food Recognition** - Snap a photo of your meal and instantly get nutritional information
 - **💪 Comprehensive Workout Library** - Access hundreds of exercises with detailed instructions and GIFs
+- **🏃 Live Workout Tracking** - Real-time pose detection and exercise counting with on-device ML
+- **🗣️ Voice Feedback** - Audio guidance and form corrections during workouts
 - **📊 Smart Nutrition Tracking** - Monitor macros, calories, and nutritional goals effortlessly
-- **🌍 Multi-language Support** - Available in English, Arabic, French, German, Spanish, and Icelandic
+- **🌍 Multi-language Support** - Available in English, Arabic, French, German, Spanish, Italian, and Icelandic
 - **🔐 Secure Authentication** - OAuth integration with Google, Facebook, and GitHub
 - **📱 Cross-Platform** - iOS, Android, and Web support through React Native
 
@@ -48,9 +50,12 @@
 - **Body Info Editor** - Update fitness goals, activity level, body measurements
 - **Workout Library** - Browse 270+ exercises with GIF demonstrations
 - **Save Workouts** - Bookmark favorite exercises for quick access
+- **Live Workout Mode** - Real-time pose detection and exercise tracking
+- **AI Fitness Engine** - On-device ML for exercise form analysis
+- **Voice Feedback** - Audio guidance during workouts
 - **Food Recognition** - AI-powered meal analysis with camera/gallery picker
 - **Nutrition Tracking** - Daily calorie intake, macro tracking
-- **Multi-language** - i18n support with 6 languages
+- **Multi-language** - i18n support with 7 languages
 - **Offline Support** - AsyncStorage for data persistence
 - **Deep Linking** - OAuth callback handling
 
@@ -78,6 +83,14 @@
 - **Arabic Cuisine Support** - Specialized recognition for Middle Eastern dishes
 - **Confidence Scoring** - Reliable predictions with accuracy metrics
 - **Docker Deployment** - Containerized ML model serving
+- **Streamlit Demo** - Interactive web demo for food recognition
+
+### 🏃 On-Device AI (Mobile)
+- **Pose Detection** - Real-time body pose tracking
+- **Exercise Recognition** - ONNX models for exercise classification
+- **Rep Counting** - Automatic repetition counting
+- **Form Analysis** - Exercise form feedback and corrections
+- **Voice Guidance** - Real-time audio feedback during workouts
 
 ---
 
@@ -86,74 +99,128 @@
 ```
 Icoach-app/
 │
-├── 📱 application/          # React Native Mobile App (Expo)
+├── 📱 application/                    # React Native Mobile App (Expo)
 │   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   │   ├── common/     # Buttons, Inputs, GoogleButton, etc.
-│   │   │   └── auth/       # Auth-specific components
-│   │   ├── screens/        # App screens
-│   │   │   ├── WelcomeScreen.tsx
-│   │   │   ├── SignInScreen.tsx
-│   │   │   ├── SignupScreen.tsx
-│   │   │   ├── HomeScreen.tsx
-│   │   │   ├── ProfileScreen.tsx
-│   │   │   ├── EditProfileScreen.tsx
-│   │   │   ├── EditBodyInfoScreen.tsx
-│   │   │   ├── WorkoutsScreen.tsx
-│   │   │   ├── FoodsScreen.tsx
-│   │   │   ├── MessagesScreen.tsx
-│   │   │   ├── OnboardingScreen.tsx
-│   │   │   └── AuthCallbackScreen.tsx
-│   │   ├── navigation/     # React Navigation setup
-│   │   ├── services/       # API integration (api.ts)
-│   │   ├── context/        # AuthContext with token management
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── utils/          # Helper functions & validators
-│   │   ├── constants/      # Theme, colors, sizes
-│   │   └── types/          # TypeScript definitions
-│   ├── i18n/               # Internationalization (6 languages)
-│   └── assets/             # Fonts, images
+│   │   ├── components/               # Reusable UI components
+│   │   │   ├── common/               # Shared components
+│   │   │   │   ├── CustomButton.tsx     # Styled button with variants
+│   │   │   │   ├── CustomInput.tsx      # Styled text input
+│   │   │   │   ├── GoogleButton.tsx     # Google OAuth button
+│   │   │   │   └── LanguageSelector.tsx # Language switcher
+│   │   │   ├── auth/                 # Auth-specific components
+│   │   │   │   └── AuthHeader.tsx       # Authentication header
+│   │   │   └── MediaPickerSheet.tsx  # Camera/Gallery picker
+│   │   ├── screens/                  # App screens (19 screens)
+│   │   │   ├── WelcomeScreen.tsx        # Landing page
+│   │   │   ├── SignInScreen.tsx         # Sign in
+│   │   │   ├── SignupScreen.tsx         # Registration
+│   │   │   ├── HomeScreen.tsx           # Main dashboard
+│   │   │   ├── ProfileScreen.tsx        # User profile
+│   │   │   ├── EditProfileScreen.tsx    # Edit profile
+│   │   │   ├── EditBodyInfoScreen.tsx   # Body metrics editor
+│   │   │   ├── WorkoutsScreen.tsx       # Exercise library
+│   │   │   ├── SavedWorkoutsScreen.tsx  # Bookmarked workouts
+│   │   │   ├── LiveWorkoutScreen.tsx    # Real-time workout tracking
+│   │   │   ├── FoodsScreen.tsx          # Food & nutrition
+│   │   │   ├── MessagesScreen.tsx       # Notifications
+│   │   │   ├── OnboardingScreen.tsx     # First-time setup
+│   │   │   ├── AuthCallbackScreen.tsx   # OAuth callback
+│   │   │   ├── EmailVerificationScreen.tsx
+│   │   │   ├── ForgotPasswordScreen.tsx
+│   │   │   ├── ResetPasswordScreen.tsx
+│   │   │   └── ChangePasswordScreen.tsx
+│   │   ├── navigation/               # React Navigation setup
+│   │   │   └── AppNavigator.tsx
+│   │   ├── services/                 # API & AI integration
+│   │   │   ├── api.ts                   # Backend API client
+│   │   │   ├── poseDetection/           # Real-time pose detection
+│   │   │   └── aiFitnessEngine/         # AI workout analysis
+│   │   │       ├── exercises/           # Exercise definitions
+│   │   │       ├── feedbackMapping.ts   # Feedback rules
+│   │   │       ├── voiceFeedback.ts     # Audio feedback
+│   │   │       └── utils.ts             # Helper functions
+│   │   ├── context/                  # Global state management
+│   │   │   ├── AuthContext.tsx          # Auth & token management
+│   │   │   └── ThemeContext.tsx         # Theme management
+│   │   ├── hooks/                    # Custom React hooks
+│   │   │   └── useForm.ts               # Form state management
+│   │   ├── utils/                    # Helper functions & validators
+│   │   ├── constants/                # Theme, colors, sizes
+│   │   │   ├── colors.ts
+│   │   │   └── sizes.ts
+│   │   ├── types/                    # TypeScript definitions
+│   │   └── styles/                   # Global styles
+│   ├── ML_Models/                    # On-device ML models
+│   │   ├── jumping_jacks.onnx           # Exercise detection model
+│   │   └── jj_encoder_info.json         # Model metadata
+│   ├── i18n/                         # Internationalization
+│   │   ├── i18n.ts                      # i18n configuration
+│   │   └── locales/                     # Language files (7 languages)
+│   │       ├── en.json, ar.json, fr.json
+│   │       ├── de.json, es.json, it.json, is.json
+│   └── assets/                       # Fonts, images
 │
-├── 🖥️ server/              # Node.js + Express + TypeScript Backend
+├── 🖥️ server/                        # Node.js + Express + TypeScript Backend
 │   ├── src/
-│   │   ├── controllers/    # Request handlers
+│   │   ├── app.ts                    # Main application setup
+│   │   ├── controllers/              # Request handlers
 │   │   │   ├── authController.ts
 │   │   │   ├── userController.ts
 │   │   │   ├── workoutController.ts
 │   │   │   ├── foodController.ts
-│   │   │   └── savedWorkoutController.ts
-│   │   ├── routes/v1/      # API endpoints (versioned)
-│   │   │   ├── authRoutes.ts
-│   │   │   ├── userRoutes.ts
-│   │   │   ├── workoutRoutes.ts
-│   │   │   ├── foodRoutes.ts
-│   │   │   └── savedWorkoutRoutes.ts
-│   │   ├── models/         # Database models
-│   │   │   ├── sql/        # Sequelize models (User, Workout, Food)
-│   │   │   └── nosql/      # Mongoose models
-│   │   ├── services/       # Business logic
-│   │   │   ├── userService.ts
-│   │   │   ├── emailService.ts
-│   │   │   └── imageService.ts
-│   │   ├── middleware/     # Auth, validation, error handling
-│   │   ├── config/         # Database & JWT configuration
-│   │   ├── migrations/     # Database migrations
-│   │   └── seeders/        # Database seeders
-│   ├── data/               # Seed data (workouts CSV, foods JSON)
-│   └── uploads/            # Local file uploads
+│   │   │   ├── savedWorkoutController.ts
+│   │   │   └── viewController.ts
+│   │   ├── routes/                   # API endpoints
+│   │   │   ├── v1/                      # API v1 (versioned)
+│   │   │   │   ├── authRoutes.ts
+│   │   │   │   ├── userRoutes.ts
+│   │   │   │   ├── workoutRoutes.ts
+│   │   │   │   ├── foodRoutes.ts
+│   │   │   │   └── savedWorkoutRoutes.ts
+│   │   │   └── web/                     # Web routes
+│   │   ├── models/                   # Database models
+│   │   ├── services/                 # Business logic
+│   │   ├── middleware/               # Auth, validation, error handling
+│   │   ├── config/                   # Database & JWT configuration
+│   │   ├── migrations/               # Database migrations
+│   │   ├── seeders/                  # Database seeders
+│   │   ├── types/                    # TypeScript definitions
+│   │   ├── utils/                    # Helper utilities
+│   │   └── views/                    # Server-side views
+│   ├── data/                         # Seed data
+│   │   ├── workouts_data.csv            # 270+ exercises
+│   │   └── food_nutrition_data.json     # Food nutrition data
+│   ├── config/                       # Configuration files
+│   ├── uploads/                      # Local file uploads
+│   └── logs/                         # Application logs
 │
-├── 🤖 AI/                  # Python AI Service (FastAPI)
-│   ├── AI_API_Features/
-│   │   ├── routers/        # FastAPI routes (food.py)
-│   │   ├── services/       # ML & DB services
-│   │   ├── models/         # Pydantic schemas
-│   │   └── config/         # Database & settings
-│   ├── food_predict_feature/
-│   │   ├── best_model_food100.keras  # Trained EfficientNetB0 model
-│   │   └── class_names.json          # 100+ food categories
-│   └── main.py             # FastAPI application entry
+├── 🤖 AI/                            # Python AI Service (FastAPI)
+│   ├── main.py                       # FastAPI application entry
+│   ├── AI_API_Features/              # API features module
+│   │   ├── routers/                     # FastAPI routes
+│   │   │   └── food.py                  # Food prediction endpoints
+│   │   ├── services/                    # Business logic
+│   │   │   ├── ml_service.py            # ML model inference
+│   │   │   └── db_service.py            # Database operations
+│   │   ├── models/                      # Data models
+│   │   │   ├── database.py              # ORM models
+│   │   │   └── schemas.py               # Pydantic schemas
+│   │   ├── config/                      # Configuration
+│   │   │   ├── database.py              # DB connection
+│   │   │   └── settings.py              # App settings
+│   │   └── utils/                       # Helper utilities
+│   │       └── helpers.py
+│   ├── food_predict_feature/         # Food recognition module
+│   │   ├── app.py                       # Streamlit demo app
+│   │   ├── best_model_food100.keras     # Trained EfficientNetB0 model
+│   │   ├── class_names.json             # 100+ food categories
+│   │   └── food detection model.ipynb   # Training notebook
+│   ├── requirements-api.txt          # API dependencies
+│   ├── Dockerfile                    # Container configuration
+│   └── docker-compose.yml            # Multi-container setup
 │
-└── 🌐 frontend/            # Web Frontend (Planned)
+└── 🌐 frontend/                      # Web Frontend (Planned)
+    └── README.md
 ```
 
 ### 🔄 Data Flow
@@ -471,6 +538,9 @@ Detailed documentation for each component:
 | **i18next** | Internationalization |
 | **AsyncStorage** | Local data persistence |
 | **React Context API** | State management |
+| **ONNX Runtime** | On-device ML inference |
+| **Expo Camera** | Camera & pose detection |
+| **Expo Speech** | Voice feedback |
 
 ### Backend Server
 | Technology | Purpose |
@@ -501,7 +571,7 @@ Detailed documentation for each component:
 
 ---
 
-## � API Endpoints Overview
+## 🔌 API Endpoints Overview
 
 ### Authentication (`/api/v1/auth`)
 | Method | Endpoint | Description |
@@ -554,9 +624,14 @@ Detailed documentation for each component:
 | GET | `/api/v1/food/classes` | Get all food classes |
 | GET | `/health` | Health check |
 
+### On-Device ML Models (Mobile)
+| Model | File | Description |
+|-------|------|-------------|
+| Jumping Jacks | `jumping_jacks.onnx` | Exercise detection & rep counting |
+
 ---
 
-## �📊 Database Schema
+## 📊 Database Schema
 
 ### PostgreSQL Tables
 
@@ -612,7 +687,8 @@ Supported languages:
 - 🇫🇷 French (Français)
 - 🇩🇪 German (Deutsch)
 - 🇪🇸 Spanish (Español)
-- 🇮🇸 Icelandic (Íslenska)
+- 🇮� Italian (Italiano)
+- 🇮�🇸 Icelandic (Íslenska)
 
 ---
 
@@ -700,11 +776,14 @@ docker run -p 8000:8000 icoach-ai:latest
 - [x] Workout library with 270+ exercises
 - [x] Save/bookmark favorite workouts
 - [x] AI-powered food recognition
-- [x] Multi-language support (6 languages)
+- [x] Multi-language support (7 languages)
 - [x] Email verification system
+- [x] Live workout mode with pose detection
+- [x] On-device ML for exercise tracking
+- [x] Voice feedback during workouts
 
 ### In Progress 🔄
-- [ ] Real-time workout tracking
+- [ ] More exercise models (currently: jumping jacks)
 - [ ] Social features (friends, challenges)
 - [ ] Progress photos and comparisons
 - [ ] Custom meal plans
