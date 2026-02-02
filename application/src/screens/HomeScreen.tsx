@@ -44,7 +44,7 @@ export default function HomeScreen() {
     return { uri: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD700&color=000&bold=true` };
   }, [user]);
 
-  const INITIAL_MEALS = [t('breakfast'), t('lunch'), 'Workout Meal', t('dinner')];
+  const INITIAL_MEALS = ['Breakfast', 'Lunch', 'Workout Meal', 'Dinner'];
   const EXTRA_MEALS = ['Morning Snack', 'Evening Snack', 'Post-Workout Shake'];
   const displayedMeals = showAll ? [...INITIAL_MEALS, ...EXTRA_MEALS] : INITIAL_MEALS;
 
@@ -98,8 +98,8 @@ export default function HomeScreen() {
                 {[
                     { name: 'Youssef', image: require('../../assets/youssef.jpeg') },
                     { name: 'Omar', image: require('../../assets/omar.jpeg') },
-                    { name: 'Amr', image: require('../../assets/mazen.jpeg') },
-                    { name: 'Mazen', image: require('../../assets/amr.jpeg') },
+                    { name: 'Amr', image: require('../../assets/amr.jpeg') },
+                    { name: 'Mazen', image: require('../../assets/mazen.jpeg') },
                     { name: 'Ziad', image: require('../../assets/ziad.jpeg') },
                     { name: 'Saif', image: require('../../assets/saif.jpeg') }
                 ].map((item, index) => (
