@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 import { authService } from '../services';
+import { socketService } from '../services/socketService';
 import type { User } from '../types';
 
 interface AuthContextType {
@@ -25,6 +27,51 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Handle email verification event from WebSocket
+  const handleEmailVerified = useCallback((data: {
+    success: boolean;
+    message: string;
+    user: { id: string; email: string; isEmailVerified: boolean; firstName?: string };
+  }) => {
+    console.log('📧 Email verified event received in AuthContext:', data);
+    
+    if (data.success && user) {
+      // Update user state with verified status
+      const updatedUser = { ...user, isEmailVerified: true };
+      setUser(updatedUser);
+      
+      // Update stored user data
+      AsyncStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
+      
+      // Show success notification to user
+      Alert.alert(
+        '✅ Email Verified!',
+        data.message || 'Your email has been verified successfully. You now have full access to all features.',
+        [{ text: 'Great!', style: 'default' }]
+      );
+    }
+  }, [user]);
+
+  // Connect to WebSocket when user is logged in
+  useEffect(() => {
+    if (user?.id && !user.isEmailVerified) {
+      // Only connect if user is logged in and email not verified yet
+      console.log('🔌 Connecting socket for unverified user:', user.id);
+      socketService.connect(user.id, {
+        onEmailVerified: handleEmailVerified,
+        onConnected: () => console.log('✅ Socket connected for real-time updates'),
+        onDisconnected: (reason) => console.log('🔌 Socket disconnected:', reason),
+      });
+    } else if (!user) {
+      // Disconnect when user logs out
+      socketService.disconnect();
+    }
+
+    return () => {
+      // Cleanup on unmount (but not on every user change)
+    };
+  }, [user?.id, user?.isEmailVerified, handleEmailVerified]);
 
   // Load stored auth data on mount
   useEffect(() => {
@@ -85,6 +132,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error) {
       console.error('Logout API error:', error);
     } finally {
+      // Disconnect WebSocket
+      socketService.disconnect();
+      
       // Clear local state and storage
       setUser(null);
       setToken(null);

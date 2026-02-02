@@ -341,6 +341,20 @@ export class UserService {
       emailVerificationToken: null,
     });
 
+    // Emit real-time notification to connected user
+    try {
+      const { socketService } = await import('./socketService.js');
+      socketService.emitEmailVerified(user.id.toString(), {
+        id: user.id.toString(),
+        email: user.email,
+        isEmailVerified: true,
+        firstName: user.firstName,
+      });
+    } catch (socketError) {
+      console.error('Failed to emit socket event:', socketError);
+      // Don't fail verification if socket emit fails
+    }
+
     // Send welcome email
     try {
       await EmailService.sendWelcomeEmail(user.email, user.firstName);

@@ -1,5 +1,5 @@
 // API service for backend communication
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 // Global reference to auth refresh function (will be set by AuthContext)
 let globalRefreshTokenFunction: (() => Promise<string | null>) | null = null;

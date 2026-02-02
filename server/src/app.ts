@@ -1,4 +1,5 @@
 import express from "express";
+import { createServer } from 'http';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -12,6 +13,7 @@ import { initializeDatabases } from './config/database.js';
 import { setupSwagger } from './config/swagger.js';
 import apiRoutes from './routes/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { socketService } from './services/socketService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +26,11 @@ configurePassport();
 
 // Initialize Express app
 const app = express();
+const httpServer = createServer(app);
 const PORT = process.env.PORT || 5000;
+
+// Initialize Socket.IO
+socketService.initialize(httpServer);
 
 // Trust proxy (for rate limiting and IP detection)
 app.set('trust proxy', 1);
@@ -141,11 +147,12 @@ const startServer = async () => {
     // Initialize databases
     await initializeDatabases();
     
-    app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🌐 Web views available at: http://localhost:${PORT}`);
       console.log(`📖 API documentation: http://localhost:${PORT}/api-docs`);
+      console.log(`🔌 WebSocket server ready for connections`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
