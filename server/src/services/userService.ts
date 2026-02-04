@@ -344,14 +344,20 @@ export class UserService {
     // Emit real-time notification to connected user
     try {
       const { socketService } = await import('./socketService.js');
-      socketService.emitEmailVerified(user.id.toString(), {
+      const emitData = {
         id: user.id.toString(),
         email: user.email,
         isEmailVerified: true,
         firstName: user.firstName,
-      });
+      };
+      console.log('📧 [EMAIL VERIFICATION] Preparing to emit socket event...');
+      console.log('📧 [EMAIL VERIFICATION] User ID:', user.id.toString());
+      console.log('📧 [EMAIL VERIFICATION] Emit data:', JSON.stringify(emitData, null, 2));
+      
+      const emitResult = socketService.emitEmailVerified(user.id.toString(), emitData);
+      console.log('📧 [EMAIL VERIFICATION] Socket emit result:', emitResult ? 'SUCCESS - User received the event' : 'FAILED - User not connected');
     } catch (socketError) {
-      console.error('Failed to emit socket event:', socketError);
+      console.error('❌ [EMAIL VERIFICATION] Failed to emit socket event:', socketError);
       // Don't fail verification if socket emit fails
     }
 

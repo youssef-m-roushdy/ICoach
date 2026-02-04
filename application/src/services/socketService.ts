@@ -68,26 +68,53 @@ class SocketService {
 
     // Connection successful
     this.socket.on('connect', () => {
-      console.log('✅ Socket connected:', this.socket?.id);
+      console.log('\n========== APP: SOCKET CONNECTED ==========');
+      console.log('✅ [APP SOCKET] Connected!');
+      console.log('✅ [APP SOCKET] Socket ID:', this.socket?.id);
+      console.log('✅ [APP SOCKET] User ID to register:', this.userId);
       this.reconnectAttempts = 0;
       
       // Register user with server
       if (this.userId) {
+        console.log('✅ [APP SOCKET] Emitting register event with userId:', this.userId);
         this.socket?.emit('register', this.userId);
+      } else {
+        console.log('⚠️ [APP SOCKET] No userId to register!');
       }
       
       this.eventHandlers.onConnected?.();
+      console.log('==========================================\n');
     });
 
     // Registration confirmed
     this.socket.on('registered', (data: { success: boolean; message: string }) => {
-      console.log('✅ Socket registered:', data.message);
+      console.log('\n========== APP: SOCKET REGISTERED ==========');
+      console.log('✅ [APP SOCKET] Registration confirmed!');
+      console.log('✅ [APP SOCKET] Success:', data.success);
+      console.log('✅ [APP SOCKET] Message:', data.message);
+      console.log('✅ [APP SOCKET] User ID:', this.userId);
+      console.log('✅ [APP SOCKET] Socket ID:', this.socket?.id);
+      console.log('✅ [APP SOCKET] Now listening for email_verified events...');
+      console.log('============================================\n');
     });
 
     // Email verified event from server
     this.socket.on('email_verified', (data: EmailVerifiedData) => {
-      console.log('📧 Email verified event received:', data);
-      this.eventHandlers.onEmailVerified?.(data);
+      console.log('\n========== APP: EMAIL VERIFIED EVENT RECEIVED ==========');
+      console.log('📧 [APP SOCKET] Raw data received:', JSON.stringify(data, null, 2));
+      console.log('📧 [APP SOCKET] Success:', data.success);
+      console.log('📧 [APP SOCKET] Message:', data.message);
+      console.log('📧 [APP SOCKET] User data:', JSON.stringify(data.user, null, 2));
+      console.log('📧 [APP SOCKET] Handler exists:', !!this.eventHandlers.onEmailVerified);
+      
+      if (this.eventHandlers.onEmailVerified) {
+        console.log('📧 [APP SOCKET] Calling onEmailVerified handler...');
+        this.eventHandlers.onEmailVerified(data);
+        console.log('📧 [APP SOCKET] Handler called successfully!');
+      } else {
+        console.log('⚠️ [APP SOCKET] No handler registered for email_verified event!');
+      }
+      console.log('=======================================================\n');
     });
 
     // Disconnection

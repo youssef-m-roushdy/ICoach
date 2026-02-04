@@ -34,39 +34,70 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     message: string;
     user: { id: string; email: string; isEmailVerified: boolean; firstName?: string };
   }) => {
-    console.log('📧 Email verified event received in AuthContext:', data);
+    console.log('\n========== AUTH CONTEXT: EMAIL VERIFIED HANDLER ==========');
+    console.log('📧 [AUTH] Received data:', JSON.stringify(data, null, 2));
+    console.log('📧 [AUTH] Current user state:', JSON.stringify(user, null, 2));
+    console.log('📧 [AUTH] Current user isEmailVerified:', user?.isEmailVerified);
+    console.log('📧 [AUTH] Data success:', data.success);
+    console.log('📧 [AUTH] User exists:', !!user);
     
     if (data.success && user) {
+      console.log('📧 [AUTH] ✅ Conditions met! Updating user state...');
+      
       // Update user state with verified status
       const updatedUser = { ...user, isEmailVerified: true };
+      console.log('📧 [AUTH] Updated user object:', JSON.stringify(updatedUser, null, 2));
+      
       setUser(updatedUser);
+      console.log('📧 [AUTH] setUser called with isEmailVerified: true');
       
       // Update stored user data
-      AsyncStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
+      AsyncStorage.setItem(USER_KEY, JSON.stringify(updatedUser))
+        .then(() => console.log('📧 [AUTH] AsyncStorage updated successfully'))
+        .catch(err => console.error('📧 [AUTH] AsyncStorage update failed:', err));
       
+      console.log('📧 [AUTH] About to show Alert...');
       // Show success notification to user
       Alert.alert(
         '✅ Email Verified!',
         data.message || 'Your email has been verified successfully. You now have full access to all features.',
         [{ text: 'Great!', style: 'default' }]
       );
+      console.log('========================================================\n');
+    } else {
+      console.log('📧 [AUTH] ⚠️ Conditions NOT met!');
+      console.log('📧 [AUTH] data.success:', data.success);
+      console.log('📧 [AUTH] user:', !!user);
+      console.log('========================================================\n');
     }
   }, [user]);
 
   // Connect to WebSocket when user is logged in
   useEffect(() => {
+    console.log('\n========== AUTH CONTEXT: SOCKET CONNECTION EFFECT ==========');
+    console.log('🔌 [AUTH SOCKET] user?.id:', user?.id);
+    console.log('🔌 [AUTH SOCKET] user?.isEmailVerified:', user?.isEmailVerified);
+    console.log('🔌 [AUTH SOCKET] Should connect:', !!(user?.id && !user.isEmailVerified));
+    
     if (user?.id && !user.isEmailVerified) {
       // Only connect if user is logged in and email not verified yet
-      console.log('🔌 Connecting socket for unverified user:', user.id);
+      console.log('🔌 [AUTH SOCKET] ✅ Connecting socket for unverified user:', user.id);
       socketService.connect(user.id, {
         onEmailVerified: handleEmailVerified,
-        onConnected: () => console.log('✅ Socket connected for real-time updates'),
-        onDisconnected: (reason) => console.log('🔌 Socket disconnected:', reason),
+        onConnected: () => {
+          console.log('✅ [AUTH SOCKET] Socket connected for real-time updates');
+          console.log('✅ [AUTH SOCKET] Handler registered for user:', user.id);
+        },
+        onDisconnected: (reason) => console.log('🔌 [AUTH SOCKET] Socket disconnected:', reason),
       });
     } else if (!user) {
+      console.log('🔌 [AUTH SOCKET] No user, disconnecting socket');
       // Disconnect when user logs out
       socketService.disconnect();
+    } else if (user.isEmailVerified) {
+      console.log('🔌 [AUTH SOCKET] User already verified, not connecting socket');
     }
+    console.log('===========================================================\n');
 
     return () => {
       // Cleanup on unmount (but not on every user change)

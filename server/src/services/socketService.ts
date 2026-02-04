@@ -48,16 +48,32 @@ class SocketService {
 
       // Handle user registration (associate userId with socket)
       socket.on('register', (userId: string) => {
+        console.log('\n========== SOCKET REGISTRATION ==========');
+        console.log('📝 [REGISTER] Received registration request');
+        console.log('📝 [REGISTER] User ID:', userId, '| Type:', typeof userId);
+        console.log('📝 [REGISTER] Socket ID:', socket.id);
+        
         if (userId) {
-          this.userSockets.set(userId, socket);
-          socket.data.userId = userId;
-          console.log(`✅ User ${userId} registered with socket ${socket.id}`);
+          // Always convert to string for consistent Map key lookup
+          const normalizedUserId = String(userId);
+          this.userSockets.set(normalizedUserId, socket);
+          socket.data.userId = normalizedUserId;
+          
+          console.log('✅ [REGISTER] User registered successfully!');
+          console.log('✅ [REGISTER] Normalized User ID:', normalizedUserId, '| Type:', typeof normalizedUserId);
+          console.log('✅ [REGISTER] Current connected users:', Array.from(this.userSockets.keys()));
+          console.log('✅ [REGISTER] Total connected users:', this.userSockets.size);
           
           // Send confirmation back to client
           socket.emit('registered', { 
             success: true, 
             message: 'Successfully connected to real-time updates' 
           });
+          console.log('✅ [REGISTER] Confirmation sent to client');
+          console.log('=========================================\n');
+        } else {
+          console.log('⚠️ [REGISTER] No userId provided!');
+          console.log('=========================================\n');
         }
       });
 
@@ -88,19 +104,40 @@ class SocketService {
     isEmailVerified: boolean;
     firstName?: string;
   }): boolean {
-    const socket = this.userSockets.get(userId);
+    // Always normalize to string for consistent Map key lookup
+    const normalizedUserId = String(userId);
+    
+    console.log('\n========== EMAIL VERIFICATION SOCKET EMIT ==========');
+    console.log('🔍 [SOCKET] Looking for user socket...');
+    console.log('🔍 [SOCKET] User ID:', userId, '| Normalized:', normalizedUserId);
+    console.log('🔍 [SOCKET] Connected sockets map size:', this.userSockets.size);
+    console.log('🔍 [SOCKET] All connected user IDs:', Array.from(this.userSockets.keys()));
+    
+    const socket = this.userSockets.get(normalizedUserId);
     
     if (socket && socket.connected) {
-      socket.emit('email_verified', {
+      const payload = {
         success: true,
         message: 'Your email has been verified successfully!',
         user: userData,
-      });
-      console.log(`📧 Email verified event sent to user ${userId}`);
+      };
+      console.log('✅ [SOCKET] User socket found and connected!');
+      console.log('✅ [SOCKET] Socket ID:', socket.id);
+      console.log('✅ [SOCKET] Sending payload:', JSON.stringify(payload, null, 2));
+      
+      socket.emit('email_verified', payload);
+      
+      console.log('📧 [SOCKET] Email verified event SENT to user', normalizedUserId);
+      console.log('================================================\n');
       return true;
     }
     
-    console.log(`⚠️ User ${userId} not connected, cannot send email_verified event`);
+    console.log('⚠️ [SOCKET] User', normalizedUserId, 'NOT connected!');
+    console.log('⚠️ [SOCKET] Socket exists:', !!socket);
+    if (socket) {
+      console.log('⚠️ [SOCKET] Socket connected status:', socket.connected);
+    }
+    console.log('================================================\n');
     return false;
   }
 
